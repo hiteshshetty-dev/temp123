@@ -1,0 +1,119 @@
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/visualBuilder/eventManager/useRecalculateVariantDataCSLPValues.ts
+var useRecalculateVariantDataCSLPValues_exports = {};
+__export(useRecalculateVariantDataCSLPValues_exports, {
+  useRecalculateVariantDataCSLPValues: () => useRecalculateVariantDataCSLPValues
+});
+module.exports = __toCommonJS(useRecalculateVariantDataCSLPValues_exports);
+var import__ = require("../index.cjs");
+var import_livePreviewEventManager = __toESM(require("../../livePreview/eventManager/livePreviewEventManager.cjs"), 1);
+var import_livePreviewEventManager2 = require("../../livePreview/eventManager/livePreviewEventManager.constant.cjs");
+var import_constants = require("../utils/constants.cjs");
+var import_visualBuilder = require("../visualBuilder.style.cjs");
+var VARIANT_UPDATE_DELAY_MS = 8e3;
+function useRecalculateVariantDataCSLPValues() {
+  var _a;
+  (_a = import_livePreviewEventManager.default) == null ? void 0 : _a.on(
+    import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.VARIANT_PATCH,
+    (event) => {
+      if (import__.VisualBuilder.VisualBuilderGlobalState.value.audienceMode) {
+        updateVariantClasses(event.data);
+      }
+    }
+  );
+}
+function updateVariantClasses({
+  highlightVariantFields,
+  expectedCSLPValues
+}) {
+  const variant = import__.VisualBuilder.VisualBuilderGlobalState.value.variant;
+  const observers = [];
+  const updateElementClasses = (element, dataCslp, observer) => {
+    if (!dataCslp) return;
+    if (dataCslp.startsWith("v2:") && element.classList.contains("visual-builder__base-field")) {
+      element.classList.remove("visual-builder__base-field");
+      if (highlightVariantFields) {
+        element.classList.add(
+          (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"],
+          "visual-builder__variant-field"
+        );
+      } else {
+        element.classList.add("visual-builder__variant-field");
+      }
+    } else if (!dataCslp.startsWith("v2:") && element.classList.contains("visual-builder__variant-field")) {
+      element.classList.remove(
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"],
+        "visual-builder__variant-field"
+      );
+      element.classList.add("visual-builder__base-field");
+    } else if (dataCslp.startsWith("v2:") && variant && !dataCslp.includes(variant) && element.classList.contains("visual-builder__variant-field")) {
+      element.classList.remove(
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"],
+        "visual-builder__variant-field"
+      );
+      element.classList.add("visual-builder__disabled-variant-field");
+    }
+    observer.disconnect();
+    const index = observers.indexOf(observer);
+    if (index > -1) {
+      observers.splice(index, 1);
+    }
+  };
+  const elementsWithCslp = document.querySelectorAll(
+    `[${import_constants.DATA_CSLP_ATTR_SELECTOR}]`
+  );
+  elementsWithCslp.forEach((elementNode) => {
+    const element = elementNode;
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === "attributes" && mutation.attributeName === import_constants.DATA_CSLP_ATTR_SELECTOR) {
+          const dataCslp = element.getAttribute(
+            import_constants.DATA_CSLP_ATTR_SELECTOR
+          );
+          updateElementClasses(element, dataCslp || "", observer);
+        }
+      });
+    });
+    observers.push(observer);
+    observer.observe(element, { attributes: true });
+  });
+  setTimeout(() => {
+    if (observers.length > 0) {
+      observers.forEach((observer) => observer.disconnect());
+      observers.length = 0;
+    }
+  }, VARIANT_UPDATE_DELAY_MS);
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  useRecalculateVariantDataCSLPValues
+});
+//# sourceMappingURL=useRecalculateVariantDataCSLPValues.cjs.map

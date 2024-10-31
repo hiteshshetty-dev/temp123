@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/visualBuilder/types/visualBuilder.types.ts"],"sourcesContent":["import { CslpData } from \"../../cslp/types/cslp.types\";\n\nexport interface VisualBuilderCslpEventDetails {\n    editableElement: Element;\n    cslpData: string;\n    fieldMetadata: CslpData;\n}\n"],"mappings":";;;;;;;;;;;;;;;;AAAA;AAAA;","names":[]}

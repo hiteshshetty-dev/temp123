@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../src/visualBuilder/utils/errorHandling.ts"],"sourcesContent":["\nexport function hasPostMessageError(obj: any): boolean {\n    return obj?.error === true;\n}"],"mappings":";;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AACO,SAAS,oBAAoB,KAAmB;AACnD,SAAO,KAAK,UAAU;AAC1B;","names":[]}
