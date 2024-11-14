@@ -6,7 +6,6 @@ function cslpTagStyles() {
   return {
     "cslp-edit-mode": css`
             outline: 1px dashed #6c5ce7 !important;
-            position: relative !important;
         `,
     "cslp-tooltip": css`
             padding: 0;

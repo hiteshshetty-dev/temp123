@@ -263,6 +263,13 @@ function FieldToolbarComponent(props) {
     }
     fetchFieldSchema();
   }, [fieldMetadata]);
+  (0, import_compat.useEffect)(() => {
+    import_visualBuilderPostMessage.default?.on(import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, (args) => {
+      if (args.data?.path === fieldMetadata.instance.fieldPathWithIndex) {
+        props.hideOverlay();
+      }
+    });
+  }, []);
   const multipleFieldToolbarButtonClasses = (0, import_classnames.default)(
     "visual-builder__button visual-builder__button--secondary",
     (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],

@@ -109,7 +109,8 @@ var _VisualBuilder = class _VisualBuilder {
           updateFocussedStateOnMutation(
             this.overlayWrapper,
             this.focusedToolbar,
-            this.visualBuilderContainer
+            this.visualBuilderContainer,
+            this.resizeObserver
           );
           const emptyBlockParents = Array.from(
             document.querySelectorAll(

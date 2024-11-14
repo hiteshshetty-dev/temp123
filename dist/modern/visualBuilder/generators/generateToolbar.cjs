@@ -40,11 +40,11 @@ var import_FieldToolbar = __toESM(require("../components/FieldToolbar.cjs"), 1);
 var import_preact = require("preact");
 var import_fieldLabelWrapper = __toESM(require("../components/fieldLabelWrapper.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
-function appendFocusedToolbar(eventDetails, focusedToolbarElement) {
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement);
-  appendFieldToolbar(eventDetails, focusedToolbarElement);
+  appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay);
 }
-function appendFieldToolbar(eventDetails, focusedToolbarElement) {
+function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ))
@@ -54,7 +54,8 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement) {
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       import_FieldToolbar.default,
       {
-        eventDetails
+        eventDetails,
+        hideOverlay
       }
     ),
     wrapper

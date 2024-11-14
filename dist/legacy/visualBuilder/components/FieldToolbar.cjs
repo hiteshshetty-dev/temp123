@@ -269,6 +269,15 @@ function FieldToolbarComponent(props) {
     }
     fetchFieldSchema();
   }, [fieldMetadata]);
+  (0, import_compat.useEffect)(() => {
+    var _a2;
+    (_a2 = import_visualBuilderPostMessage.default) == null ? void 0 : _a2.on(import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, (args) => {
+      var _a3;
+      if (((_a3 = args.data) == null ? void 0 : _a3.path) === fieldMetadata.instance.fieldPathWithIndex) {
+        props.hideOverlay();
+      }
+    });
+  }, []);
   const multipleFieldToolbarButtonClasses = (0, import_classnames.default)(
     "visual-builder__button visual-builder__button--secondary",
     (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],

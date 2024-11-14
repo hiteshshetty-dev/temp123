@@ -4,11 +4,19 @@ import "../../chunk-5WRI5ZAA.js";
 import { VisualBuilder } from "../index.js";
 import { extractDetailsFromCslp } from "../../cslp/index.js";
 import { getAddInstanceButtons } from "../generators/generateAddInstanceButtons.js";
-import { addFocusOverlay } from "../generators/generateOverlay.js";
+import {
+  addFocusOverlay,
+  hideFocusOverlay
+} from "../generators/generateOverlay.js";
 import { hideHoverOutline } from "../listeners/mouseHover.js";
-import { LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX, RIGHT_EDGE_BUFFER, TOOLBAR_EDGE_BUFFER, TOP_EDGE_BUFFER } from "./constants.js";
+import {
+  LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX,
+  RIGHT_EDGE_BUFFER,
+  TOOLBAR_EDGE_BUFFER,
+  TOP_EDGE_BUFFER
+} from "./constants.js";
 import getChildrenDirection from "./getChildrenDirection.js";
-import getStyleOfAnElement from "./getStyleOfAnElement.js";
+import { getPsuedoEditableElementStyles } from "./getPsuedoEditableStylesElement.js";
 function positionToolbar({
   focusedToolbar,
   selectedElementDimension
@@ -18,7 +26,10 @@ function positionToolbar({
     const distanceFromTop = selectedElementDimension.top + window.scrollY - TOOLBAR_EDGE_BUFFER;
     const adjustedDistanceFromTop = selectedElementDimension.top + window.scrollY < TOP_EDGE_BUFFER ? distanceFromTop + selectedElementDimension.height + TOP_EDGE_BUFFER : distanceFromTop;
     const distanceFromLeft = selectedElementDimension.left - LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX;
-    const adjustedDistanceFromLeft = Math.max(distanceFromLeft, TOOLBAR_EDGE_BUFFER);
+    const adjustedDistanceFromLeft = Math.max(
+      distanceFromLeft,
+      TOOLBAR_EDGE_BUFFER
+    );
     if (targetElementRightEdgeOffset < RIGHT_EDGE_BUFFER && (focusedToolbar.style.justifyContent !== "flex-end" || focusedToolbar.style.left !== `${selectedElementDimension.right + LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX}px`)) {
       focusedToolbar.style.justifyContent = "flex-end";
       focusedToolbar.style.left = `${selectedElementDimension.right + LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX}px`;
@@ -39,9 +50,27 @@ function updateFocussedState({
   resizeObserver
 }) {
   var _a, _b;
-  const previousSelectedEditableDOM = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
+  let previousSelectedEditableDOM = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
   if (!visualBuilderContainer || !editableElement || !previousSelectedEditableDOM || !overlayWrapper) {
     return;
+  }
+  const previousSelectedElementCslp = previousSelectedEditableDOM == null ? void 0 : previousSelectedEditableDOM.getAttribute("data-cslp");
+  const newPreviousSelectedElement = document.querySelector(
+    `[data-cslp="${previousSelectedElementCslp}"]`
+  );
+  if (!newPreviousSelectedElement && resizeObserver) {
+    hideFocusOverlay({
+      visualBuilderOverlayWrapper: overlayWrapper,
+      focusedToolbar,
+      visualBuilderContainer,
+      resizeObserver,
+      noTrigger: true
+    });
+    return;
+  }
+  if (newPreviousSelectedElement !== previousSelectedEditableDOM) {
+    previousSelectedEditableDOM = newPreviousSelectedElement;
+    VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = previousSelectedEditableDOM;
   }
   hideHoverOutline(visualBuilderContainer);
   addFocusOverlay(previousSelectedEditableDOM, overlayWrapper);
@@ -49,7 +78,7 @@ function updateFocussedState({
     ".visual-builder__pseudo-editable-element"
   );
   if (psuedoEditableElement) {
-    const styles = getStyleOfAnElement(editableElement);
+    const styles = getPsuedoEditableElementStyles(editableElement);
     const styleString = Object.entries(styles).reduce(
       (acc, [key, value]) => {
         return `${acc}${key}:${value};`;
@@ -58,17 +87,13 @@ function updateFocussedState({
     );
     psuedoEditableElement.style.cssText = styleString;
     psuedoEditableElement.style.visibility = "visible";
-    psuedoEditableElement.style.position = "absolute";
-    psuedoEditableElement.style.top = `${editableElement.offsetTop}px`;
-    psuedoEditableElement.style.left = `${editableElement.offsetLeft}px`;
   }
   const cslp = (editableElement == null ? void 0 : editableElement.getAttribute("data-cslp")) || "";
   const fieldMetadata = extractDetailsFromCslp(cslp);
   const targetElementDimension = editableElement.getBoundingClientRect();
   if (targetElementDimension.width && targetElementDimension.height) {
     const selectedElement = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
-    if (!selectedElement)
-      return;
+    if (!selectedElement) return;
     positionToolbar({
       focusedToolbar,
       selectedElementDimension: selectedElement.getBoundingClientRect()
@@ -98,11 +123,28 @@ function updateFocussedState({
     }
   }
 }
-function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visualBuilderContainer) {
+function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visualBuilderContainer, resizeObserver) {
   if (!focusOverlayWrapper) return;
-  const selectedElement = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
-  if (!selectedElement)
+  let selectedElement = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
+  if (!selectedElement) return;
+  const selectedElementCslp = selectedElement == null ? void 0 : selectedElement.getAttribute("data-cslp");
+  const newSelectedElement = document.querySelector(
+    `[data-cslp="${selectedElementCslp}"]`
+  );
+  if (!newSelectedElement && resizeObserver) {
+    hideFocusOverlay({
+      visualBuilderOverlayWrapper: focusOverlayWrapper,
+      focusedToolbar,
+      visualBuilderContainer,
+      resizeObserver,
+      noTrigger: true
+    });
     return;
+  }
+  if (newSelectedElement !== selectedElement) {
+    selectedElement = newSelectedElement;
+    VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = selectedElement;
+  }
   const selectedElementDimension = selectedElement.getBoundingClientRect();
   const focusOutline = focusOverlayWrapper.querySelector(
     ".visual-builder__overlay--outline"
@@ -184,19 +226,16 @@ function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visu
       ".visual-builder__pseudo-editable-element"
     );
     const editableElement = selectedElement;
-    const styles = getStyleOfAnElement(editableElement);
+    const styles = getPsuedoEditableElementStyles(editableElement);
     const styleString = Object.entries(styles).reduce(
       (acc, [key, value]) => {
         return `${acc}${key}:${value};`;
       },
       ""
     );
-    if (psuedoEditableElement && (psuedoEditableElement.style.cssText !== styleString || psuedoEditableElement.style.visibility !== "visible" || psuedoEditableElement.style.position !== "absolute" || psuedoEditableElement.style.top !== `${editableElement.offsetTop}px` || psuedoEditableElement.style.left !== `${editableElement.offsetLeft}px`)) {
+    if (psuedoEditableElement && (psuedoEditableElement.style.cssText !== styleString || psuedoEditableElement.style.visibility !== "visible")) {
       psuedoEditableElement.style.cssText = styleString;
       psuedoEditableElement.style.visibility = "visible";
-      psuedoEditableElement.style.position = "absolute";
-      psuedoEditableElement.style.top = `${editableElement.offsetTop}px`;
-      psuedoEditableElement.style.left = `${editableElement.offsetLeft}px`;
     }
   }
 }

@@ -10,7 +10,7 @@ import {
   getDOMEditStack
 } from "../utils/getCsDataOfElement.js";
 import { appendFocusedToolbar } from "../generators/generateToolbar.js";
-import { addFocusOverlay } from "../generators/generateOverlay.js";
+import { addFocusOverlay, hideOverlay } from "../generators/generateOverlay.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
 import { VisualBuilder } from "../index.js";
@@ -29,7 +29,7 @@ function addOverlay(params) {
 function addFocusedToolbar(params) {
   const { editableElement } = params.eventDetails;
   if (!editableElement || !params.focusedToolbar) return;
-  appendFocusedToolbar(params.eventDetails, params.focusedToolbar);
+  appendFocusedToolbar(params.eventDetails, params.focusedToolbar, params.hideOverlay);
 }
 async function handleBuilderInteraction(params) {
   const eventTarget = params.event.target;
@@ -75,7 +75,15 @@ async function handleBuilderInteraction(params) {
   });
   addFocusedToolbar({
     eventDetails,
-    focusedToolbar: params.focusedToolbar
+    focusedToolbar: params.focusedToolbar,
+    hideOverlay: () => {
+      hideOverlay({
+        visualBuilderContainer: params.visualBuilderContainer,
+        visualBuilderOverlayWrapper: params.overlayWrapper,
+        focusedToolbar: params.focusedToolbar,
+        resizeObserver: params.resizeObserver
+      });
+    }
   });
   const { content_type_uid, fieldPath, cslpValue } = fieldMetadata;
   toggleHighlightedCommentIconDisplay(cslpValue, false);

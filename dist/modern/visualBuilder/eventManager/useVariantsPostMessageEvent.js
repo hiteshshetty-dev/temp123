@@ -22,18 +22,29 @@ function addVariantFieldClass(variant_uid, highlightVariantFields) {
     }
   });
 }
-function removeVariantFieldClass() {
-  const variantAndBaseFieldElements = document.querySelectorAll(
-    ".visual-builder__disabled-variant-field, .visual-builder__variant-field, .visual-builder__base-field"
-  );
-  variantAndBaseFieldElements.forEach((element) => {
-    element.classList.remove(
-      "visual-builder__disabled-variant-field",
-      "visual-builder__variant-field",
-      visualBuilderStyles()["visual-builder__variant-field"],
-      "visual-builder__base-field"
+function removeVariantFieldClass(onlyHighlighted = false) {
+  if (onlyHighlighted) {
+    const variantElements = document.querySelectorAll(
+      `.${visualBuilderStyles()["visual-builder__variant-field"]}`
     );
-  });
+    variantElements.forEach((element) => {
+      element.classList.remove(
+        visualBuilderStyles()["visual-builder__variant-field"]
+      );
+    });
+  } else {
+    const variantAndBaseFieldElements = document.querySelectorAll(
+      ".visual-builder__disabled-variant-field, .visual-builder__variant-field, .visual-builder__base-field"
+    );
+    variantAndBaseFieldElements.forEach((element) => {
+      element.classList.remove(
+        "visual-builder__disabled-variant-field",
+        "visual-builder__variant-field",
+        visualBuilderStyles()["visual-builder__variant-field"],
+        "visual-builder__base-field"
+      );
+    });
+  }
 }
 function setAudienceMode(mode) {
   VisualBuilder.VisualBuilderGlobalState.value.audienceMode = mode;
@@ -75,8 +86,8 @@ function useVariantFieldsPostMessageEvent() {
   );
   visualBuilderPostMessage?.on(
     VisualBuilderPostMessageEvents.REMOVE_VARIANT_FIELDS,
-    () => {
-      removeVariantFieldClass();
+    (event) => {
+      removeVariantFieldClass(event?.data?.onlyHighlighted);
     }
   );
 }

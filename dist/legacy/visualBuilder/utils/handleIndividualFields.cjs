@@ -148,8 +148,8 @@ async function handleIndividualFields(eventDetails, elements) {
             editableElement: actualEditableField,
             visualBuilderContainer: visualBuilderContainer2,
             overlayWrapper,
-            resizeObserver,
-            focusedToolbar
+            focusedToolbar,
+            resizeObserver
           });
         }, 200);
         actualEditableField.addEventListener(

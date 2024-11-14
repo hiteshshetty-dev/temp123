@@ -10,12 +10,12 @@ declare function updateFocussedState({ editableElement, visualBuilderContainer, 
     visualBuilderContainer: HTMLDivElement | null;
     overlayWrapper: HTMLDivElement | null;
     focusedToolbar: HTMLDivElement | null;
-    resizeObserver: ResizeObserver;
+    resizeObserver: ResizeObserver | null;
 }): void;
 /**
  * This function is used to resize/reposition focus overlay and toolbar due to a
  * mutation in the DOM or due to changes in a different field (other than the focussed field).
  */
-declare function updateFocussedStateOnMutation(focusOverlayWrapper: HTMLDivElement | null, focusedToolbar: HTMLDivElement | null, visualBuilderContainer: HTMLDivElement | null): void;
+declare function updateFocussedStateOnMutation(focusOverlayWrapper: HTMLDivElement | null, focusedToolbar: HTMLDivElement | null, visualBuilderContainer: HTMLDivElement | null, resizeObserver: ResizeObserver | null): void;
 
 export { updateFocussedState, updateFocussedStateOnMutation };

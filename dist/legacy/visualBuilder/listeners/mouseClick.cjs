@@ -56,7 +56,7 @@ function addOverlay(params) {
 function addFocusedToolbar(params) {
   const { editableElement } = params.eventDetails;
   if (!editableElement || !params.focusedToolbar) return;
-  (0, import_generateToolbar.appendFocusedToolbar)(params.eventDetails, params.focusedToolbar);
+  (0, import_generateToolbar.appendFocusedToolbar)(params.eventDetails, params.focusedToolbar, params.hideOverlay);
 }
 async function handleBuilderInteraction(params) {
   var _a, _b;
@@ -103,7 +103,15 @@ async function handleBuilderInteraction(params) {
   });
   addFocusedToolbar({
     eventDetails,
-    focusedToolbar: params.focusedToolbar
+    focusedToolbar: params.focusedToolbar,
+    hideOverlay: () => {
+      (0, import_generateOverlay.hideOverlay)({
+        visualBuilderContainer: params.visualBuilderContainer,
+        visualBuilderOverlayWrapper: params.overlayWrapper,
+        focusedToolbar: params.focusedToolbar,
+        resizeObserver: params.resizeObserver
+      });
+    }
   });
   const { content_type_uid, fieldPath, cslpValue } = fieldMetadata;
   (0, import_generateHighlightedComment.toggleHighlightedCommentIconDisplay)(cslpValue, false);

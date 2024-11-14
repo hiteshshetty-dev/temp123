@@ -12,11 +12,11 @@ import FieldToolbarComponent from "../components/FieldToolbar.js";
 import { render } from "preact";
 import FieldLabelWrapperComponent from "../components/fieldLabelWrapper.js";
 import { jsx } from "preact/jsx-runtime";
-function appendFocusedToolbar(eventDetails, focusedToolbarElement) {
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement);
-  appendFieldToolbar(eventDetails, focusedToolbarElement);
+  appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay);
 }
-function appendFieldToolbar(eventDetails, focusedToolbarElement) {
+function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ))
@@ -26,7 +26,8 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement) {
     /* @__PURE__ */ jsx(
       FieldToolbarComponent,
       {
-        eventDetails
+        eventDetails,
+        hideOverlay
       }
     ),
     wrapper

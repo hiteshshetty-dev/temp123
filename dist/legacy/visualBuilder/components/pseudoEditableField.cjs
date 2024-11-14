@@ -34,25 +34,18 @@ __export(pseudoEditableField_exports, {
 });
 module.exports = __toCommonJS(pseudoEditableField_exports);
 var import_classnames = __toESM(require("classnames"), 1);
-var import_getCamelCaseStyles = __toESM(require("../utils/getCamelCaseStyles.cjs"), 1);
-var import_getStyleOfAnElement = __toESM(require("../utils/getStyleOfAnElement.cjs"), 1);
 var import_visualBuilder = require("../visualBuilder.style.cjs");
+var import_getPsuedoEditableStylesElement = require("../utils/getPsuedoEditableStylesElement.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function PseudoEditableFieldComponent(props) {
-  const styles = (0, import_getCamelCaseStyles.default)(
-    (0, import_getStyleOfAnElement.default)(props.editableElement)
-  );
-  const rect = props.editableElement.getBoundingClientRect();
-  styles.position = "absolute";
-  styles.top = `${rect.top + window.scrollY}px`;
-  styles.left = `${rect.left + window.scrollX}px`;
-  styles.height = "auto";
-  styles.whiteSpace = "pre-line";
-  styles.textTransform = "none";
+  const styles = (0, import_getPsuedoEditableStylesElement.getPsuedoEditableElementStyles)(props.editableElement, true);
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",
     {
-      className: (0, import_classnames.default)("visual-builder__pseudo-editable-element", (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__pseudo-editable-element"]),
+      className: (0, import_classnames.default)(
+        "visual-builder__pseudo-editable-element",
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__pseudo-editable-element"]
+      ),
       "data-testid": "visual-builder__pseudo-editable-element",
       style: styles,
       children: props.config.textContent

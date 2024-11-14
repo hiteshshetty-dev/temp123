@@ -28,7 +28,6 @@ function cslpTagStyles() {
   return {
     "cslp-edit-mode": import_goober.css`
             outline: 1px dashed #6c5ce7 !important;
-            position: relative !important;
         `,
     "cslp-tooltip": import_goober.css`
             padding: 0;

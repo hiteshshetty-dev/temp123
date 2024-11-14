@@ -54,18 +54,29 @@ function addVariantFieldClass(variant_uid, highlightVariantFields) {
     }
   });
 }
-function removeVariantFieldClass() {
-  const variantAndBaseFieldElements = document.querySelectorAll(
-    ".visual-builder__disabled-variant-field, .visual-builder__variant-field, .visual-builder__base-field"
-  );
-  variantAndBaseFieldElements.forEach((element) => {
-    element.classList.remove(
-      "visual-builder__disabled-variant-field",
-      "visual-builder__variant-field",
-      (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"],
-      "visual-builder__base-field"
+function removeVariantFieldClass(onlyHighlighted = false) {
+  if (onlyHighlighted) {
+    const variantElements = document.querySelectorAll(
+      `.${(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"]}`
     );
-  });
+    variantElements.forEach((element) => {
+      element.classList.remove(
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"]
+      );
+    });
+  } else {
+    const variantAndBaseFieldElements = document.querySelectorAll(
+      ".visual-builder__disabled-variant-field, .visual-builder__variant-field, .visual-builder__base-field"
+    );
+    variantAndBaseFieldElements.forEach((element) => {
+      element.classList.remove(
+        "visual-builder__disabled-variant-field",
+        "visual-builder__variant-field",
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-field"],
+        "visual-builder__base-field"
+      );
+    });
+  }
 }
 function setAudienceMode(mode) {
   import__.VisualBuilder.VisualBuilderGlobalState.value.audienceMode = mode;
@@ -108,8 +119,9 @@ function useVariantFieldsPostMessageEvent() {
   );
   (_e = import_visualBuilderPostMessage.default) == null ? void 0 : _e.on(
     import_postMessage.VisualBuilderPostMessageEvents.REMOVE_VARIANT_FIELDS,
-    () => {
-      removeVariantFieldClass();
+    (event) => {
+      var _a2;
+      removeVariantFieldClass((_a2 = event == null ? void 0 : event.data) == null ? void 0 : _a2.onlyHighlighted);
     }
   );
 }
