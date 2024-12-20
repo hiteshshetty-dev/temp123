@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/visualBuilder/utils/handleIndividualFields.ts
@@ -37,6 +47,8 @@ var import_multipleElementAddButton = require("./multipleElementAddButton.cjs");
 var import_updateFocussedState = require("./updateFocussedState.cjs");
 var import_types = require("./types/index.types.cjs");
 var import_getMultilinePlaintext = require("./getMultilinePlaintext.cjs");
+var import_postMessage = require("./types/postMessage.types.cjs");
+var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -54,15 +66,13 @@ async function handleIndividualFields(eventDetails, elements) {
       fieldPathWithIndex
     )
   ]);
-  const expectedFieldInstanceData = Array.isArray(expectedFieldData) ? expectedFieldData.at(fieldMetadata.multipleFieldMetadata.index) : void 0;
   const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
   const { isDisabled: disabled } = (0, import_isFieldDisabled.isFieldDisabled)(fieldSchema, eventDetails);
   editableElement.setAttribute(
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
     fieldType
   );
-  if (fieldSchema && ((fieldSchema == null ? void 0 : fieldSchema.multiple) || (fieldSchema == null ? void 0 : fieldSchema.data_type) === "reference" && // @ts-ignore
-  (fieldSchema == null ? void 0 : fieldSchema.field_metadata.ref_multiple))) {
+  if (isFieldMultiple(fieldSchema)) {
     if (lastEditedField !== editableElement) {
       const addButtonLabel = fieldSchema.data_type === "blocks" ? (
         // ? `Add ${fieldSchema.display_name ?? "Modular Block"}`
@@ -83,70 +93,75 @@ async function handleIndividualFields(eventDetails, elements) {
         }
       );
     }
-    if (eventDetails.fieldMetadata.multipleFieldMetadata.index > -1) {
-      handleSingleField(
-        {
-          editableElement,
-          visualBuilderContainer,
-          resizeObserver: elements.resizeObserver
-        },
-        { expectedFieldData: expectedFieldInstanceData, disabled }
-      );
-    }
-  } else {
-    handleSingleField(
-      {
-        editableElement,
-        visualBuilderContainer,
-        resizeObserver: elements.resizeObserver
-      },
-      { expectedFieldData, disabled }
-    );
   }
-  function handleSingleField(elements2, config) {
-    const { editableElement: editableElement2, visualBuilderContainer: visualBuilderContainer2 } = elements2;
-    if (config.disabled) {
-      return;
+  !disabled && handleInlineEditing();
+  function handleInlineEditing() {
+    if (!import_constants.ALLOWED_INLINE_EDITABLE_FIELD.includes(fieldType)) return;
+    const index = Number(fieldMetadata.instance.fieldPathWithIndex.split(".").at(-1));
+    const isInstance = Number.isFinite(index);
+    if (isFieldMultiple(fieldSchema)) {
+      let expectedFieldInstanceData = null;
+      if (Array.isArray(expectedFieldData)) {
+        if (!isInstance) {
+          return;
+        }
+        if (index >= expectedFieldData.length) {
+        } else {
+          expectedFieldInstanceData = expectedFieldData.at(index);
+        }
+      } else {
+        expectedFieldInstanceData = expectedFieldData;
+      }
+      enableInlineEditing(expectedFieldInstanceData);
+    } else {
+      let expectedFieldInstanceData = null;
+      if (isInstance) {
+        if (index !== 0) {
+          return;
+        }
+        expectedFieldInstanceData = Array.isArray(expectedFieldData) ? expectedFieldData.at(0) : expectedFieldData;
+      }
+      enableInlineEditing(expectedFieldInstanceData ?? expectedFieldData);
     }
-    if (import_constants.ALLOWED_INLINE_EDITABLE_FIELD.includes(fieldType)) {
-      let actualEditableField = editableElement2;
+    function enableInlineEditing(expectedFieldData2) {
+      let actualEditableField = editableElement;
       import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldValue = actualEditableField == null ? void 0 : actualEditableField.innerText;
       const elementComputedDisplay = window.getComputedStyle(actualEditableField).display;
-      let textContent = editableElement2.innerText || editableElement2.textContent || "";
+      let textContent = editableElement.innerText || editableElement.textContent || "";
       if (fieldType === import_types.FieldDataType.MULTILINE) {
         textContent = (0, import_getMultilinePlaintext.getMultilinePlaintext)(actualEditableField);
         actualEditableField.addEventListener("paste", pasteAsPlainText);
       }
-      const expectedTextContent = config.expectedFieldData;
-      if (textContent !== expectedTextContent || (0, import_generatePseudoEditableField.isEllipsisActive)(editableElement2)) {
+      const expectedTextContent = expectedFieldData2;
+      if (expectedTextContent && textContent !== expectedTextContent || (0, import_generatePseudoEditableField.isEllipsisActive)(editableElement)) {
         const pseudoEditableField = (0, import_generatePseudoEditableField.generatePseudoEditableElement)(
-          { editableElement: editableElement2 },
-          { textContent: config.expectedFieldData }
+          { editableElement },
+          { textContent: expectedFieldData2 }
         );
-        editableElement2.style.visibility = "hidden";
+        editableElement.style.visibility = "hidden";
         pseudoEditableField.setAttribute(
           import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
           fieldType
         );
-        visualBuilderContainer2.appendChild(pseudoEditableField);
+        visualBuilderContainer.appendChild(pseudoEditableField);
         actualEditableField = pseudoEditableField;
         if (fieldType === import_types.FieldDataType.MULTILINE)
           actualEditableField.addEventListener(
             "paste",
             pasteAsPlainText
           );
-        elements2.resizeObserver.observe(pseudoEditableField);
+        elements.resizeObserver.observe(pseudoEditableField);
       } else if (elementComputedDisplay === "inline") {
         const onInlineElementInput = (0, import_lodash_es.throttle)(() => {
-          const overlayWrapper = visualBuilderContainer2.querySelector(
+          const overlayWrapper = visualBuilderContainer.querySelector(
             ".visual-builder__overlay__wrapper"
           );
-          const focusedToolbar = visualBuilderContainer2.querySelector(
+          const focusedToolbar = visualBuilderContainer.querySelector(
             ".visual-builder__focused-toolbar"
           );
           (0, import_updateFocussedState.updateFocussedState)({
             editableElement: actualEditableField,
-            visualBuilderContainer: visualBuilderContainer2,
+            visualBuilderContainer,
             overlayWrapper,
             focusedToolbar,
             resizeObserver
@@ -164,6 +179,10 @@ async function handleIndividualFields(eventDetails, elements) {
       return;
     }
   }
+}
+function isFieldMultiple(fieldSchema) {
+  return fieldSchema && (fieldSchema.multiple || fieldSchema.data_type === "reference" && // @ts-ignore
+  fieldSchema.field_metadata.ref_multiple);
 }
 function cleanIndividualFieldResidual(elements) {
   const { overlayWrapper, visualBuilderContainer, focusedToolbar } = elements;
@@ -210,6 +229,11 @@ function cleanIndividualFieldResidual(elements) {
   }
   if (focusedToolbar) {
     focusedToolbar.innerHTML = "";
+    const toolbarEvents = [import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
+    toolbarEvents.forEach((event) => {
+      var _a, _b;
+      (_b = (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.unregisterEvent) == null ? void 0 : _b.call(_a, event);
+    });
   }
 }
 var pasteAsPlainText = (0, import_lodash_es.debounce)(

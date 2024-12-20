@@ -33,7 +33,6 @@ __export(FieldToolbar_exports, {
   default: () => FieldToolbar_default
 });
 module.exports = __toCommonJS(FieldToolbar_exports);
-var import_signals = require("@preact/signals");
 var import_getChildrenDirection = __toESM(require("../utils/getChildrenDirection.cjs"), 1);
 var import_constants = require("../utils/constants.cjs");
 var import_getFieldType = require("../utils/getFieldType.cjs");
@@ -86,23 +85,23 @@ function handleEdit(fieldMetadata) {
 }
 function handleFormFieldFocus(eventDetails) {
   const { editableElement, fieldMetadata, cslpData } = eventDetails;
-  import_visualBuilderPostMessage.default?.send(
-    import_postMessage.VisualBuilderPostMessageEvents.TOGGLE_FORM,
-    {
-      fieldMetadata,
-      cslpData
-    }
-  ).then(() => {
-    import_visualBuilderPostMessage.default?.send(import_postMessage.VisualBuilderPostMessageEvents.FOCUS_FIELD, {
-      DOMEditStack: (0, import_getCsDataOfElement.getDOMEditStack)(editableElement)
-    });
+  import_visualBuilderPostMessage.default?.send(import_postMessage.VisualBuilderPostMessageEvents.TOGGLE_FORM, {
+    fieldMetadata,
+    cslpData
+  }).then(() => {
+    import_visualBuilderPostMessage.default?.send(
+      import_postMessage.VisualBuilderPostMessageEvents.FOCUS_FIELD,
+      {
+        DOMEditStack: (0, import_getCsDataOfElement.getDOMEditStack)(editableElement)
+      }
+    );
   });
 }
 function FieldToolbarComponent(props) {
   const { eventDetails } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
-  const direction = (0, import_signals.useSignal)("");
   const parentPath = fieldMetadata?.multipleFieldMetadata?.parentDetails?.parentCslpValue || "";
+  const direction = (0, import_getChildrenDirection.default)(targetElement, parentPath);
   const isVariant = !!fieldMetadata?.variant;
   const [fieldSchema, setFieldSchema] = (0, import_compat.useState)(
     null
@@ -116,13 +115,10 @@ function FieldToolbarComponent(props) {
   let fieldType = null;
   let isWholeMultipleField = false;
   if (fieldSchema) {
-    const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
-      fieldSchema,
-      {
-        editableElement: targetElement,
-        fieldMetadata
-      }
-    );
+    const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(fieldSchema, {
+      editableElement: targetElement,
+      fieldMetadata
+    });
     if (isDisabled) {
       return null;
     }
@@ -138,7 +134,6 @@ function FieldToolbarComponent(props) {
       return null;
     }
   }
-  direction.value = (0, import_getChildrenDirection.default)(targetElement, parentPath);
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "button",
@@ -256,19 +251,23 @@ function FieldToolbarComponent(props) {
       if (fieldSchema2) {
         setFieldSchema(fieldSchema2);
       }
-      const variantStatus = await (0, import_FieldRevertComponent.getFieldVariantStatus)(
-        fieldMetadata.fieldPathWithIndex
-      );
+      const variantStatus = await (0, import_FieldRevertComponent.getFieldVariantStatus)(fieldMetadata);
       setFieldVariantStatus(variantStatus ?? import_FieldRevertComponent.BASE_VARIANT_STATUS);
     }
     fetchFieldSchema();
   }, [fieldMetadata]);
   (0, import_compat.useEffect)(() => {
-    import_visualBuilderPostMessage.default?.on(import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, (args) => {
-      if (args.data?.path === fieldMetadata.instance.fieldPathWithIndex) {
-        props.hideOverlay();
+    const event = import_visualBuilderPostMessage.default?.on(
+      import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE,
+      (args) => {
+        if (args.data?.path === fieldMetadata.instance.fieldPathWithIndex) {
+          props.hideOverlay();
+        }
       }
-    });
+    );
+    return () => {
+      event?.unregister();
+    };
   }, []);
   const multipleFieldToolbarButtonClasses = (0, import_classnames.default)(
     "visual-builder__button visual-builder__button--secondary",
@@ -321,7 +320,7 @@ function FieldToolbarComponent(props) {
                       {
                         "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-left-button",
                         className: multipleFieldToolbarButtonClasses,
-                        "data-tooltip": direction.value === "vertical" ? "Move up" : "Move left",
+                        "data-tooltip": direction === "vertical" ? "Move up" : "Move left",
                         onClick: (e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -335,8 +334,8 @@ function FieldToolbarComponent(props) {
                           import_icons.MoveLeftIcon,
                           {
                             className: (0, import_classnames.default)({
-                              "visual-builder__rotate--90": direction.value === "vertical",
-                              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction.value === "vertical"
+                              "visual-builder__rotate--90": direction === "vertical",
+                              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction === "vertical"
                             }),
                             disabled: disableMoveLeft
                           }
@@ -348,7 +347,7 @@ function FieldToolbarComponent(props) {
                       {
                         "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-right-button",
                         className: multipleFieldToolbarButtonClasses,
-                        "data-tooltip": direction.value === "vertical" ? "Move down" : "Move right",
+                        "data-tooltip": direction === "vertical" ? "Move down" : "Move right",
                         onClick: (e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -362,8 +361,8 @@ function FieldToolbarComponent(props) {
                           import_icons.MoveRightIcon,
                           {
                             className: (0, import_classnames.default)({
-                              "visual-builder__rotate--90": direction.value === "vertical",
-                              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction.value === "vertical"
+                              "visual-builder__rotate--90": direction === "vertical",
+                              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction === "vertical"
                             }),
                             disabled: disableMoveRight
                           }

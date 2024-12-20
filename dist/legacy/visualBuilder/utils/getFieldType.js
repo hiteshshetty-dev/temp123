@@ -3,28 +3,29 @@ import "../../chunk-5WRI5ZAA.js";
 // src/visualBuilder/utils/getFieldType.ts
 import { FieldDataType } from "./types/index.types.js";
 function getFieldType(fieldSchema) {
+  var _a, _b, _c, _d, _e;
   if (!fieldSchema) return;
   if (Object.hasOwnProperty.call(fieldSchema, "extension_uid")) {
     return FieldDataType.CUSTOM_FIELD;
   }
   switch (fieldSchema.data_type) {
     case "text": {
-      if (fieldSchema == null ? void 0 : fieldSchema.field_metadata.multiline) {
+      if ((_a = fieldSchema.field_metadata) == null ? void 0 : _a.multiline) {
         return FieldDataType.MULTILINE;
-      } else if (fieldSchema == null ? void 0 : fieldSchema.field_metadata.allow_rich_text) {
+      } else if ((_b = fieldSchema.field_metadata) == null ? void 0 : _b.allow_rich_text) {
         return FieldDataType.HTML_RTE;
-      } else if (fieldSchema == null ? void 0 : fieldSchema.field_metadata.markdown) {
+      } else if ((_c = fieldSchema.field_metadata) == null ? void 0 : _c.markdown) {
         return FieldDataType.MARKDOWN_RTE;
       } else if (fieldSchema.enum) {
         return FieldDataType.SELECT;
-      } else if (fieldSchema.uid === "url" && fieldSchema.field_metadata._default) {
+      } else if (fieldSchema.uid === "url" && ((_d = fieldSchema.field_metadata) == null ? void 0 : _d._default)) {
         return FieldDataType.URL;
       } else {
         return FieldDataType.SINGLELINE;
       }
     }
     case "json": {
-      if (fieldSchema.field_metadata.allow_json_rte) {
+      if ((_e = fieldSchema.field_metadata) == null ? void 0 : _e.allow_json_rte) {
         return FieldDataType.JSON_RTE;
       }
       break;

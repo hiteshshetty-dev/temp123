@@ -19,7 +19,8 @@ var voidElements = /* @__PURE__ */ new Set([
   "param",
   "source",
   "track",
-  "wbr"
+  "wbr",
+  "video"
 ]);
 var LEAF_CSLP_SELECTOR = "[data-cslp]:not(:has([data-cslp]))";
 var DIFF_WRAPPER = "cs-compare";

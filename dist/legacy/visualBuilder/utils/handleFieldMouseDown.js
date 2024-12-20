@@ -10,6 +10,7 @@ import {
 } from "./constants.js";
 import { FieldDataType } from "./types/index.types.js";
 import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
+import { insertSpaceAtCursor } from "./insertSpaceAtCursor.js";
 function handleFieldInput(e) {
   const event = e;
   const targetElement = event.target;
@@ -40,10 +41,19 @@ function handleFieldKeyDown(e) {
   const fieldType = targetElement.getAttribute(
     VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
+  if (targetElement.tagName === "BUTTON") {
+    handleKeyDownOnButton(event);
+  }
   if (fieldType === FieldDataType.NUMBER) {
     handleNumericFieldKeyDown(event);
   } else if (fieldType === FieldDataType.SINGLELINE) {
     handleSingleLineFieldKeyDown(event);
+  }
+}
+function handleKeyDownOnButton(e) {
+  if (e.code === "Space" && e.target) {
+    e.preventDefault();
+    insertSpaceAtCursor(e.target);
   }
 }
 function handleSingleLineFieldKeyDown(e) {

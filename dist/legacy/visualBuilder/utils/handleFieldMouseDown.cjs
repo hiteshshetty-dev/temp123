@@ -29,6 +29,7 @@ var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_constants = require("./constants.cjs");
 var import_types = require("./types/index.types.cjs");
 var import_postMessage = require("./types/postMessage.types.cjs");
+var import_insertSpaceAtCursor = require("./insertSpaceAtCursor.cjs");
 function handleFieldInput(e) {
   const event = e;
   const targetElement = event.target;
@@ -59,10 +60,19 @@ function handleFieldKeyDown(e) {
   const fieldType = targetElement.getAttribute(
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
+  if (targetElement.tagName === "BUTTON") {
+    handleKeyDownOnButton(event);
+  }
   if (fieldType === import_types.FieldDataType.NUMBER) {
     handleNumericFieldKeyDown(event);
   } else if (fieldType === import_types.FieldDataType.SINGLELINE) {
     handleSingleLineFieldKeyDown(event);
+  }
+}
+function handleKeyDownOnButton(e) {
+  if (e.code === "Space" && e.target) {
+    e.preventDefault();
+    (0, import_insertSpaceAtCursor.insertSpaceAtCursor)(e.target);
   }
 }
 function handleSingleLineFieldKeyDown(e) {

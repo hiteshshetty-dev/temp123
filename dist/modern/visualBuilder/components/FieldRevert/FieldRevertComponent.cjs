@@ -47,11 +47,11 @@ var BASE_VARIANT_STATUS = {
   isOrderChanged: false,
   fieldLevelCustomizations: false
 };
-async function getFieldVariantStatus(fieldPathWithIndex) {
+async function getFieldVariantStatus(fieldMetadata) {
   try {
     const result = await import_visualBuilderPostMessage.default?.send(
       "get-field-variant-status",
-      fieldPathWithIndex
+      fieldMetadata
     );
     return result;
   } catch (error) {

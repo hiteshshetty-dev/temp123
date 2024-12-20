@@ -17,7 +17,7 @@ interface FieldRevertComponentProps {
     variantStatus?: IVariantStatus;
 }
 declare const BASE_VARIANT_STATUS: IVariantStatus;
-declare function getFieldVariantStatus(fieldPathWithIndex: string): Promise<IVariantStatus | undefined>;
+declare function getFieldVariantStatus(fieldMetadata: CslpData): Promise<IVariantStatus | undefined>;
 declare const FieldRevertComponent: (props: FieldRevertComponentProps) => react_jsx_runtime.JSX.Element;
 
 export { BASE_VARIANT_STATUS, FieldRevertComponent, type IVariantStatus, type TFieldRevertActionCallback, getFieldVariantStatus };

@@ -35,7 +35,7 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   focusedToolbarElement.append(wrapper);
 }
 function appendFieldPathDropdown(eventDetails, focusedToolbarElement) {
-  if (document.querySelector("visual-builder__focused-toolbar__field-label-wrapper"))
+  if (document.querySelector(".visual-builder__focused-toolbar__field-label-wrapper"))
     return;
   const { editableElement: targetElement, fieldMetadata } = eventDetails;
   const targetElementDimension = targetElement.getBoundingClientRect();

@@ -13,12 +13,12 @@ var BASE_VARIANT_STATUS = {
   isOrderChanged: false,
   fieldLevelCustomizations: false
 };
-async function getFieldVariantStatus(fieldPathWithIndex) {
+async function getFieldVariantStatus(fieldMetadata) {
   var _a;
   try {
     const result = await ((_a = visualBuilderPostMessage) == null ? void 0 : _a.send(
       "get-field-variant-status",
-      fieldPathWithIndex
+      fieldMetadata
     ));
     return result;
   } catch (error) {

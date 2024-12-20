@@ -25,28 +25,29 @@ __export(getFieldType_exports, {
 module.exports = __toCommonJS(getFieldType_exports);
 var import_types = require("./types/index.types.cjs");
 function getFieldType(fieldSchema) {
+  var _a, _b, _c, _d, _e;
   if (!fieldSchema) return;
   if (Object.hasOwnProperty.call(fieldSchema, "extension_uid")) {
     return import_types.FieldDataType.CUSTOM_FIELD;
   }
   switch (fieldSchema.data_type) {
     case "text": {
-      if (fieldSchema == null ? void 0 : fieldSchema.field_metadata.multiline) {
+      if ((_a = fieldSchema.field_metadata) == null ? void 0 : _a.multiline) {
         return import_types.FieldDataType.MULTILINE;
-      } else if (fieldSchema == null ? void 0 : fieldSchema.field_metadata.allow_rich_text) {
+      } else if ((_b = fieldSchema.field_metadata) == null ? void 0 : _b.allow_rich_text) {
         return import_types.FieldDataType.HTML_RTE;
-      } else if (fieldSchema == null ? void 0 : fieldSchema.field_metadata.markdown) {
+      } else if ((_c = fieldSchema.field_metadata) == null ? void 0 : _c.markdown) {
         return import_types.FieldDataType.MARKDOWN_RTE;
       } else if (fieldSchema.enum) {
         return import_types.FieldDataType.SELECT;
-      } else if (fieldSchema.uid === "url" && fieldSchema.field_metadata._default) {
+      } else if (fieldSchema.uid === "url" && ((_d = fieldSchema.field_metadata) == null ? void 0 : _d._default)) {
         return import_types.FieldDataType.URL;
       } else {
         return import_types.FieldDataType.SINGLELINE;
       }
     }
     case "json": {
-      if (fieldSchema.field_metadata.allow_json_rte) {
+      if ((_e = fieldSchema.field_metadata) == null ? void 0 : _e.allow_json_rte) {
         return import_types.FieldDataType.JSON_RTE;
       }
       break;

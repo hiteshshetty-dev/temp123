@@ -33,6 +33,7 @@ var DEFAULT_MULTIPLE_FIELDS = [
   FieldDataType.GROUP,
   FieldDataType.BLOCK
 ];
+var unicodeNonBreakingSpace = "\xA0";
 export {
   ALLOWED_INLINE_EDITABLE_FIELD,
   ALLOWED_MODAL_EDITABLE_FIELD,
@@ -45,6 +46,7 @@ export {
   TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
-  numericInputRegex
+  numericInputRegex,
+  unicodeNonBreakingSpace
 };
 //# sourceMappingURL=constants.js.map

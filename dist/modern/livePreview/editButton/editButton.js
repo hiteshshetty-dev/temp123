@@ -154,7 +154,7 @@ function shouldRenderEditButton() {
     PublicLogger.error(error);
   }
   const iFrameCheck = inIframe();
-  if (config.editButton.exclude?.find(
+  if (!iFrameCheck && config.editButton.exclude?.find(
     (exclude) => exclude === "outsideLivePreviewPortal"
   )) {
     return false;

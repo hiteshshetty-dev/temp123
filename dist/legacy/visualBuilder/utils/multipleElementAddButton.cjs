@@ -179,7 +179,7 @@ function observeParentAndFocusNewInstance({
           `[data-cslp='${expectedCslp}']`
         );
         if (newInstance) {
-          setTimeout(() => newInstance.click(), 150);
+          setTimeout(() => newInstance.click(), 350);
           observer.disconnect();
           hasObserverDisconnected = true;
           return;

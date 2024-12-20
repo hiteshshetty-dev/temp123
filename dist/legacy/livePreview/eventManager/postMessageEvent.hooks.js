@@ -55,7 +55,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.0.1",
+        sdkVersion: "3.0.2",
         mode: Config.get().mode
       }
     }

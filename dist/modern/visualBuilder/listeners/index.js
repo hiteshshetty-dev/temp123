@@ -62,10 +62,16 @@ function removeEventListeners(params) {
     window.removeEventListener("mousemove", mousemoveHandler);
   }
   if (mouseleaveHandler) {
-    document.documentElement.removeEventListener("mouseleave", mouseleaveHandler);
+    document.documentElement.removeEventListener(
+      "mouseleave",
+      mouseleaveHandler
+    );
   }
   if (mouseenterHandler) {
-    document.documentElement.removeEventListener("mouseenter", mouseenterHandler);
+    document.documentElement.removeEventListener(
+      "mouseenter",
+      mouseenterHandler
+    );
   }
   eventListenersMap.clear();
 }

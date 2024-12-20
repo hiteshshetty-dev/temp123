@@ -31,7 +31,8 @@ __export(constants_exports, {
   TOP_EDGE_BUFFER: () => TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID: () => VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY: () => VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
-  numericInputRegex: () => numericInputRegex
+  numericInputRegex: () => numericInputRegex,
+  unicodeNonBreakingSpace: () => unicodeNonBreakingSpace
 });
 module.exports = __toCommonJS(constants_exports);
 var import_types = require("./types/index.types.cjs");
@@ -66,6 +67,7 @@ var DEFAULT_MULTIPLE_FIELDS = [
   import_types.FieldDataType.GROUP,
   import_types.FieldDataType.BLOCK
 ];
+var unicodeNonBreakingSpace = "\xA0";
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   ALLOWED_INLINE_EDITABLE_FIELD,
@@ -79,6 +81,7 @@ var DEFAULT_MULTIPLE_FIELDS = [
   TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
-  numericInputRegex
+  numericInputRegex,
+  unicodeNonBreakingSpace
 });
 //# sourceMappingURL=constants.cjs.map

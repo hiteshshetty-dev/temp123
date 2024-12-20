@@ -9,22 +9,22 @@ function getFieldType(fieldSchema) {
   }
   switch (fieldSchema.data_type) {
     case "text": {
-      if (fieldSchema?.field_metadata.multiline) {
+      if (fieldSchema.field_metadata?.multiline) {
         return FieldDataType.MULTILINE;
-      } else if (fieldSchema?.field_metadata.allow_rich_text) {
+      } else if (fieldSchema.field_metadata?.allow_rich_text) {
         return FieldDataType.HTML_RTE;
-      } else if (fieldSchema?.field_metadata.markdown) {
+      } else if (fieldSchema.field_metadata?.markdown) {
         return FieldDataType.MARKDOWN_RTE;
       } else if (fieldSchema.enum) {
         return FieldDataType.SELECT;
-      } else if (fieldSchema.uid === "url" && fieldSchema.field_metadata._default) {
+      } else if (fieldSchema.uid === "url" && fieldSchema.field_metadata?._default) {
         return FieldDataType.URL;
       } else {
         return FieldDataType.SINGLELINE;
       }
     }
     case "json": {
-      if (fieldSchema.field_metadata.allow_json_rte) {
+      if (fieldSchema.field_metadata?.allow_json_rte) {
         return FieldDataType.JSON_RTE;
       }
       break;
