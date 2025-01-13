@@ -20,33 +20,15 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/utils/index.ts
 var utils_exports = {};
 __export(utils_exports, {
-  addLivePreviewQueryTags: () => addLivePreviewQueryTags,
+  addLivePreviewQueryTags: () => import_addLivePreviewQueryTags.addLivePreviewQueryTags,
   addParamsToUrl: () => addParamsToUrl,
   hasWindow: () => hasWindow,
   isOpeningInTimeline: () => isOpeningInTimeline
 });
 module.exports = __toCommonJS(utils_exports);
-var import_logger = require("../logger/logger.cjs");
+var import_addLivePreviewQueryTags = require("./addLivePreviewQueryTags.cjs");
 function hasWindow() {
   return typeof window !== "undefined";
-}
-function addLivePreviewQueryTags(link) {
-  try {
-    const docUrl = new URL(document.location.href);
-    const newUrl = new URL(link);
-    const livePreviewHash = docUrl.searchParams.get("live_preview");
-    const ctUid = docUrl.searchParams.get("content_type_uid");
-    const entryUid = docUrl.searchParams.get("entry_uid");
-    if (livePreviewHash && ctUid && entryUid) {
-      newUrl.searchParams.set("live_preview", livePreviewHash);
-      newUrl.searchParams.set("content_type_uid", ctUid);
-      newUrl.searchParams.set("entry_uid", entryUid);
-    }
-    return newUrl.href;
-  } catch (error) {
-    import_logger.PublicLogger.error("Error while adding live preview to URL");
-    return link;
-  }
 }
 function addParamsToUrl() {
   window.addEventListener("click", (event) => {
@@ -54,7 +36,7 @@ function addParamsToUrl() {
     const targetHref = target.href;
     const docOrigin = document.location.origin;
     if (targetHref && targetHref.includes(docOrigin) && !targetHref.includes("live_preview")) {
-      const newUrl = addLivePreviewQueryTags(target.href);
+      const newUrl = (0, import_addLivePreviewQueryTags.addLivePreviewQueryTags)(target.href);
       event.target.href = newUrl || target.href;
     }
   });

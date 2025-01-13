@@ -229,6 +229,9 @@ var LivePreviewEditButton = class {
     return false;
   }
   updateTooltipPosition() {
+    if (!document.getElementById("cslp-tooltip")) {
+      this.createCslpTooltip();
+    }
     const editButton = Config.get().editButton;
     const elements = Config.get().elements;
     if (!elements.highlightedElement || !this.tooltip) return false;

@@ -1,5 +1,5 @@
 import { OnEntryChangeCallback, OnEntryChangeConfig, OnEntryChangeCallbackUID, OnEntryChangeUnsubscribeParameters } from '../livePreview/types/onEntryChangeCallback.type.cjs';
-import { IInitData } from '../types/types.cjs';
+import { IInitData, IExportedConfig } from '../types/types.cjs';
 
 declare class ContentstackLivePreview {
     private static previewConstructors;
@@ -19,6 +19,7 @@ declare class ContentstackLivePreview {
      * This hash could be used when data is fetched manually.
      */
     static get hash(): string;
+    static get config(): IExportedConfig;
     private static isInitialized;
     private static initializePreview;
     /**

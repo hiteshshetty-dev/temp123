@@ -110,5 +110,6 @@ interface IVisualBuilderInitEvent {
         masterLocale: string;
     };
 }
+type IExportedConfig = Pick<IConfig, "ssr" | "enable" | "cleanCslpOnProduction" | "stackDetails" | "clientUrlParams" | "windowType" | "hash" | "editButton" | "mode">;
 
-export { type IClientUrlParams, type IConfig, type IConfigEditButton, type IEditButtonPosition, type IEditEntrySearchParams, type IInitData, type IInitStackDetails, type ILivePreviewMessageCommon, type ILivePreviewMode, ILivePreviewModeConfig, ILivePreviewWindowType, type IStackDetails, type IStackSdk, type IVisualBuilderInitEvent };
+export { type IClientUrlParams, type IConfig, type IConfigEditButton, type IEditButtonPosition, type IEditEntrySearchParams, type IExportedConfig, type IInitData, type IInitStackDetails, type ILivePreviewMessageCommon, type ILivePreviewMode, ILivePreviewModeConfig, ILivePreviewWindowType, type IStackDetails, type IStackSdk, type IVisualBuilderInitEvent };

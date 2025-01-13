@@ -33,16 +33,16 @@ __export(contentstack_live_preview_HOC_exports, {
   default: () => contentstack_live_preview_HOC_default
 });
 module.exports = __toCommonJS(contentstack_live_preview_HOC_exports);
-var import_uuid = require("uuid");
 var import_lodash_es = require("lodash-es");
+var import_uuid = require("uuid");
 var import_config = require("../configManager/config.default.cjs");
 var import_configManager = __toESM(require("../configManager/configManager.cjs"), 1);
-var import_visualBuilder = require("../visualBuilder/index.cjs");
 var import_live_preview = __toESM(require("../livePreview/live-preview.cjs"), 1);
+var import_onPageTraversal = require("../livePreview/onPageTraversal.cjs");
 var import_removeFromOnChangeSubscribers = require("../livePreview/removeFromOnChangeSubscribers.cjs");
 var import_logger = require("../logger/logger.cjs");
-var import_onPageTraversal = require("../livePreview/onPageTraversal.cjs");
 var import_compare = require("../timeline/compare/compare.cjs");
+var import_visualBuilder = require("../visualBuilder/index.cjs");
 var _ContentstackLivePreview = class _ContentstackLivePreview {
   /**
    * Initializes the Live Preview SDK with the provided user configuration.
@@ -75,6 +75,25 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
       (0, import_configManager.updateConfigFromUrl)();
     }
     return import_configManager.default.get().hash;
+  }
+  static get config() {
+    if (!_ContentstackLivePreview.isInitialized()) {
+      (0, import_configManager.updateConfigFromUrl)();
+    }
+    const config = import_configManager.default.get();
+    const clonedConfig = (0, import_lodash_es.cloneDeep)(config);
+    const configToShare = (0, import_lodash_es.pick)(clonedConfig, [
+      "ssr",
+      "enable",
+      "cleanCslpOnProduction",
+      "stackDetails",
+      "clientUrlParams",
+      "windowType",
+      "hash",
+      "editButton",
+      "mode"
+    ]);
+    return configToShare;
   }
   static isInitialized() {
     return !(0, import_lodash_es.isEmpty)(_ContentstackLivePreview.previewConstructors);
@@ -204,7 +223,7 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
    * @returns The version of the SDK as a string.
    */
   static getSdkVersion() {
-    return "3.0.2";
+    return "3.1.0";
   }
 };
 _ContentstackLivePreview.previewConstructors = {};
