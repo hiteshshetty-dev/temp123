@@ -36,6 +36,7 @@ var import_getFieldType = require("../utils/getFieldType.cjs");
 var import__ = require("../index.cjs");
 var import_generateHoverOutline = require("../generators/generateHoverOutline.cjs");
 var import_visualBuilder = require("../visualBuilder.style.cjs");
+var import__2 = require("../../index.cjs");
 function resetCustomCursor(customCursor) {
   if (customCursor) {
     (0, import_generateCustomCursor.generateCustomCursor)({
@@ -171,7 +172,7 @@ async function handleMouseHover(params) {
       showCustomCursor(params2.customCursor);
     }
     if (!editableElement.classList.contains(
-      "visual-builder__empty-block-parent"
+      import__2.VB_EmptyBlockParentClass
     ) && !editableElement.classList.contains("visual-builder__empty-block")) {
       addOutline(editableElement);
       import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(

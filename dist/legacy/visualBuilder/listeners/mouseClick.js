@@ -17,6 +17,7 @@ import { VisualBuilder } from "../index.js";
 import { FieldSchemaMap } from "../utils/fieldSchemaMap.js";
 import { isFieldDisabled } from "../utils/isFieldDisabled.js";
 import { toggleHighlightedCommentIconDisplay } from "../generators/generateHighlightedComment.js";
+import { VB_EmptyBlockParentClass } from "../../index.js";
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   addFocusOverlay(
@@ -60,7 +61,7 @@ async function handleBuilderInteraction(params) {
     });
   }
   if (editableElement.classList.contains(
-    "visual-builder__empty-block-parent"
+    VB_EmptyBlockParentClass
   ) || editableElement.classList.contains("visual-builder__empty-block")) {
     return;
   }

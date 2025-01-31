@@ -44,6 +44,7 @@ var import__ = require("../index.cjs");
 var import_fieldSchemaMap = require("../utils/fieldSchemaMap.cjs");
 var import_isFieldDisabled = require("../utils/isFieldDisabled.cjs");
 var import_generateHighlightedComment = require("../generators/generateHighlightedComment.cjs");
+var import__2 = require("../../index.cjs");
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   (0, import_generateOverlay.addFocusOverlay)(
@@ -86,7 +87,7 @@ async function handleBuilderInteraction(params) {
     });
   }
   if (editableElement.classList.contains(
-    "visual-builder__empty-block-parent"
+    import__2.VB_EmptyBlockParentClass
   ) || editableElement.classList.contains("visual-builder__empty-block")) {
     return;
   }

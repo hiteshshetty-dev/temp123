@@ -41,6 +41,7 @@ import {
 import { useHighlightCommentIcon } from "./eventManager/useHighlightCommentIcon.js";
 import { updateHighlightedCommentIconPosition } from "./generators/generateHighlightedComment.js";
 import { useRecalculateVariantDataCSLPValues } from "./eventManager/useRecalculateVariantDataCSLPValues.js";
+import { VB_EmptyBlockParentClass } from "../index.js";
 var _VisualBuilder = class _VisualBuilder {
   constructor() {
     this.customCursor = null;
@@ -114,7 +115,7 @@ var _VisualBuilder = class _VisualBuilder {
           );
           const emptyBlockParents = Array.from(
             document.querySelectorAll(
-              ".visual-builder__empty-block-parent"
+              `.${VB_EmptyBlockParentClass}`
             )
           );
           const previousEmptyBlockParents = _VisualBuilder.VisualBuilderGlobalState.value.previousEmptyBlockParents;

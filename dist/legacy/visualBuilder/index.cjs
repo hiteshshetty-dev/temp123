@@ -61,6 +61,7 @@ var import_updateFocussedState = require("./utils/updateFocussedState.cjs");
 var import_useHighlightCommentIcon = require("./eventManager/useHighlightCommentIcon.cjs");
 var import_generateHighlightedComment = require("./generators/generateHighlightedComment.cjs");
 var import_useRecalculateVariantDataCSLPValues = require("./eventManager/useRecalculateVariantDataCSLPValues.cjs");
+var import__ = require("../index.cjs");
 var _VisualBuilder = class _VisualBuilder {
   constructor() {
     this.customCursor = null;
@@ -134,7 +135,7 @@ var _VisualBuilder = class _VisualBuilder {
           );
           const emptyBlockParents = Array.from(
             document.querySelectorAll(
-              ".visual-builder__empty-block-parent"
+              `.${import__.VB_EmptyBlockParentClass}`
             )
           );
           const previousEmptyBlockParents = _VisualBuilder.VisualBuilderGlobalState.value.previousEmptyBlockParents;

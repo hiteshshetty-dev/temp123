@@ -28,15 +28,15 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
-var src_exports = {};
-__export(src_exports, {
+var index_exports = {};
+__export(index_exports, {
   VB_EmptyBlockParentClass: () => VB_EmptyBlockParentClass,
-  default: () => src_default
+  default: () => index_default
 });
-module.exports = __toCommonJS(src_exports);
+module.exports = __toCommonJS(index_exports);
 var import_contentstack_live_preview_HOC = __toESM(require("./preview/contentstack-live-preview-HOC.cjs"), 1);
 var VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
-var src_default = import_contentstack_live_preview_HOC.default;
+var index_default = import_contentstack_live_preview_HOC.default;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   VB_EmptyBlockParentClass

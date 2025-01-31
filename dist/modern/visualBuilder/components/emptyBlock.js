@@ -54,6 +54,7 @@ function EmptyBlock(props) {
             ),
             onClick: () => sendAddInstanceEvent(),
             type: "button",
+            "data-testid": "visual-builder__empty-block-add-button",
             children: [
               /* @__PURE__ */ jsx("i", { className: "fas fa-plus" }),
               " \xA0",

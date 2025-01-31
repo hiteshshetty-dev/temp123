@@ -11,6 +11,7 @@ import { getFieldType } from "../utils/getFieldType.js";
 import { VisualBuilder } from "../index.js";
 import { addHoverOutline } from "../generators/generateHoverOutline.js";
 import { visualBuilderStyles } from "../visualBuilder.style.js";
+import { VB_EmptyBlockParentClass } from "../../index.js";
 function resetCustomCursor(customCursor) {
   if (customCursor) {
     generateCustomCursor({
@@ -146,7 +147,7 @@ async function handleMouseHover(params) {
       showCustomCursor(params2.customCursor);
     }
     if (!editableElement.classList.contains(
-      "visual-builder__empty-block-parent"
+      VB_EmptyBlockParentClass
     ) && !editableElement.classList.contains("visual-builder__empty-block")) {
       addOutline(editableElement);
       FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
