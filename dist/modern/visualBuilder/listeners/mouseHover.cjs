@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/visualBuilder/listeners/mouseHover.ts
@@ -37,6 +47,8 @@ var import__ = require("../index.cjs");
 var import_generateHoverOutline = require("../generators/generateHoverOutline.cjs");
 var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import__2 = require("../../index.cjs");
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
+var import_generateThread = require("../generators/generateThread.cjs");
 function resetCustomCursor(customCursor) {
   if (customCursor) {
     (0, import_generateCustomCursor.generateCustomCursor)({
@@ -44,6 +56,13 @@ function resetCustomCursor(customCursor) {
       customCursor
     });
   }
+}
+function collabCustomCursor(customCursor) {
+  if (!customCursor) return;
+  (0, import_generateCustomCursor.generateCustomCursor)({
+    fieldType: "discussion",
+    customCursor
+  });
 }
 function handleCursorPosition(event, customCursor) {
   if (customCursor) {
@@ -107,18 +126,30 @@ async function handleMouseHover(params) {
   (0, import_lodash_es.throttle)(async (params2) => {
     const eventDetails = (0, import_getCsDataOfElement.getCsDataOfElement)(params2.event);
     const eventTarget = params2.event.target;
+    const config = import_configManager.default.get();
+    if (config?.collab.enable && config?.collab.pauseFeedback) {
+      hideCustomCursor(params2.customCursor);
+      return;
+    }
     if (!eventDetails) {
-      if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget))) {
+      if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget) || (0, import_generateThread.isCollabThread)(eventTarget))) {
+        handleCursorPosition(params2.event, params2.customCursor);
         hideCustomCursor(params2.customCursor);
         return;
       }
-      resetCustomCursor(params2.customCursor);
+      if (!config?.collab.enable) {
+        resetCustomCursor(params2.customCursor);
+      }
       (0, import_multipleElementAddButton.removeAddInstanceButtons)({
         eventTarget: params2.event.target,
         visualBuilderContainer: params2.visualBuilderContainer,
         overlayWrapper: params2.overlayWrapper
       });
       handleCursorPosition(params2.event, params2.customCursor);
+      if (config?.collab.enable && config?.collab.isFeedbackMode) {
+        showCustomCursor(params2.customCursor);
+        collabCustomCursor(params2.customCursor);
+      }
       return;
     }
     const { editableElement, fieldMetadata } = eventDetails;
@@ -130,13 +161,25 @@ async function handleMouseHover(params) {
       return;
     }
     if (params2.customCursor) {
-      const elementUnderCursor = document.elementFromPoint(params2.event.clientX, params2.event.clientY);
+      const elementUnderCursor = document.elementFromPoint(
+        params2.event.clientX,
+        params2.event.clientY
+      );
       if (elementUnderCursor) {
         if (elementUnderCursor.nodeName === "A" || elementUnderCursor.nodeName === "BUTTON") {
           elementUnderCursor.classList.add(
             (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__no-cursor-style"]
           );
         }
+      }
+      if (config?.collab.enable && config?.collab.isFeedbackMode) {
+        collabCustomCursor(params2.customCursor);
+        handleCursorPosition(params2.event, params2.customCursor);
+        showCustomCursor(params2.customCursor);
+        return;
+      } else if (config?.collab.enable && !config?.collab.isFeedbackMode) {
+        hideCustomCursor(params2.customCursor);
+        return;
       }
       if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM !== editableElement) {
         resetCustomCursor(params2.customCursor);
@@ -171,9 +214,7 @@ async function handleMouseHover(params) {
       handleCursorPosition(params2.event, params2.customCursor);
       showCustomCursor(params2.customCursor);
     }
-    if (!editableElement.classList.contains(
-      import__2.VB_EmptyBlockParentClass
-    ) && !editableElement.classList.contains("visual-builder__empty-block")) {
+    if (!editableElement.classList.contains(import__2.VB_EmptyBlockParentClass) && !editableElement.classList.contains("visual-builder__empty-block")) {
       addOutline(editableElement);
       import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
         (fieldSchema) => {

@@ -1,4 +1,5 @@
 import { ILivePreviewWindowType } from '../../../types/types.cjs';
+import '../../../visualBuilder/types/collab.types.cjs';
 
 interface HistoryLivePreviewPostMessageEventData {
     type: "forward" | "backward" | "reload";

@@ -2,6 +2,7 @@ import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/utils/getChildrenDirection.ts
 import getChildElements from "./getChildElements.js";
+var validPositions = ["vertical", "horizontal", "none"];
 function getChildrenDirection(editableElement, parentCslpValue) {
   if (!editableElement) {
     return "none";
@@ -11,6 +12,13 @@ function getChildrenDirection(editableElement, parentCslpValue) {
   );
   if (!parentElement) {
     return "none";
+  }
+  const directionFromParentElement = parentElement.getAttribute("data-add-direction");
+  const isValidParentDirection = validPositions.includes(
+    directionFromParentElement
+  );
+  if (directionFromParentElement && isValidParentDirection) {
+    return directionFromParentElement;
   }
   const [firstChildElement, secondChildElement, removeClone] = getChildElements(parentElement, parentCslpValue);
   if (!firstChildElement) return "none";

@@ -207,7 +207,9 @@ function cleanIndividualFieldResidual(elements) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [VisualBuilderPostMessageEvents.DELETE_INSTANCE, VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
     toolbarEvents.forEach((event) => {
-      visualBuilderPostMessage?.unregisterEvent?.(event);
+      if (visualBuilderPostMessage?.requestMessageHandlers?.has(event)) {
+        visualBuilderPostMessage?.unregisterEvent?.(event);
+      }
     });
   }
 }

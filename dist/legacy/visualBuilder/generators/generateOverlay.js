@@ -132,6 +132,11 @@ function sendFieldEvent(options) {
   }
 }
 function hideOverlay(params) {
+  const focusElementObserver = VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver;
+  if (focusElementObserver) {
+    focusElementObserver.disconnect();
+    VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver = null;
+  }
   hideFocusOverlay({
     visualBuilderContainer: params.visualBuilderContainer,
     visualBuilderOverlayWrapper: params.visualBuilderOverlayWrapper,

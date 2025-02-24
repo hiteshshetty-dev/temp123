@@ -207,8 +207,10 @@ function cleanIndividualFieldResidual(elements) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [VisualBuilderPostMessageEvents.DELETE_INSTANCE, VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
     toolbarEvents.forEach((event) => {
-      var _a, _b;
-      (_b = (_a = visualBuilderPostMessage) == null ? void 0 : _a.unregisterEvent) == null ? void 0 : _b.call(_a, event);
+      var _a, _b, _c, _d;
+      if ((_b = (_a = visualBuilderPostMessage) == null ? void 0 : _a.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
+        (_d = (_c = visualBuilderPostMessage) == null ? void 0 : _c.unregisterEvent) == null ? void 0 : _d.call(_c, event);
+      }
     });
   }
 }

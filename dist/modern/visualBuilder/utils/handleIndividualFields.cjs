@@ -231,7 +231,9 @@ function cleanIndividualFieldResidual(elements) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
     toolbarEvents.forEach((event) => {
-      import_visualBuilderPostMessage.default?.unregisterEvent?.(event);
+      if (import_visualBuilderPostMessage.default?.requestMessageHandlers?.has(event)) {
+        import_visualBuilderPostMessage.default?.unregisterEvent?.(event);
+      }
     });
   }
 }

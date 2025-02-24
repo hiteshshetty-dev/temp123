@@ -7,6 +7,10 @@ declare function visualBuilderStyles(): {
     "visual-builder__add-button": string;
     "visual-builder__add-button-label": string;
     "visual-builder__start-editing-btn": string;
+    "visual-builder__start-editing-btn__bottom-right": string;
+    "visual-builder__start-editing-btn__bottom-left": string;
+    "visual-builder__start-editing-btn__top-right": string;
+    "visual-builder__start-editing-btn__top-left": string;
     "visual-builder__cursor-icon": string;
     "visual-builder__cursor-pointer": string;
     "visual-builder__cursor-icon--loader": string;

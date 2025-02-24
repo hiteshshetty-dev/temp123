@@ -8,6 +8,7 @@ interface VisualBuilderGlobalStateImpl {
     audienceMode: boolean;
     locale: string;
     variant: string | null;
+    focusElementObserver: MutationObserver | null;
 }
 declare class VisualBuilder {
     private customCursor;
@@ -20,6 +21,7 @@ declare class VisualBuilder {
     private resizeEventHandler;
     private resizeObserver;
     private mutationObserver;
+    private threadMutationObserver;
     constructor();
     destroy: () => void;
 }

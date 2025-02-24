@@ -34,6 +34,7 @@ __export(getChildrenDirection_exports, {
 });
 module.exports = __toCommonJS(getChildrenDirection_exports);
 var import_getChildElements = __toESM(require("./getChildElements.cjs"), 1);
+var validPositions = ["vertical", "horizontal", "none"];
 function getChildrenDirection(editableElement, parentCslpValue) {
   if (!editableElement) {
     return "none";
@@ -43,6 +44,13 @@ function getChildrenDirection(editableElement, parentCslpValue) {
   );
   if (!parentElement) {
     return "none";
+  }
+  const directionFromParentElement = parentElement.getAttribute("data-add-direction");
+  const isValidParentDirection = validPositions.includes(
+    directionFromParentElement
+  );
+  if (directionFromParentElement && isValidParentDirection) {
+    return directionFromParentElement;
   }
   const [firstChildElement, secondChildElement, removeClone] = (0, import_getChildElements.default)(parentElement, parentCslpValue);
   if (!firstChildElement) return "none";

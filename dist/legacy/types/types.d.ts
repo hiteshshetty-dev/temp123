@@ -1,3 +1,5 @@
+import { IInviteMetadata, IThreadDTO } from '../visualBuilder/types/collab.types.js';
+
 declare interface IEditEntrySearchParams {
     hash?: string;
     entry_uid?: string;
@@ -52,6 +54,7 @@ declare enum ILivePreviewModeConfig {
 }
 declare enum ILivePreviewWindowType {
     PREVIEW = "preview",
+    PREVIEW_SHARE = "preview-share",
     BUILDER = "builder",
     INDEPENDENT = "independent"
 }
@@ -71,10 +74,22 @@ declare interface IConfig {
     windowType: ILivePreviewWindowType;
     hash: string;
     editButton: IConfigEditButton;
+    editButtonBuilder: IConfigEditButtonBuilder;
     mode: ILivePreviewModeConfig;
     elements: {
         highlightedElement: HTMLElement | null;
     };
+    collab: {
+        enable: boolean;
+        fromShare: boolean;
+        pauseFeedback: boolean;
+        isFeedbackMode: boolean;
+        inviteMetadata: IInviteMetadata;
+    };
+}
+declare interface IConfigEditButtonBuilder {
+    enable: boolean;
+    position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 }
 declare interface IConfigEditButton {
     enable: boolean;
@@ -95,6 +110,7 @@ declare interface IInitData {
     clientUrlParams: Partial<Omit<IClientUrlParams, "url">>;
     stackSdk: IStackSdk;
     editButton: IConfigEditButton;
+    editButtonBuilder: IConfigEditButtonBuilder;
     mode: ILivePreviewMode;
 }
 declare interface ILivePreviewMessageCommon {
@@ -109,7 +125,13 @@ interface IVisualBuilderInitEvent {
     stackDetails: {
         masterLocale: string;
     };
+    collab?: {
+        enable: boolean;
+        isFeedbackMode: boolean;
+        inviteMetadata: IInviteMetadata;
+        payload: IThreadDTO[];
+    };
 }
 type IExportedConfig = Pick<IConfig, "ssr" | "enable" | "cleanCslpOnProduction" | "stackDetails" | "clientUrlParams" | "windowType" | "hash" | "editButton" | "mode">;
 
-export { type IClientUrlParams, type IConfig, type IConfigEditButton, type IEditButtonPosition, type IEditEntrySearchParams, type IExportedConfig, type IInitData, type IInitStackDetails, type ILivePreviewMessageCommon, type ILivePreviewMode, ILivePreviewModeConfig, ILivePreviewWindowType, type IStackDetails, type IStackSdk, type IVisualBuilderInitEvent };
+export { type IClientUrlParams, type IConfig, type IConfigEditButton, type IConfigEditButtonBuilder, type IEditButtonPosition, type IEditEntrySearchParams, type IExportedConfig, type IInitData, type IInitStackDetails, type ILivePreviewMessageCommon, type ILivePreviewMode, ILivePreviewModeConfig, ILivePreviewWindowType, type IStackDetails, type IStackSdk, type IVisualBuilderInitEvent };
