@@ -23,8 +23,15 @@ function getEditButtonPosition(position) {
 }
 function StartEditingButtonComponent() {
   const config = Config.get();
-  const enable = config.editButtonBuilder.enable;
-  const position = config.editButtonBuilder.position || "bottom-right";
+  const enable = config.editInVisualBuilderButton.enable;
+  const position = config.editInVisualBuilderButton.position || "bottom-right";
+  function updateTargetUrl(e) {
+    const targetElement = e.target;
+    targetElement.setAttribute(
+      "href",
+      getVisualBuilderRedirectionUrl().toString()
+    );
+  }
   return enable ? /* @__PURE__ */ jsxs(
     "a",
     {
@@ -35,13 +42,9 @@ function StartEditingButtonComponent() {
         positionStyles[getEditButtonPosition(position)]
       ),
       "data-testid": "vcms-start-editing-btn",
-      onClick: (e) => {
-        const targetElement = e.target;
-        targetElement.setAttribute(
-          "href",
-          getVisualBuilderRedirectionUrl().toString()
-        );
-      },
+      onMouseEnter: (e) => updateTargetUrl(e),
+      onFocus: (e) => updateTargetUrl(e),
+      onClick: (e) => updateTargetUrl(e),
       children: [
         /* @__PURE__ */ jsx(EditIcon, {}),
         /* @__PURE__ */ jsx("span", { children: "Start Editing" })

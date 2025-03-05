@@ -104,11 +104,11 @@ function handleFormFieldFocus(eventDetails) {
 }
 function FieldToolbarComponent(props) {
   var _a, _b, _c, _d, _e;
-  const { eventDetails } = props;
+  const { eventDetails, isVariant: isVariantOrParentOfVariant } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
   const parentPath = ((_b = (_a = fieldMetadata == null ? void 0 : fieldMetadata.multipleFieldMetadata) == null ? void 0 : _a.parentDetails) == null ? void 0 : _b.parentCslpValue) || "";
+  const isVariant = !!(fieldMetadata == null ? void 0 : fieldMetadata.variant) || isVariantOrParentOfVariant;
   const direction = (0, import_getChildrenDirection.default)(targetElement, parentPath);
-  const isVariant = !!(fieldMetadata == null ? void 0 : fieldMetadata.variant);
   const [fieldSchema, setFieldSchema] = (0, import_compat.useState)(
     null
   );
@@ -136,9 +136,6 @@ function FieldToolbarComponent(props) {
     if (fieldType === import_types.FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || ((_c = fieldMetadata.multipleFieldMetadata) == null ? void 0 : _c.index) === -1);
-    if (import_constants.DEFAULT_MULTIPLE_FIELDS.includes(fieldType) && isWholeMultipleField) {
-      return null;
-    }
   }
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(

@@ -5,6 +5,7 @@ type FieldDetails = Pick<VisualBuilderCslpEventDetails, "editableElement" | "fie
 interface MultipleFieldToolbarProps {
     eventDetails: VisualBuilderCslpEventDetails;
     hideOverlay: () => void;
+    isVariant?: boolean;
 }
 declare function FieldToolbarComponent(props: MultipleFieldToolbarProps): JSX.Element | null;
 

@@ -37,7 +37,7 @@ function getUserInitData() {
       position: "top",
       includeByQueryParameter: true
     },
-    editButtonBuilder: {
+    editInVisualBuilderButton: {
       enable: true,
       position: "bottom-right"
     },
@@ -71,7 +71,7 @@ function getDefaultConfig() {
       position: "top",
       includeByQueryParameter: true
     },
-    editButtonBuilder: {
+    editInVisualBuilderButton: {
       enable: true,
       position: "bottom-right"
     },
@@ -106,20 +106,6 @@ function getDefaultConfig() {
     },
     elements: {
       highlightedElement: null
-    },
-    collab: {
-      enable: false,
-      fromShare: false,
-      pauseFeedback: false,
-      isFeedbackMode: false,
-      inviteMetadata: {
-        currentUser: {
-          email: "",
-          uid: ""
-        },
-        users: [],
-        inviteUid: ""
-      }
     }
   };
 }

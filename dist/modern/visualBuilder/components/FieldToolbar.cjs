@@ -98,11 +98,11 @@ function handleFormFieldFocus(eventDetails) {
   });
 }
 function FieldToolbarComponent(props) {
-  const { eventDetails } = props;
+  const { eventDetails, isVariant: isVariantOrParentOfVariant } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
   const parentPath = fieldMetadata?.multipleFieldMetadata?.parentDetails?.parentCslpValue || "";
+  const isVariant = !!fieldMetadata?.variant || isVariantOrParentOfVariant;
   const direction = (0, import_getChildrenDirection.default)(targetElement, parentPath);
-  const isVariant = !!fieldMetadata?.variant;
   const [fieldSchema, setFieldSchema] = (0, import_compat.useState)(
     null
   );
@@ -130,9 +130,6 @@ function FieldToolbarComponent(props) {
     if (fieldType === import_types.FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || fieldMetadata.multipleFieldMetadata?.index === -1);
-    if (import_constants.DEFAULT_MULTIPLE_FIELDS.includes(fieldType) && isWholeMultipleField) {
-      return null;
-    }
   }
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(

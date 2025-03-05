@@ -4,8 +4,7 @@ import "../../chunk-5WRI5ZAA.js";
 import getChildrenDirection from "../utils/getChildrenDirection.js";
 import {
   ALLOWED_MODAL_EDITABLE_FIELD,
-  ALLOWED_REPLACE_FIELDS,
-  DEFAULT_MULTIPLE_FIELDS
+  ALLOWED_REPLACE_FIELDS
 } from "../utils/constants.js";
 import { getFieldType } from "../utils/getFieldType.js";
 import {
@@ -83,11 +82,11 @@ function handleFormFieldFocus(eventDetails) {
   });
 }
 function FieldToolbarComponent(props) {
-  const { eventDetails } = props;
+  const { eventDetails, isVariant: isVariantOrParentOfVariant } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
   const parentPath = fieldMetadata?.multipleFieldMetadata?.parentDetails?.parentCslpValue || "";
+  const isVariant = !!fieldMetadata?.variant || isVariantOrParentOfVariant;
   const direction = getChildrenDirection(targetElement, parentPath);
-  const isVariant = !!fieldMetadata?.variant;
   const [fieldSchema, setFieldSchema] = useState(
     null
   );
@@ -115,9 +114,6 @@ function FieldToolbarComponent(props) {
     if (fieldType === FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || fieldMetadata.multipleFieldMetadata?.index === -1);
-    if (DEFAULT_MULTIPLE_FIELDS.includes(fieldType) && isWholeMultipleField) {
-      return null;
-    }
   }
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ jsx(

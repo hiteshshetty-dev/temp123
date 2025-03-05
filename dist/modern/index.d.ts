@@ -1,7 +1,6 @@
 import ContentstackLivePreview from './preview/contentstack-live-preview-HOC.js';
 import { IStackSdk as IStackSdk$1 } from './types/types.js';
 import './livePreview/types/onEntryChangeCallback.type.js';
-import './visualBuilder/types/collab.types.js';
 
 type IStackSdk = IStackSdk$1;
 declare const VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";

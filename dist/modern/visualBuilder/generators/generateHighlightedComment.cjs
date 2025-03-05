@@ -59,9 +59,9 @@ function highlightCommentIconOnCanvas(payload) {
       iconContainer.style.position = "fixed";
       iconContainer.style.top = `${top - highlighCommentOffset}px`;
       iconContainer.style.left = `${left - highlighCommentOffset}px`;
-      iconContainer.style.zIndex = "900";
+      iconContainer.style.zIndex = "1000";
       iconContainer.style.cursor = "pointer";
-      iconContainer.className = "highlighted-comment collab-icon";
+      iconContainer.className = "highlighted-comment";
       (0, import_preact2.render)(
         (0, import_preact.h)(import_HighlightedCommentIcon.default, { data }),
         // Use h directly with Preact

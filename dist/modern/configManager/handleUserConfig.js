@@ -64,9 +64,9 @@ var handleInitData = (initData) => {
     position: initData.editButton?.position ?? stackSdk.live_preview?.position ?? config.editButton.position ?? "top",
     includeByQueryParameter: initData.editButton?.includeByQueryParameter ?? stackSdk.live_preview?.includeByQueryParameter ?? config.editButton.includeByQueryParameter ?? true
   });
-  Config.set("editButtonBuilder", {
-    enable: initData.editButtonBuilder?.enable ?? stackSdk.live_preview?.editButtonBuilder?.enable ?? config.editButtonBuilder.enable,
-    position: initData.editButtonBuilder?.position ?? stackSdk.live_preview?.position ?? config.editButtonBuilder.position ?? "bottom-right"
+  Config.set("editInVisualBuilderButton", {
+    enable: initData.editInVisualBuilderButton?.enable ?? stackSdk.live_preview?.editInVisualBuilderButton?.enable ?? config.editInVisualBuilderButton.enable,
+    position: initData.editInVisualBuilderButton?.position ?? stackSdk.live_preview?.position ?? config.editInVisualBuilderButton.position ?? "bottom-right"
   });
   handleClientUrlParams(
     initData.clientUrlParams ?? stackSdk.live_preview?.clientUrlParams ?? config.clientUrlParams

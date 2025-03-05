@@ -1,6 +1,5 @@
 import { OnEntryChangeCallback, OnEntryChangeConfig, OnEntryChangeCallbackUID, OnEntryChangeUnsubscribeParameters } from '../livePreview/types/onEntryChangeCallback.type.cjs';
 import { IInitData, IExportedConfig } from '../types/types.cjs';
-import '../visualBuilder/types/collab.types.cjs';
 
 declare class ContentstackLivePreview {
     private static previewConstructors;

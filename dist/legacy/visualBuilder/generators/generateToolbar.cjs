@@ -40,11 +40,16 @@ var import_FieldToolbar = __toESM(require("../components/FieldToolbar.cjs"), 1);
 var import_preact = require("preact");
 var import_fieldLabelWrapper = __toESM(require("../components/fieldLabelWrapper.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
-function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement);
-  appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay);
+  appendFieldToolbar(
+    eventDetails,
+    focusedToolbarElement,
+    hideOverlay,
+    isVariant
+  );
 }
-function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
+function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ))
@@ -55,7 +60,8 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
       import_FieldToolbar.default,
       {
         eventDetails,
-        hideOverlay
+        hideOverlay,
+        isVariant
       }
     ),
     wrapper
@@ -63,7 +69,9 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   focusedToolbarElement.append(wrapper);
 }
 function appendFieldPathDropdown(eventDetails, focusedToolbarElement) {
-  if (document.querySelector(".visual-builder__focused-toolbar__field-label-wrapper"))
+  if (document.querySelector(
+    ".visual-builder__focused-toolbar__field-label-wrapper"
+  ))
     return;
   const { editableElement: targetElement, fieldMetadata } = eventDetails;
   const targetElementDimension = targetElement.getBoundingClientRect();

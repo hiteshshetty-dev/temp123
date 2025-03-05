@@ -18,11 +18,7 @@ import { FieldSchemaMap } from "../utils/fieldSchemaMap.js";
 import { isFieldDisabled } from "../utils/isFieldDisabled.js";
 import { toggleHighlightedCommentIconDisplay } from "../generators/generateHighlightedComment.js";
 import { VB_EmptyBlockParentClass } from "../../index.js";
-import getXPath from "get-xpath";
-import Config from "../../configManager/configManager.js";
-import { generateThread } from "../generators/generateThread.js";
-import { isCollabThread } from "../generators/generateThread.js";
-import { toggleCollabPopup } from "../generators/generateThread.js";
+import { getFieldVariantStatus } from "../components/FieldRevert/FieldRevertComponent.js";
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   addFocusOverlay(
@@ -38,43 +34,20 @@ function addFocusedToolbar(params) {
   appendFocusedToolbar(
     params.eventDetails,
     params.focusedToolbar,
-    params.hideOverlay
+    params.hideOverlay,
+    params.isVariant
   );
 }
 async function handleBuilderInteraction(params) {
   const eventTarget = params.event.target;
   const isAnchorElement = eventTarget instanceof HTMLAnchorElement;
   const elementHasCslp = eventTarget && (eventTarget.hasAttribute("data-cslp") || eventTarget.closest("[data-cslp]"));
-  if ((eventTarget == null ? void 0 : eventTarget.dataset["studio-ui"]) === "true") {
+  if ((eventTarget == null ? void 0 : eventTarget.getAttribute("data-studio-ui")) === "true") {
     return;
   }
   if (isAnchorElement || elementHasCslp && !eventTarget.closest(".visual-builder__empty-block")) {
     params.event.preventDefault();
     params.event.stopPropagation();
-  }
-  const config = Config.get();
-  if ((config == null ? void 0 : config.collab.enable) === true) {
-    if (config == null ? void 0 : config.collab.pauseFeedback) return;
-    const xpath = getXPath(eventTarget);
-    if (!eventTarget) return;
-    const rect = eventTarget.getBoundingClientRect();
-    const relativeX = (params.event.clientX - rect.left) / rect.width;
-    const relativeY = (params.event.clientY - rect.top) / rect.height;
-    if (isCollabThread(eventTarget)) {
-      Config.set("collab.isFeedbackMode", false);
-    } else if (config == null ? void 0 : config.collab.isFeedbackMode) {
-      generateThread(
-        { xpath, relativeX, relativeY },
-        {
-          isNewThread: true,
-          updateConfig: true
-        }
-      );
-    } else {
-      toggleCollabPopup({ threadUid: "", action: "close" });
-      Config.set("collab.isFeedbackMode", true);
-    }
-    return;
   }
   const eventDetails = getCsDataOfElement(params.event);
   sendMouseClickPostMessage(eventDetails);
@@ -82,6 +55,8 @@ async function handleBuilderInteraction(params) {
     return;
   }
   const { editableElement, fieldMetadata } = eventDetails;
+  const variantStatus = await getFieldVariantStatus(fieldMetadata);
+  const isVariant = variantStatus ? Object.values(variantStatus).some((value) => value === true) : false;
   cleanResidualsIfNeeded(params, editableElement);
   if (isEmptyBlockElement(editableElement)) {
     return;
@@ -91,7 +66,7 @@ async function handleBuilderInteraction(params) {
     return;
   }
   VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = editableElement;
-  addOverlayAndToolbar(params, eventDetails, editableElement);
+  addOverlayAndToolbar(params, eventDetails, editableElement, isVariant);
   const { cslpValue } = fieldMetadata;
   toggleHighlightedCommentIconDisplay(cslpValue, false);
   await handleFieldSchemaAndIndividualFields(
@@ -129,7 +104,7 @@ function isEmptyBlockElement(editableElement) {
 function isSameSelectedElement(previousSelectedElement, editableElement, params) {
   return !!(previousSelectedElement && previousSelectedElement === editableElement && !params.reEvaluate);
 }
-function addOverlayAndToolbar(params, eventDetails, editableElement) {
+function addOverlayAndToolbar(params, eventDetails, editableElement, isVariant) {
   addOverlay({
     overlayWrapper: params.overlayWrapper,
     resizeObserver: params.resizeObserver,
@@ -145,7 +120,8 @@ function addOverlayAndToolbar(params, eventDetails, editableElement) {
         focusedToolbar: params.focusedToolbar,
         resizeObserver: params.resizeObserver
       });
-    }
+    },
+    isVariant
   });
 }
 async function handleFieldSchemaAndIndividualFields(params, eventDetails, fieldMetadata, editableElement, previousSelectedElement) {

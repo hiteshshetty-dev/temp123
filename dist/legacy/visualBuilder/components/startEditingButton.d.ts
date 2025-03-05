@@ -1,7 +1,6 @@
-import { IConfigEditButtonBuilder } from '../../types/types.js';
-import '../types/collab.types.js';
+import { IConfigEditInVisualBuilderButton } from '../../types/types.js';
 
-type Position = NonNullable<IConfigEditButtonBuilder['position']>;
+type Position = NonNullable<IConfigEditInVisualBuilderButton['position']>;
 declare function getEditButtonPosition(position: any): Position;
 declare function StartEditingButtonComponent(): JSX.Element | null;
 

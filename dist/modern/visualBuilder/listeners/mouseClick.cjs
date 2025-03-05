@@ -45,11 +45,7 @@ var import_fieldSchemaMap = require("../utils/fieldSchemaMap.cjs");
 var import_isFieldDisabled = require("../utils/isFieldDisabled.cjs");
 var import_generateHighlightedComment = require("../generators/generateHighlightedComment.cjs");
 var import__2 = require("../../index.cjs");
-var import_get_xpath = __toESM(require("get-xpath"), 1);
-var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
-var import_generateThread = require("../generators/generateThread.cjs");
-var import_generateThread2 = require("../generators/generateThread.cjs");
-var import_generateThread3 = require("../generators/generateThread.cjs");
+var import_FieldRevertComponent = require("../components/FieldRevert/FieldRevertComponent.cjs");
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   (0, import_generateOverlay.addFocusOverlay)(
@@ -65,43 +61,20 @@ function addFocusedToolbar(params) {
   (0, import_generateToolbar.appendFocusedToolbar)(
     params.eventDetails,
     params.focusedToolbar,
-    params.hideOverlay
+    params.hideOverlay,
+    params.isVariant
   );
 }
 async function handleBuilderInteraction(params) {
   const eventTarget = params.event.target;
   const isAnchorElement = eventTarget instanceof HTMLAnchorElement;
   const elementHasCslp = eventTarget && (eventTarget.hasAttribute("data-cslp") || eventTarget.closest("[data-cslp]"));
-  if (eventTarget?.dataset["studio-ui"] === "true") {
+  if (eventTarget?.getAttribute("data-studio-ui") === "true") {
     return;
   }
   if (isAnchorElement || elementHasCslp && !eventTarget.closest(".visual-builder__empty-block")) {
     params.event.preventDefault();
     params.event.stopPropagation();
-  }
-  const config = import_configManager.default.get();
-  if (config?.collab.enable === true) {
-    if (config?.collab.pauseFeedback) return;
-    const xpath = (0, import_get_xpath.default)(eventTarget);
-    if (!eventTarget) return;
-    const rect = eventTarget.getBoundingClientRect();
-    const relativeX = (params.event.clientX - rect.left) / rect.width;
-    const relativeY = (params.event.clientY - rect.top) / rect.height;
-    if ((0, import_generateThread2.isCollabThread)(eventTarget)) {
-      import_configManager.default.set("collab.isFeedbackMode", false);
-    } else if (config?.collab.isFeedbackMode) {
-      (0, import_generateThread.generateThread)(
-        { xpath, relativeX, relativeY },
-        {
-          isNewThread: true,
-          updateConfig: true
-        }
-      );
-    } else {
-      (0, import_generateThread3.toggleCollabPopup)({ threadUid: "", action: "close" });
-      import_configManager.default.set("collab.isFeedbackMode", true);
-    }
-    return;
   }
   const eventDetails = (0, import_getCsDataOfElement.getCsDataOfElement)(params.event);
   sendMouseClickPostMessage(eventDetails);
@@ -109,6 +82,8 @@ async function handleBuilderInteraction(params) {
     return;
   }
   const { editableElement, fieldMetadata } = eventDetails;
+  const variantStatus = await (0, import_FieldRevertComponent.getFieldVariantStatus)(fieldMetadata);
+  const isVariant = variantStatus ? Object.values(variantStatus).some((value) => value === true) : false;
   cleanResidualsIfNeeded(params, editableElement);
   if (isEmptyBlockElement(editableElement)) {
     return;
@@ -118,7 +93,7 @@ async function handleBuilderInteraction(params) {
     return;
   }
   import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = editableElement;
-  addOverlayAndToolbar(params, eventDetails, editableElement);
+  addOverlayAndToolbar(params, eventDetails, editableElement, isVariant);
   const { cslpValue } = fieldMetadata;
   (0, import_generateHighlightedComment.toggleHighlightedCommentIconDisplay)(cslpValue, false);
   await handleFieldSchemaAndIndividualFields(
@@ -155,7 +130,7 @@ function isEmptyBlockElement(editableElement) {
 function isSameSelectedElement(previousSelectedElement, editableElement, params) {
   return !!(previousSelectedElement && previousSelectedElement === editableElement && !params.reEvaluate);
 }
-function addOverlayAndToolbar(params, eventDetails, editableElement) {
+function addOverlayAndToolbar(params, eventDetails, editableElement, isVariant) {
   addOverlay({
     overlayWrapper: params.overlayWrapper,
     resizeObserver: params.resizeObserver,
@@ -171,7 +146,8 @@ function addOverlayAndToolbar(params, eventDetails, editableElement) {
         focusedToolbar: params.focusedToolbar,
         resizeObserver: params.resizeObserver
       });
-    }
+    },
+    isVariant
   });
 }
 async function handleFieldSchemaAndIndividualFields(params, eventDetails, fieldMetadata, editableElement, previousSelectedElement) {

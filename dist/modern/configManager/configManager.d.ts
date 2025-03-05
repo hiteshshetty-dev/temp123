@@ -1,6 +1,5 @@
 import { DeepSignal } from 'deepsignal';
 import { IConfig, IInitData } from '../types/types.js';
-import '../visualBuilder/types/collab.types.js';
 
 declare class Config {
     static config: {

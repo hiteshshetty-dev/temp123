@@ -65,9 +65,9 @@ var handleInitData = (initData) => {
     position: ((_n = initData.editButton) == null ? void 0 : _n.position) ?? ((_o = stackSdk.live_preview) == null ? void 0 : _o.position) ?? config.editButton.position ?? "top",
     includeByQueryParameter: ((_p = initData.editButton) == null ? void 0 : _p.includeByQueryParameter) ?? ((_q = stackSdk.live_preview) == null ? void 0 : _q.includeByQueryParameter) ?? config.editButton.includeByQueryParameter ?? true
   });
-  Config.set("editButtonBuilder", {
-    enable: ((_r = initData.editButtonBuilder) == null ? void 0 : _r.enable) ?? ((_t = (_s = stackSdk.live_preview) == null ? void 0 : _s.editButtonBuilder) == null ? void 0 : _t.enable) ?? config.editButtonBuilder.enable,
-    position: ((_u = initData.editButtonBuilder) == null ? void 0 : _u.position) ?? ((_v = stackSdk.live_preview) == null ? void 0 : _v.position) ?? config.editButtonBuilder.position ?? "bottom-right"
+  Config.set("editInVisualBuilderButton", {
+    enable: ((_r = initData.editInVisualBuilderButton) == null ? void 0 : _r.enable) ?? ((_t = (_s = stackSdk.live_preview) == null ? void 0 : _s.editInVisualBuilderButton) == null ? void 0 : _t.enable) ?? config.editInVisualBuilderButton.enable,
+    position: ((_u = initData.editInVisualBuilderButton) == null ? void 0 : _u.position) ?? ((_v = stackSdk.live_preview) == null ? void 0 : _v.position) ?? config.editInVisualBuilderButton.position ?? "bottom-right"
   });
   handleClientUrlParams(
     initData.clientUrlParams ?? ((_w = stackSdk.live_preview) == null ? void 0 : _w.clientUrlParams) ?? config.clientUrlParams
