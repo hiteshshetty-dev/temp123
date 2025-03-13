@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/utils/handleIndividualFields.ts
 import { debounce, throttle } from "lodash-es";
@@ -25,6 +25,7 @@ import { FieldDataType } from "./types/index.types.js";
 import { getMultilinePlaintext } from "./getMultilinePlaintext.js";
 import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
 import visualBuilderPostMessage from "./visualBuilderPostMessage.js";
+import Config from "../../configManager/configManager.js";
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -206,6 +207,8 @@ function cleanIndividualFieldResidual(elements) {
   if (focusedToolbar) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [VisualBuilderPostMessageEvents.DELETE_INSTANCE, VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
+    const config = Config.get();
+    if (config?.collab?.enable) return;
     toolbarEvents.forEach((event) => {
       if (visualBuilderPostMessage?.requestMessageHandlers?.has(event)) {
         visualBuilderPostMessage?.unregisterEvent?.(event);

@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/listeners/index.ts
 import { VisualBuilder } from "../index.js";

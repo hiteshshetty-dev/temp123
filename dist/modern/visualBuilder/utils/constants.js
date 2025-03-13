@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/utils/constants.ts
 import { FieldDataType } from "./types/index.types.js";
@@ -34,6 +34,8 @@ var DEFAULT_MULTIPLE_FIELDS = [
   FieldDataType.BLOCK
 ];
 var unicodeNonBreakingSpace = "\xA0";
+var mentionLimit = 20;
+var maxMessageLength = 500;
 export {
   ALLOWED_INLINE_EDITABLE_FIELD,
   ALLOWED_MODAL_EDITABLE_FIELD,
@@ -46,6 +48,8 @@ export {
   TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
+  maxMessageLength,
+  mentionLimit,
   numericInputRegex,
   unicodeNonBreakingSpace
 };

@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/generators/generateOverlay.tsx
 import { extractDetailsFromCslp } from "../../cslp/cslpdata.js";

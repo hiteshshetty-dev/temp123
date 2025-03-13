@@ -49,6 +49,7 @@ var import_types = require("./types/index.types.cjs");
 var import_getMultilinePlaintext = require("./getMultilinePlaintext.cjs");
 var import_postMessage = require("./types/postMessage.types.cjs");
 var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -185,6 +186,7 @@ function isFieldMultiple(fieldSchema) {
   fieldSchema.field_metadata.ref_multiple);
 }
 function cleanIndividualFieldResidual(elements) {
+  var _a;
   const { overlayWrapper, visualBuilderContainer, focusedToolbar } = elements;
   (0, import_multipleElementAddButton.removeAddInstanceButtons)(
     {
@@ -230,9 +232,11 @@ function cleanIndividualFieldResidual(elements) {
   if (focusedToolbar) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
+    const config = import_configManager.default.get();
+    if ((_a = config == null ? void 0 : config.collab) == null ? void 0 : _a.enable) return;
     toolbarEvents.forEach((event) => {
-      var _a, _b, _c, _d;
-      if ((_b = (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
+      var _a2, _b, _c, _d;
+      if ((_b = (_a2 = import_visualBuilderPostMessage.default) == null ? void 0 : _a2.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
         (_d = (_c = import_visualBuilderPostMessage.default) == null ? void 0 : _c.unregisterEvent) == null ? void 0 : _d.call(_c, event);
       }
     });

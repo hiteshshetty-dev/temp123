@@ -1,4 +1,4 @@
-import "../chunk-5WRI5ZAA.js";
+import "../chunk-IKZWERSR.js";
 
 // src/preview/contentstack-live-preview-HOC.ts
 import { cloneDeep, isEmpty, pick } from "lodash-es";
@@ -191,7 +191,7 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
    * @returns The version of the SDK as a string.
    */
   static getSdkVersion() {
-    return "3.1.2";
+    return "3.2.0";
   }
 };
 _ContentstackLivePreview.previewConstructors = {};

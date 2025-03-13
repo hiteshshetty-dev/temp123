@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/livePreview/eventManager/postMessageEvent.hooks.ts
 import Config, { setConfigFromParams } from "../../configManager/configManager.js";
@@ -55,7 +55,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.1.2",
+        sdkVersion: "3.2.0",
         mode: Config.get().mode
       }
     }

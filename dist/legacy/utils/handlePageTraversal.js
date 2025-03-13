@@ -1,4 +1,4 @@
-import "../chunk-5WRI5ZAA.js";
+import "../chunk-IKZWERSR.js";
 
 // src/utils/handlePageTraversal.ts
 var handlePageTraversal = () => {

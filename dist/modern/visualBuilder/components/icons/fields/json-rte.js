@@ -1,4 +1,4 @@
-import "../../../../chunk-5WRI5ZAA.js";
+import "../../../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/components/icons/fields/json-rte.tsx
 import { jsx, jsxs } from "preact/jsx-runtime";

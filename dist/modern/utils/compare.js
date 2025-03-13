@@ -1,4 +1,4 @@
-import "../chunk-5WRI5ZAA.js";
+import "../chunk-IKZWERSR.js";
 
 // src/utils/compare.ts
 var DIFF_WRAPPER = "cs-compare";

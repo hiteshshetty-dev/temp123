@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/utils/insertSpaceAtCursor.ts
 import { unicodeNonBreakingSpace } from "./constants.js";

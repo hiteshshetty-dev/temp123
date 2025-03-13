@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/utils/handleIndividualFields.ts
 import { debounce, throttle } from "lodash-es";
@@ -25,6 +25,7 @@ import { FieldDataType } from "./types/index.types.js";
 import { getMultilinePlaintext } from "./getMultilinePlaintext.js";
 import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
 import visualBuilderPostMessage from "./visualBuilderPostMessage.js";
+import Config from "../../configManager/configManager.js";
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -161,6 +162,7 @@ function isFieldMultiple(fieldSchema) {
   fieldSchema.field_metadata.ref_multiple);
 }
 function cleanIndividualFieldResidual(elements) {
+  var _a;
   const { overlayWrapper, visualBuilderContainer, focusedToolbar } = elements;
   removeAddInstanceButtons(
     {
@@ -206,9 +208,11 @@ function cleanIndividualFieldResidual(elements) {
   if (focusedToolbar) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [VisualBuilderPostMessageEvents.DELETE_INSTANCE, VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
+    const config = Config.get();
+    if ((_a = config == null ? void 0 : config.collab) == null ? void 0 : _a.enable) return;
     toolbarEvents.forEach((event) => {
-      var _a, _b, _c, _d;
-      if ((_b = (_a = visualBuilderPostMessage) == null ? void 0 : _a.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
+      var _a2, _b, _c, _d;
+      if ((_b = (_a2 = visualBuilderPostMessage) == null ? void 0 : _a2.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
         (_d = (_c = visualBuilderPostMessage) == null ? void 0 : _c.unregisterEvent) == null ? void 0 : _d.call(_c, event);
       }
     });

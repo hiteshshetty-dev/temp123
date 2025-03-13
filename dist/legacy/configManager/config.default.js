@@ -1,4 +1,4 @@
-import "../chunk-5WRI5ZAA.js";
+import "../chunk-IKZWERSR.js";
 
 // src/configManager/config.default.ts
 import {
@@ -85,6 +85,21 @@ function getDefaultConfig() {
     },
     elements: {
       highlightedElement: null
+    },
+    collab: {
+      enable: false,
+      fromShare: false,
+      pauseFeedback: false,
+      isFeedbackMode: false,
+      inviteMetadata: {
+        currentUser: {
+          email: "",
+          uid: ""
+        },
+        users: [],
+        inviteUid: ""
+      },
+      payload: []
     }
   };
 }

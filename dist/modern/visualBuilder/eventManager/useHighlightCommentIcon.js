@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/eventManager/useHighlightCommentIcon.ts
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";

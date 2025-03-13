@@ -1,4 +1,4 @@
-import "../../chunk-5WRI5ZAA.js";
+import "../../chunk-IKZWERSR.js";
 
 // src/visualBuilder/listeners/mouseClick.ts
 import {
@@ -19,6 +19,12 @@ import { isFieldDisabled } from "../utils/isFieldDisabled.js";
 import { toggleHighlightedCommentIconDisplay } from "../generators/generateHighlightedComment.js";
 import { VB_EmptyBlockParentClass } from "../../index.js";
 import { getFieldVariantStatus } from "../components/FieldRevert/FieldRevertComponent.js";
+import getXPath from "get-xpath";
+import Config from "../../configManager/configManager.js";
+import { generateThread } from "../generators/generateThread.js";
+import { isCollabThread } from "../generators/generateThread.js";
+import { toggleCollabPopup } from "../generators/generateThread.js";
+import { fixSvgXPath } from "../utils/collabUtils.js";
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   addFocusOverlay(
@@ -48,6 +54,34 @@ async function handleBuilderInteraction(params) {
   if (isAnchorElement || elementHasCslp && !eventTarget.closest(".visual-builder__empty-block")) {
     params.event.preventDefault();
     params.event.stopPropagation();
+  }
+  const config = Config.get();
+  if (config?.collab.enable === true) {
+    if (config?.collab.pauseFeedback) return;
+    const xpath = fixSvgXPath(getXPath(eventTarget));
+    if (!eventTarget) return;
+    const rect = eventTarget.getBoundingClientRect();
+    const relativeX = (params.event.clientX - rect.left) / rect.width;
+    const relativeY = (params.event.clientY - rect.top) / rect.height;
+    if (!isCollabThread(eventTarget)) {
+      params.event.preventDefault();
+      params.event.stopPropagation();
+    }
+    if (isCollabThread(eventTarget)) {
+      Config.set("collab.isFeedbackMode", false);
+    } else if (config?.collab.isFeedbackMode) {
+      generateThread(
+        { xpath, relativeX, relativeY },
+        {
+          isNewThread: true,
+          updateConfig: true
+        }
+      );
+    } else {
+      toggleCollabPopup({ threadUid: "", action: "close" });
+      Config.set("collab.isFeedbackMode", true);
+    }
+    return;
   }
   const eventDetails = getCsDataOfElement(params.event);
   sendMouseClickPostMessage(eventDetails);

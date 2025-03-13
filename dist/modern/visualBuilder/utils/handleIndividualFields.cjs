@@ -49,6 +49,7 @@ var import_types = require("./types/index.types.cjs");
 var import_getMultilinePlaintext = require("./getMultilinePlaintext.cjs");
 var import_postMessage = require("./types/postMessage.types.cjs");
 var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -230,6 +231,8 @@ function cleanIndividualFieldResidual(elements) {
   if (focusedToolbar) {
     focusedToolbar.innerHTML = "";
     const toolbarEvents = [import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
+    const config = import_configManager.default.get();
+    if (config?.collab?.enable) return;
     toolbarEvents.forEach((event) => {
       if (import_visualBuilderPostMessage.default?.requestMessageHandlers?.has(event)) {
         import_visualBuilderPostMessage.default?.unregisterEvent?.(event);

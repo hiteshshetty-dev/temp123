@@ -1,4 +1,4 @@
-import "../chunk-5WRI5ZAA.js";
+import "../chunk-IKZWERSR.js";
 
 // src/visualBuilder/index.ts
 import { signal } from "@preact/signals";
@@ -40,8 +40,18 @@ import {
 } from "./utils/updateFocussedState.js";
 import { useHighlightCommentIcon } from "./eventManager/useHighlightCommentIcon.js";
 import { updateHighlightedCommentIconPosition } from "./generators/generateHighlightedComment.js";
+import { updateCollabIconPosition } from "./generators/generateThread.js";
+import { updatePopupPositions } from "./generators/generateThread.js";
 import { useRecalculateVariantDataCSLPValues } from "./eventManager/useRecalculateVariantDataCSLPValues.js";
 import { VB_EmptyBlockParentClass } from "../index.js";
+import { useCollab } from "./eventManager/useCollab.js";
+import {
+  handleMissingThreads,
+  processThreadsBatch,
+  filterUnrenderedThreads,
+  clearThreadStatus
+} from "./generators/generateThread.js";
+var threadsPayload = [];
 var _VisualBuilder = class _VisualBuilder {
   constructor() {
     this.customCursor = null;
@@ -49,11 +59,15 @@ var _VisualBuilder = class _VisualBuilder {
     this.visualBuilderContainer = null;
     this.focusedToolbar = null;
     this.scrollEventHandler = () => {
+      updateCollabIconPosition();
+      updatePopupPositions();
       updateHighlightedCommentIconPosition();
     };
     this.resizeEventHandler = () => {
       const previousSelectedEditableDOM = _VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
       updateHighlightedCommentIconPosition();
+      updateCollabIconPosition();
+      updatePopupPositions();
       if (previousSelectedEditableDOM) {
         this.handlePositionChange(
           previousSelectedEditableDOM
@@ -114,9 +128,7 @@ var _VisualBuilder = class _VisualBuilder {
             this.resizeObserver
           );
           const emptyBlockParents = Array.from(
-            document.querySelectorAll(
-              `.${VB_EmptyBlockParentClass}`
-            )
+            document.querySelectorAll(`.${VB_EmptyBlockParentClass}`)
           );
           const previousEmptyBlockParents = _VisualBuilder.VisualBuilderGlobalState.value.previousEmptyBlockParents;
           if (!isEqual(emptyBlockParents, previousEmptyBlockParents)) {
@@ -138,6 +150,30 @@ var _VisualBuilder = class _VisualBuilder {
         { trailing: true }
       )
     );
+    this.threadMutationObserver = new MutationObserver(
+      debounce(() => {
+        const container = document.querySelector(
+          ".visual-builder__container"
+        );
+        if (container && threadsPayload) {
+          const unrenderedThreads = filterUnrenderedThreads(threadsPayload);
+          if (unrenderedThreads.length > 0) {
+            processThreadsBatch(threadsPayload).then(
+              (missingThreadIds) => {
+                missingThreadIds.forEach(clearThreadStatus);
+                if (missingThreadIds.length > 0) {
+                  handleMissingThreads({
+                    payload: { isElementPresent: false },
+                    threadUids: missingThreadIds
+                  });
+                }
+              }
+            );
+          }
+          threadsPayload = [];
+        }
+      }, 1e3)
+    );
     // TODO: write test cases
     this.destroy = () => {
       window.removeEventListener("resize", this.resizeEventHandler);
@@ -152,6 +188,7 @@ var _VisualBuilder = class _VisualBuilder {
       });
       this.resizeObserver.disconnect();
       this.mutationObserver.disconnect();
+      this.threadMutationObserver.disconnect();
       _VisualBuilder.VisualBuilderGlobalState.value = {
         previousSelectedEditableDOM: null,
         previousHoveredTargetDOM: null,
@@ -207,13 +244,22 @@ var _VisualBuilder = class _VisualBuilder {
       var _a2, _b;
       const {
         windowType = ILivePreviewWindowType.BUILDER,
-        stackDetails
+        stackDetails,
+        collab
       } = data || {};
       Config.set("windowType", windowType);
       Config.set(
         "stackDetails.masterLocale",
         (stackDetails == null ? void 0 : stackDetails.masterLocale) || "en-us"
       );
+      if (collab) {
+        Config.set("collab.enable", collab.enable);
+        Config.set("collab.isFeedbackMode", collab.isFeedbackMode);
+        Config.set("collab.inviteMetadata", collab.inviteMetadata);
+      }
+      if (collab == null ? void 0 : collab.payload) {
+        threadsPayload = collab == null ? void 0 : collab.payload;
+      }
       addEventListeners({
         overlayWrapper: this.overlayWrapper,
         visualBuilderContainer: this.visualBuilderContainer,
@@ -222,36 +268,44 @@ var _VisualBuilder = class _VisualBuilder {
         resizeObserver: this.resizeObserver,
         customCursor: this.customCursor
       });
-      addKeyboardShortcuts({
-        overlayWrapper: this.overlayWrapper,
-        visualBuilderContainer: this.visualBuilderContainer,
-        focusedToolbar: this.focusedToolbar,
-        resizeObserver: this.resizeObserver
-      });
-      useScrollToField();
-      useHighlightCommentIcon();
-      this.mutationObserver.observe(document.body, {
+      this.threadMutationObserver.observe(document.body, {
         childList: true,
-        subtree: true
-      });
-      (_a2 = visualBuilderPostMessage) == null ? void 0 : _a2.on(
-        VisualBuilderPostMessageEvents.GET_ALL_ENTRIES_IN_CURRENT_PAGE,
-        getEntryIdentifiersInCurrentPage
-      );
-      (_b = visualBuilderPostMessage) == null ? void 0 : _b.send(
-        VisualBuilderPostMessageEvents.SEND_VARIANT_AND_LOCALE
-      );
-      useHideFocusOverlayPostMessageEvent({
-        overlayWrapper: this.overlayWrapper,
-        visualBuilderContainer: this.visualBuilderContainer,
-        focusedToolbar: this.focusedToolbar,
-        resizeObserver: this.resizeObserver
+        subtree: true,
+        attributes: false
       });
       useHistoryPostMessageEvent();
-      useOnEntryUpdatePostMessageEvent();
-      useRecalculateVariantDataCSLPValues();
-      useDraftFieldsPostMessageEvent();
-      useVariantFieldsPostMessageEvent();
+      useCollab();
+      if (windowType === ILivePreviewWindowType.BUILDER) {
+        addKeyboardShortcuts({
+          overlayWrapper: this.overlayWrapper,
+          visualBuilderContainer: this.visualBuilderContainer,
+          focusedToolbar: this.focusedToolbar,
+          resizeObserver: this.resizeObserver
+        });
+        useScrollToField();
+        useHighlightCommentIcon();
+        this.mutationObserver.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+        (_a2 = visualBuilderPostMessage) == null ? void 0 : _a2.on(
+          VisualBuilderPostMessageEvents.GET_ALL_ENTRIES_IN_CURRENT_PAGE,
+          getEntryIdentifiersInCurrentPage
+        );
+        (_b = visualBuilderPostMessage) == null ? void 0 : _b.send(
+          VisualBuilderPostMessageEvents.SEND_VARIANT_AND_LOCALE
+        );
+        useHideFocusOverlayPostMessageEvent({
+          overlayWrapper: this.overlayWrapper,
+          visualBuilderContainer: this.visualBuilderContainer,
+          focusedToolbar: this.focusedToolbar,
+          resizeObserver: this.resizeObserver
+        });
+        useOnEntryUpdatePostMessageEvent();
+        useRecalculateVariantDataCSLPValues();
+        useDraftFieldsPostMessageEvent();
+        useVariantFieldsPostMessageEvent();
+      }
     }).catch(() => {
       if (!inIframe()) {
         generateStartEditingButton(this.visualBuilderContainer);

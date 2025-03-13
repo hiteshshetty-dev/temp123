@@ -46,6 +46,12 @@ var import_isFieldDisabled = require("../utils/isFieldDisabled.cjs");
 var import_generateHighlightedComment = require("../generators/generateHighlightedComment.cjs");
 var import__2 = require("../../index.cjs");
 var import_FieldRevertComponent = require("../components/FieldRevert/FieldRevertComponent.cjs");
+var import_get_xpath = __toESM(require("get-xpath"), 1);
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
+var import_generateThread = require("../generators/generateThread.cjs");
+var import_generateThread2 = require("../generators/generateThread.cjs");
+var import_generateThread3 = require("../generators/generateThread.cjs");
+var import_collabUtils = require("../utils/collabUtils.cjs");
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   (0, import_generateOverlay.addFocusOverlay)(
@@ -75,6 +81,34 @@ async function handleBuilderInteraction(params) {
   if (isAnchorElement || elementHasCslp && !eventTarget.closest(".visual-builder__empty-block")) {
     params.event.preventDefault();
     params.event.stopPropagation();
+  }
+  const config = import_configManager.default.get();
+  if (config?.collab.enable === true) {
+    if (config?.collab.pauseFeedback) return;
+    const xpath = (0, import_collabUtils.fixSvgXPath)((0, import_get_xpath.default)(eventTarget));
+    if (!eventTarget) return;
+    const rect = eventTarget.getBoundingClientRect();
+    const relativeX = (params.event.clientX - rect.left) / rect.width;
+    const relativeY = (params.event.clientY - rect.top) / rect.height;
+    if (!(0, import_generateThread2.isCollabThread)(eventTarget)) {
+      params.event.preventDefault();
+      params.event.stopPropagation();
+    }
+    if ((0, import_generateThread2.isCollabThread)(eventTarget)) {
+      import_configManager.default.set("collab.isFeedbackMode", false);
+    } else if (config?.collab.isFeedbackMode) {
+      (0, import_generateThread.generateThread)(
+        { xpath, relativeX, relativeY },
+        {
+          isNewThread: true,
+          updateConfig: true
+        }
+      );
+    } else {
+      (0, import_generateThread3.toggleCollabPopup)({ threadUid: "", action: "close" });
+      import_configManager.default.set("collab.isFeedbackMode", true);
+    }
+    return;
   }
   const eventDetails = (0, import_getCsDataOfElement.getCsDataOfElement)(params.event);
   sendMouseClickPostMessage(eventDetails);
