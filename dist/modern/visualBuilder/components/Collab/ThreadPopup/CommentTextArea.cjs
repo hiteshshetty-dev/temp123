@@ -46,6 +46,7 @@ var CommentTextArea = import_compat.default.memo(
       state,
       error,
       showSuggestions,
+      cursorPosition,
       selectedIndex,
       filteredUsers,
       inputRef,
@@ -108,6 +109,14 @@ var CommentTextArea = import_compat.default.memo(
                           "collab-thread-body--input--textarea--suggestionsList",
                           (0, import_collab.collabStyles)()["collab-thread-body--input--textarea--suggestionsList"]
                         ),
+                        style: {
+                          ...cursorPosition.showAbove ? {
+                            bottom: `${window.innerHeight - (inputRef.current?.getBoundingClientRect().top || 0) - cursorPosition.top}px`,
+                            top: "auto"
+                          } : {
+                            top: `${(inputRef.current?.getBoundingClientRect().top || 0) + cursorPosition.top}px`
+                          }
+                        },
                         ref: listRef,
                         children: filteredUsers.map((user, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                           "li",

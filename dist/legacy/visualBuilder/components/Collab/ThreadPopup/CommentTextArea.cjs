@@ -42,10 +42,12 @@ var import_Tooltip = __toESM(require("../Tooltip/Tooltip.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
 var CommentTextArea = import_compat.default.memo(
   ({ userState, handleOnSaveRef, comment, onClose }) => {
+    var _a, _b;
     const {
       state,
       error,
       showSuggestions,
+      cursorPosition,
       selectedIndex,
       filteredUsers,
       inputRef,
@@ -108,6 +110,14 @@ var CommentTextArea = import_compat.default.memo(
                           "collab-thread-body--input--textarea--suggestionsList",
                           (0, import_collab.collabStyles)()["collab-thread-body--input--textarea--suggestionsList"]
                         ),
+                        style: {
+                          ...cursorPosition.showAbove ? {
+                            bottom: `${window.innerHeight - (((_a = inputRef.current) == null ? void 0 : _a.getBoundingClientRect().top) || 0) - cursorPosition.top}px`,
+                            top: "auto"
+                          } : {
+                            top: `${(((_b = inputRef.current) == null ? void 0 : _b.getBoundingClientRect().top) || 0) + cursorPosition.top}px`
+                          }
+                        },
                         ref: listRef,
                         children: filteredUsers.map((user, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                           "li",

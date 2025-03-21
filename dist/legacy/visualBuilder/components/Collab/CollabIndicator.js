@@ -1,7 +1,8 @@
-import "../../../chunk-IKZWERSR.js";
+import "../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/Collab/CollabIndicator.tsx
 import { collabStyles } from "../../collab.style.js";
+import { useState, useEffect } from "preact/hooks";
 import classNames from "classnames";
 import ThreadPopup from "./ThreadPopup/index.js";
 import Config from "../../../configManager/configManager.js";
@@ -11,9 +12,15 @@ import { handleEmptyThreads } from "../../generators/generateThread.js";
 import { iconComponents } from "../icons/CollabIcons.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 var CollabIndicator = (props) => {
-  var _a;
+  var _a, _b;
   const config = Config.get();
-  const inviteMetadata = (_a = config == null ? void 0 : config.collab) == null ? void 0 : _a.inviteMetadata;
+  const [inviteMetadata, setInviteMetadata] = useState(
+    (_a = config == null ? void 0 : config.collab) == null ? void 0 : _a.inviteMetadata
+  );
+  useEffect(() => {
+    var _a2;
+    setInviteMetadata((_a2 = config == null ? void 0 : config.collab) == null ? void 0 : _a2.inviteMetadata);
+  }, [(_b = config == null ? void 0 : config.collab) == null ? void 0 : _b.inviteMetadata]);
   const {
     buttonRef,
     popupRef,
@@ -36,9 +43,9 @@ var CollabIndicator = (props) => {
     deleteThread
   } = useCollabOperations();
   const handleClose = (isResolved = false) => {
-    var _a2, _b, _c;
+    var _a2, _b2, _c;
     if (isResolved) {
-      (_b = (_a2 = buttonRef.current) == null ? void 0 : _a2.closest("div[field-path]")) == null ? void 0 : _b.remove();
+      (_b2 = (_a2 = buttonRef.current) == null ? void 0 : _a2.closest("div[field-path]")) == null ? void 0 : _b2.remove();
     }
     handleEmptyThreads();
     setShowPopup(false);

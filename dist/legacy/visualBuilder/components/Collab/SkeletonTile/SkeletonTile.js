@@ -1,4 +1,4 @@
-import "../../../../chunk-IKZWERSR.js";
+import "../../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/Collab/SkeletonTile/SkeletonTile.tsx
 import { collabStyles } from "../../../collab.style.js";

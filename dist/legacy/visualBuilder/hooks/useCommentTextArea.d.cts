@@ -10,6 +10,7 @@ declare const useCommentTextArea: (userState: IUserState, comment: IMessageDTO |
     cursorPosition: {
         top: number;
         left: number;
+        showAbove: boolean;
     };
     selectedIndex: number;
     filteredUsers: IMentionList[];

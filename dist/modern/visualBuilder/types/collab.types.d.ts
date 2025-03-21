@@ -240,10 +240,13 @@ interface ICollabConfig {
 }
 interface IThreadIdentifier {
     threadUid: string;
+}
+interface IThreadRemove {
+    threadUids: string[];
     updateConfig?: boolean;
 }
 interface IThreadReopen {
     thread: IThreadDTO;
 }
 
-export type { IActiveThread, ICollabConfig, ICommentActionBar, ICommentCard, ICommentDTO, ICommentPayload, ICommentResolvedText, ICommentResponse, ICommentState, ICommentTextAreaProps, IDefaultAPIResponse, IDeleteCommentArgs, IDeleteThreadArgs, IEditCommentArgs, IErrorState, IFetchComments, IFetchCommentsResponse, IInviteMetadata, IMentionItem, IMentionList, IMentionedList, IMessageDTO, IThreadBody, IThreadContext, IThreadDTO, IThreadFooter, IThreadHeader, IThreadIdentifier, IThreadPayload, IThreadPopup, IThreadPopupState, IThreadRenderStatus, IThreadReopen, IThreadResolveArgs, IThreadResponseDTO, IUserDTO, IUserMap, IUserState, MissingThreadsInfo, toggleCollabPopupEvent };
+export type { IActiveThread, ICollabConfig, ICommentActionBar, ICommentCard, ICommentDTO, ICommentPayload, ICommentResolvedText, ICommentResponse, ICommentState, ICommentTextAreaProps, IDefaultAPIResponse, IDeleteCommentArgs, IDeleteThreadArgs, IEditCommentArgs, IErrorState, IFetchComments, IFetchCommentsResponse, IInviteMetadata, IMentionItem, IMentionList, IMentionedList, IMessageDTO, IThreadBody, IThreadContext, IThreadDTO, IThreadFooter, IThreadHeader, IThreadIdentifier, IThreadPayload, IThreadPopup, IThreadPopupState, IThreadRemove, IThreadRenderStatus, IThreadReopen, IThreadResolveArgs, IThreadResponseDTO, IUserDTO, IUserMap, IUserState, MissingThreadsInfo, toggleCollabPopupEvent };

@@ -1,4 +1,4 @@
-import "../../chunk-IKZWERSR.js";
+import "../../chunk-5WRI5ZAA.js";
 
 // src/timeline/timelinePostMessage/timelinePostMessage.constant.ts
 var TIMELINE_CHANNEL_ID = "timeline";

@@ -1,4 +1,4 @@
-import "../../chunk-IKZWERSR.js";
+import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/hooks/useCollabOperations.ts
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";

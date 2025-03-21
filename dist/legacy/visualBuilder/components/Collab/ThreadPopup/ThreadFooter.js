@@ -1,4 +1,4 @@
-import "../../../../chunk-IKZWERSR.js";
+import "../../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/Collab/ThreadPopup/ThreadFooter.tsx
 import { useState } from "preact/hooks";
@@ -48,7 +48,7 @@ var ThreadFooter = ({
             buttonType: "primary",
             onClick: onSubmit,
             testId: "thread-save-btn",
-            disabled: isDisabled,
+            disabled: isDisabled || loading,
             isLoading: loading,
             children: editComment === "" ? "Post" : "Update"
           }

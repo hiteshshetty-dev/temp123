@@ -1,4 +1,4 @@
-import "../../chunk-IKZWERSR.js";
+import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/hooks/useCommentTextArea.ts
 import {
@@ -30,7 +30,11 @@ var initialState = {
 var useCommentTextArea = (userState, comment, onClose) => {
   const [state, setState] = useState(initialState);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 });
+  const [cursorPosition, setCursorPosition] = useState({
+    top: 0,
+    left: 0,
+    showAbove: false
+  });
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -172,17 +176,23 @@ var useCommentTextArea = (userState, comment, onClose) => {
         textarea.offsetWidth - 200
       );
       document.body.removeChild(span);
-      const currentLineY = currentLineNumber * lineHeight + paddingTop;
+      const scrollTop = textarea.scrollTop;
+      const currentLineY = currentLineNumber * lineHeight + paddingTop - scrollTop;
       const nextLineY = currentLineY + lineHeight;
       const viewportHeight = window.innerHeight;
       const suggestionsHeight = 160;
-      const spaceBelow = viewportHeight - (textarea.getBoundingClientRect().top + nextLineY);
+      const textareaRect = textarea.getBoundingClientRect();
+      const absoluteTop = textareaRect.top + nextLineY;
+      const spaceBelow = viewportHeight - absoluteTop;
       const showAbove = spaceBelow < suggestionsHeight;
-      const top = showAbove ? currentLineY - suggestionsHeight : nextLineY;
+      const top = showAbove ? currentLineY : nextLineY;
       return {
         top,
         left,
-        showAbove
+        showAbove,
+        absoluteTop,
+        scrollTop,
+        currentLineNumber
       };
     },
     []
@@ -297,6 +307,13 @@ var useCommentTextArea = (userState, comment, onClose) => {
       calculatePosition
     ]
   );
+  useEffect(() => {
+    itemRefs.current[selectedIndex]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "nearest"
+    });
+  }, [selectedIndex]);
   const handleSubmit = useCallback(async () => {
     if (error.hasError) return;
     try {

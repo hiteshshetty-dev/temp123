@@ -1,9 +1,9 @@
 import {
   require_dist
-} from "../../chunk-4GEPZO45.js";
+} from "../../chunk-HLXJTSQ3.js";
 import {
   __toESM
-} from "../../chunk-IKZWERSR.js";
+} from "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/utils/visualBuilderPostMessage.ts
 var import_advanced_post_message = __toESM(require_dist(), 1);

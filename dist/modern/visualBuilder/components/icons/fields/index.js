@@ -1,4 +1,4 @@
-import "../../../../chunk-IKZWERSR.js";
+import "../../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/icons/fields/index.ts
 import { EditIcon } from "../index.js";

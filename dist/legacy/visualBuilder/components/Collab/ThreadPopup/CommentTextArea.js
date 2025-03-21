@@ -1,4 +1,4 @@
-import "../../../../chunk-IKZWERSR.js";
+import "../../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/Collab/ThreadPopup/CommentTextArea.tsx
 import React from "preact/compat";
@@ -10,10 +10,12 @@ import Tooltip from "../Tooltip/Tooltip.js";
 import { jsx, jsxs } from "preact/jsx-runtime";
 var CommentTextArea = React.memo(
   ({ userState, handleOnSaveRef, comment, onClose }) => {
+    var _a, _b;
     const {
       state,
       error,
       showSuggestions,
+      cursorPosition,
       selectedIndex,
       filteredUsers,
       inputRef,
@@ -76,6 +78,14 @@ var CommentTextArea = React.memo(
                           "collab-thread-body--input--textarea--suggestionsList",
                           collabStyles()["collab-thread-body--input--textarea--suggestionsList"]
                         ),
+                        style: {
+                          ...cursorPosition.showAbove ? {
+                            bottom: `${window.innerHeight - (((_a = inputRef.current) == null ? void 0 : _a.getBoundingClientRect().top) || 0) - cursorPosition.top}px`,
+                            top: "auto"
+                          } : {
+                            top: `${(((_b = inputRef.current) == null ? void 0 : _b.getBoundingClientRect().top) || 0) + cursorPosition.top}px`
+                          }
+                        },
                         ref: listRef,
                         children: filteredUsers.map((user, index) => /* @__PURE__ */ jsx(
                           "li",

@@ -34,6 +34,7 @@ __export(CollabIndicator_exports, {
 });
 module.exports = __toCommonJS(CollabIndicator_exports);
 var import_collab = require("../../collab.style.cjs");
+var import_hooks = require("preact/hooks");
 var import_classnames = __toESM(require("classnames"), 1);
 var import_ThreadPopup = __toESM(require("./ThreadPopup/index.cjs"), 1);
 var import_configManager = __toESM(require("../../../configManager/configManager.cjs"), 1);
@@ -44,7 +45,12 @@ var import_CollabIcons = require("../icons/CollabIcons.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 var CollabIndicator = (props) => {
   const config = import_configManager.default.get();
-  const inviteMetadata = config?.collab?.inviteMetadata;
+  const [inviteMetadata, setInviteMetadata] = (0, import_hooks.useState)(
+    config?.collab?.inviteMetadata
+  );
+  (0, import_hooks.useEffect)(() => {
+    setInviteMetadata(config?.collab?.inviteMetadata);
+  }, [config?.collab?.inviteMetadata]);
   const {
     buttonRef,
     popupRef,

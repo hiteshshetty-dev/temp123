@@ -78,11 +78,18 @@ var useCollab = () => {
     }
   );
   const collabPayload = import_visualBuilderPostMessage.default?.on(
-    import_postMessage.VisualBuilderPostMessageEvents.COLLAB_THREAD_PAYLOAD,
+    import_postMessage.VisualBuilderPostMessageEvents.COLLAB_DATA_UPDATE,
     (data) => {
       if (!config?.collab?.enable) return;
       if (!data?.data?.collab) {
         console.error("Invalid collab data structure:", data);
+        return;
+      }
+      if (data?.data?.collab?.inviteMetadata) {
+        import_configManager.default.set(
+          "collab.inviteMetadata",
+          data?.data?.collab?.inviteMetadata
+        );
         return;
       }
       const missingThreadIds = data?.data?.collab?.payload?.map((payload) => (0, import_generateThread2.generateThread)(payload)).filter((id) => id !== void 0) || [];
@@ -111,15 +118,17 @@ var useCollab = () => {
     }
   );
   const collabThreadRemove = import_visualBuilderPostMessage.default?.on(
-    import_postMessage.VisualBuilderPostMessageEvents.COLLAB_THREAD_REMOVE,
+    import_postMessage.VisualBuilderPostMessageEvents.COLLAB_THREADS_REMOVE,
     (data) => {
-      const threadUid = data?.data?.threadUid;
+      const threadUids = data?.data?.threadUids;
       if (!config?.collab?.enable) return;
       if (data?.data?.updateConfig) {
         import_configManager.default.set("collab.isFeedbackMode", true);
       }
-      if (threadUid) {
-        (0, import_generateThread.removeCollabIcon)(threadUid);
+      if (threadUids.length > 0) {
+        threadUids.forEach((threadUid) => {
+          (0, import_generateThread.removeCollabIcon)(threadUid);
+        });
       }
     }
   );

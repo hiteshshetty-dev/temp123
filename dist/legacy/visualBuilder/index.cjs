@@ -61,11 +61,10 @@ var import_updateFocussedState = require("./utils/updateFocussedState.cjs");
 var import_useHighlightCommentIcon = require("./eventManager/useHighlightCommentIcon.cjs");
 var import_generateHighlightedComment = require("./generators/generateHighlightedComment.cjs");
 var import_generateThread = require("./generators/generateThread.cjs");
-var import_generateThread2 = require("./generators/generateThread.cjs");
 var import_useRecalculateVariantDataCSLPValues = require("./eventManager/useRecalculateVariantDataCSLPValues.cjs");
 var import__ = require("../index.cjs");
 var import_useCollab = require("./eventManager/useCollab.cjs");
-var import_generateThread3 = require("./generators/generateThread.cjs");
+var import_generateThread2 = require("./generators/generateThread.cjs");
 var threadsPayload = [];
 var _VisualBuilder = class _VisualBuilder {
   constructor() {
@@ -75,14 +74,16 @@ var _VisualBuilder = class _VisualBuilder {
     this.focusedToolbar = null;
     this.scrollEventHandler = () => {
       (0, import_generateThread.updateCollabIconPosition)();
-      (0, import_generateThread2.updatePopupPositions)();
+      (0, import_generateThread.updatePopupPositions)();
+      (0, import_generateThread.updateSuggestionListPosition)();
       (0, import_generateHighlightedComment.updateHighlightedCommentIconPosition)();
     };
     this.resizeEventHandler = () => {
       const previousSelectedEditableDOM = _VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
       (0, import_generateHighlightedComment.updateHighlightedCommentIconPosition)();
       (0, import_generateThread.updateCollabIconPosition)();
-      (0, import_generateThread2.updatePopupPositions)();
+      (0, import_generateThread.updatePopupPositions)();
+      (0, import_generateThread.updateSuggestionListPosition)();
       if (previousSelectedEditableDOM) {
         this.handlePositionChange(
           previousSelectedEditableDOM
@@ -171,13 +172,13 @@ var _VisualBuilder = class _VisualBuilder {
           ".visual-builder__container"
         );
         if (container && threadsPayload) {
-          const unrenderedThreads = (0, import_generateThread3.filterUnrenderedThreads)(threadsPayload);
+          const unrenderedThreads = (0, import_generateThread2.filterUnrenderedThreads)(threadsPayload);
           if (unrenderedThreads.length > 0) {
-            (0, import_generateThread3.processThreadsBatch)(threadsPayload).then(
+            (0, import_generateThread2.processThreadsBatch)(threadsPayload).then(
               (missingThreadIds) => {
-                missingThreadIds.forEach(import_generateThread3.clearThreadStatus);
+                missingThreadIds.forEach(import_generateThread2.clearThreadStatus);
                 if (missingThreadIds.length > 0) {
-                  (0, import_generateThread3.handleMissingThreads)({
+                  (0, import_generateThread2.handleMissingThreads)({
                     payload: { isElementPresent: false },
                     threadUids: missingThreadIds
                   });

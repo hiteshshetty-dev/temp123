@@ -1,4 +1,4 @@
-import "../../../chunk-IKZWERSR.js";
+import "../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/icons/CollabIcons.tsx
 import { jsx, jsxs } from "preact/jsx-runtime";

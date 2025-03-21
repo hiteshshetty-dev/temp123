@@ -1,21 +1,15 @@
-import "../../../../chunk-IKZWERSR.js";
+import "../../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/Collab/ThreadPopup/CommentResolvedText.tsx
 import { useMemo } from "preact/hooks";
-import {
-  getMessageWithDisplayName,
-  sanitizeData
-} from "../../../utils/collabUtils.js";
+import { getMessageWithDisplayName } from "../../../utils/collabUtils.js";
 import { collabStyles } from "../../../collab.style.js";
 import classNames from "classnames";
 import { jsx } from "preact/jsx-runtime";
 var CommentResolvedText = ({ comment, userState }) => {
-  const text = useMemo(() => {
-    return getMessageWithDisplayName(comment, userState, "html");
-  }, [comment.message, userState.userMap, comment.toUsers]);
   const sanitizedText = useMemo(() => {
-    return sanitizeData(text);
-  }, [text]);
+    return getMessageWithDisplayName(comment, userState, "html") ?? "";
+  }, [comment.message, userState.userMap, comment.toUsers]);
   return /* @__PURE__ */ jsx(
     "div",
     {

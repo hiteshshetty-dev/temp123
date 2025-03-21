@@ -50,7 +50,11 @@ var initialState = {
 var useCommentTextArea = (userState, comment, onClose) => {
   const [state, setState] = (0, import_hooks.useState)(initialState);
   const [showSuggestions, setShowSuggestions] = (0, import_hooks.useState)(false);
-  const [cursorPosition, setCursorPosition] = (0, import_hooks.useState)({ top: 0, left: 0 });
+  const [cursorPosition, setCursorPosition] = (0, import_hooks.useState)({
+    top: 0,
+    left: 0,
+    showAbove: false
+  });
   const [searchTerm, setSearchTerm] = (0, import_hooks.useState)("");
   const [selectedIndex, setSelectedIndex] = (0, import_hooks.useState)(0);
   const [filteredUsers, setFilteredUsers] = (0, import_hooks.useState)([]);
@@ -193,17 +197,23 @@ var useCommentTextArea = (userState, comment, onClose) => {
         textarea.offsetWidth - 200
       );
       document.body.removeChild(span);
-      const currentLineY = currentLineNumber * lineHeight + paddingTop;
+      const scrollTop = textarea.scrollTop;
+      const currentLineY = currentLineNumber * lineHeight + paddingTop - scrollTop;
       const nextLineY = currentLineY + lineHeight;
       const viewportHeight = window.innerHeight;
       const suggestionsHeight = 160;
-      const spaceBelow = viewportHeight - (textarea.getBoundingClientRect().top + nextLineY);
+      const textareaRect = textarea.getBoundingClientRect();
+      const absoluteTop = textareaRect.top + nextLineY;
+      const spaceBelow = viewportHeight - absoluteTop;
       const showAbove = spaceBelow < suggestionsHeight;
-      const top = showAbove ? currentLineY - suggestionsHeight : nextLineY;
+      const top = showAbove ? currentLineY : nextLineY;
       return {
         top,
         left,
-        showAbove
+        showAbove,
+        absoluteTop,
+        scrollTop,
+        currentLineNumber
       };
     },
     []
@@ -320,6 +330,14 @@ var useCommentTextArea = (userState, comment, onClose) => {
       calculatePosition
     ]
   );
+  (0, import_hooks.useEffect)(() => {
+    var _a;
+    (_a = itemRefs.current[selectedIndex]) == null ? void 0 : _a.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "nearest"
+    });
+  }, [selectedIndex]);
   const handleSubmit = (0, import_hooks.useCallback)(async () => {
     var _a;
     if (error.hasError) return;

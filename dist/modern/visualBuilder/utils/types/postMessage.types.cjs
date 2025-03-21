@@ -66,9 +66,9 @@ var VisualBuilderPostMessageEvents = /* @__PURE__ */ ((VisualBuilderPostMessageE
   VisualBuilderPostMessageEvents2["GET_LOCALE"] = "get-locale";
   VisualBuilderPostMessageEvents2["SEND_VARIANT_AND_LOCALE"] = "send-variant-and-locale";
   VisualBuilderPostMessageEvents2["COLLAB_ENABLE"] = "collab-enable";
-  VisualBuilderPostMessageEvents2["COLLAB_THREAD_PAYLOAD"] = "collab-thread-payload";
+  VisualBuilderPostMessageEvents2["COLLAB_DATA_UPDATE"] = "collab-data-update";
   VisualBuilderPostMessageEvents2["COLLAB_DISABLE"] = "collab-disable";
-  VisualBuilderPostMessageEvents2["COLLAB_THREAD_REMOVE"] = "collab-thread-remove";
+  VisualBuilderPostMessageEvents2["COLLAB_THREADS_REMOVE"] = "collab-threads-remove";
   VisualBuilderPostMessageEvents2["COLLAB_THREAD_REOPEN"] = "collab-thread-reopen";
   VisualBuilderPostMessageEvents2["COLLAB_THREAD_HIGHLIGHT"] = "collab-thread-highlight";
   return VisualBuilderPostMessageEvents2;

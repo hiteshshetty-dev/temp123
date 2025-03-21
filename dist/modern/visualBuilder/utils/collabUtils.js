@@ -1,4 +1,4 @@
-import "../../chunk-IKZWERSR.js";
+import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/utils/collabUtils.ts
 import { maxMessageLength, mentionLimit } from "./constants.js";
@@ -33,7 +33,7 @@ var filterOutInvalidMentions = (message, toUsers) => {
 };
 var getMessageWithDisplayName = (comment, userState, profile) => {
   if (!comment) return void 0;
-  let tempText = comment.message;
+  let tempText = sanitizeData(comment.message).replace(/<[^>]*>/g, "");
   comment?.toUsers?.forEach((user) => {
     const userPattern = new RegExp(`{{${user}}}`, "g");
     const userData = userState.userMap[user];
@@ -46,7 +46,7 @@ var sanitizeData = (dirty) => {
   return DOMPurify.sanitize(dirty, { USE_PROFILES: { html: true } });
 };
 var getCommentBody = (state) => {
-  let finalMessage = state.message.replace(/[^\S\r\n]+/g, " ").replace(/ *\n */g, "\n").trim();
+  let finalMessage = sanitizeData(state.message).replace(/[^\S\r\n]+/g, " ").replace(/ *\n */g, "\n").replace(/<[^>]*>/g, "").trim();
   const comment = {
     message: finalMessage,
     toUsers: [],

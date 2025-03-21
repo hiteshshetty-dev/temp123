@@ -1,7 +1,8 @@
-import "../../../chunk-IKZWERSR.js";
+import "../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/Collab/CollabIndicator.tsx
 import { collabStyles } from "../../collab.style.js";
+import { useState, useEffect } from "preact/hooks";
 import classNames from "classnames";
 import ThreadPopup from "./ThreadPopup/index.js";
 import Config from "../../../configManager/configManager.js";
@@ -12,7 +13,12 @@ import { iconComponents } from "../icons/CollabIcons.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 var CollabIndicator = (props) => {
   const config = Config.get();
-  const inviteMetadata = config?.collab?.inviteMetadata;
+  const [inviteMetadata, setInviteMetadata] = useState(
+    config?.collab?.inviteMetadata
+  );
+  useEffect(() => {
+    setInviteMetadata(config?.collab?.inviteMetadata);
+  }, [config?.collab?.inviteMetadata]);
   const {
     buttonRef,
     popupRef,

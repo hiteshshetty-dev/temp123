@@ -1,4 +1,4 @@
-import "../../chunk-IKZWERSR.js";
+import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/utils/getCsDataOfElement.ts
 import { extractDetailsFromCslp } from "../../cslp/cslpdata.js";

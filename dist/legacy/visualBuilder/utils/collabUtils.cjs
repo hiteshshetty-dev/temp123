@@ -75,7 +75,7 @@ var filterOutInvalidMentions = (message, toUsers) => {
 var getMessageWithDisplayName = (comment, userState, profile) => {
   var _a;
   if (!comment) return void 0;
-  let tempText = comment.message;
+  let tempText = sanitizeData(comment.message).replace(/<[^>]*>/g, "");
   (_a = comment == null ? void 0 : comment.toUsers) == null ? void 0 : _a.forEach((user) => {
     const userPattern = new RegExp(`{{${user}}}`, "g");
     const userData = userState.userMap[user];
@@ -89,7 +89,7 @@ var sanitizeData = (dirty) => {
 };
 var getCommentBody = (state) => {
   var _a;
-  let finalMessage = state.message.replace(/[^\S\r\n]+/g, " ").replace(/ *\n */g, "\n").trim();
+  let finalMessage = sanitizeData(state.message).replace(/[^\S\r\n]+/g, " ").replace(/ *\n */g, "\n").replace(/<[^>]*>/g, "").trim();
   const comment = {
     message: finalMessage,
     toUsers: [],

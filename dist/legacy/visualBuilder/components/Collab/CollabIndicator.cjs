@@ -34,6 +34,7 @@ __export(CollabIndicator_exports, {
 });
 module.exports = __toCommonJS(CollabIndicator_exports);
 var import_collab = require("../../collab.style.cjs");
+var import_hooks = require("preact/hooks");
 var import_classnames = __toESM(require("classnames"), 1);
 var import_ThreadPopup = __toESM(require("./ThreadPopup/index.cjs"), 1);
 var import_configManager = __toESM(require("../../../configManager/configManager.cjs"), 1);
@@ -43,9 +44,15 @@ var import_generateThread = require("../../generators/generateThread.cjs");
 var import_CollabIcons = require("../icons/CollabIcons.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 var CollabIndicator = (props) => {
-  var _a;
+  var _a, _b;
   const config = import_configManager.default.get();
-  const inviteMetadata = (_a = config == null ? void 0 : config.collab) == null ? void 0 : _a.inviteMetadata;
+  const [inviteMetadata, setInviteMetadata] = (0, import_hooks.useState)(
+    (_a = config == null ? void 0 : config.collab) == null ? void 0 : _a.inviteMetadata
+  );
+  (0, import_hooks.useEffect)(() => {
+    var _a2;
+    setInviteMetadata((_a2 = config == null ? void 0 : config.collab) == null ? void 0 : _a2.inviteMetadata);
+  }, [(_b = config == null ? void 0 : config.collab) == null ? void 0 : _b.inviteMetadata]);
   const {
     buttonRef,
     popupRef,
@@ -68,9 +75,9 @@ var CollabIndicator = (props) => {
     deleteThread
   } = (0, import_useCollabOperations.useCollabOperations)();
   const handleClose = (isResolved = false) => {
-    var _a2, _b, _c;
+    var _a2, _b2, _c;
     if (isResolved) {
-      (_b = (_a2 = buttonRef.current) == null ? void 0 : _a2.closest("div[field-path]")) == null ? void 0 : _b.remove();
+      (_b2 = (_a2 = buttonRef.current) == null ? void 0 : _a2.closest("div[field-path]")) == null ? void 0 : _b2.remove();
     }
     (0, import_generateThread.handleEmptyThreads)();
     setShowPopup(false);

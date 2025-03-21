@@ -39,12 +39,9 @@ var import_collab = require("../../../collab.style.cjs");
 var import_classnames = __toESM(require("classnames"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
 var CommentResolvedText = ({ comment, userState }) => {
-  const text = (0, import_hooks.useMemo)(() => {
-    return (0, import_collabUtils.getMessageWithDisplayName)(comment, userState, "html");
-  }, [comment.message, userState.userMap, comment.toUsers]);
   const sanitizedText = (0, import_hooks.useMemo)(() => {
-    return (0, import_collabUtils.sanitizeData)(text);
-  }, [text]);
+    return (0, import_collabUtils.getMessageWithDisplayName)(comment, userState, "html") ?? "";
+  }, [comment.message, userState.userMap, comment.toUsers]);
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",
     {

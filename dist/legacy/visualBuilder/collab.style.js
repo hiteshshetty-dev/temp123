@@ -1,4 +1,4 @@
-import "../chunk-IKZWERSR.js";
+import "../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/collab.style.ts
 import { css, keyframes } from "goober";
@@ -547,6 +547,7 @@ function collabStyles() {
             resize: vertical;
             border-radius: 4px;
             border: 0.0625rem solid #dde3ee;
+            line-height: 1.375rem;
             color: #222222;
             padding: 0.5rem 1rem;
             max-height: 6.25rem;

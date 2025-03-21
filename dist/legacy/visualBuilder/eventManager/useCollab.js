@@ -1,4 +1,4 @@
-import "../../chunk-IKZWERSR.js";
+import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/eventManager/useCollab.ts
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
@@ -57,15 +57,22 @@ var useCollab = () => {
     }
   );
   const collabPayload = (_b = visualBuilderPostMessage) == null ? void 0 : _b.on(
-    VisualBuilderPostMessageEvents.COLLAB_THREAD_PAYLOAD,
+    VisualBuilderPostMessageEvents.COLLAB_DATA_UPDATE,
     (data) => {
-      var _a2, _b2, _c2, _d2, _e2;
+      var _a2, _b2, _c2, _d2, _e2, _f2, _g, _h, _i;
       if (!((_a2 = config == null ? void 0 : config.collab) == null ? void 0 : _a2.enable)) return;
       if (!((_b2 = data == null ? void 0 : data.data) == null ? void 0 : _b2.collab)) {
         console.error("Invalid collab data structure:", data);
         return;
       }
-      const missingThreadIds = ((_e2 = (_d2 = (_c2 = data == null ? void 0 : data.data) == null ? void 0 : _c2.collab) == null ? void 0 : _d2.payload) == null ? void 0 : _e2.map((payload) => generateThread(payload)).filter((id) => id !== void 0)) || [];
+      if ((_d2 = (_c2 = data == null ? void 0 : data.data) == null ? void 0 : _c2.collab) == null ? void 0 : _d2.inviteMetadata) {
+        Config.set(
+          "collab.inviteMetadata",
+          (_f2 = (_e2 = data == null ? void 0 : data.data) == null ? void 0 : _e2.collab) == null ? void 0 : _f2.inviteMetadata
+        );
+        return;
+      }
+      const missingThreadIds = ((_i = (_h = (_g = data == null ? void 0 : data.data) == null ? void 0 : _g.collab) == null ? void 0 : _h.payload) == null ? void 0 : _i.map((payload) => generateThread(payload)).filter((id) => id !== void 0)) || [];
       if (missingThreadIds.length > 0) {
         handleMissingThreads({
           payload: { isElementPresent: false },
@@ -92,16 +99,18 @@ var useCollab = () => {
     }
   );
   const collabThreadRemove = (_d = visualBuilderPostMessage) == null ? void 0 : _d.on(
-    VisualBuilderPostMessageEvents.COLLAB_THREAD_REMOVE,
+    VisualBuilderPostMessageEvents.COLLAB_THREADS_REMOVE,
     (data) => {
       var _a2, _b2, _c2;
-      const threadUid = (_a2 = data == null ? void 0 : data.data) == null ? void 0 : _a2.threadUid;
+      const threadUids = (_a2 = data == null ? void 0 : data.data) == null ? void 0 : _a2.threadUids;
       if (!((_b2 = config == null ? void 0 : config.collab) == null ? void 0 : _b2.enable)) return;
       if ((_c2 = data == null ? void 0 : data.data) == null ? void 0 : _c2.updateConfig) {
         Config.set("collab.isFeedbackMode", true);
       }
-      if (threadUid) {
-        removeCollabIcon(threadUid);
+      if (threadUids.length > 0) {
+        threadUids.forEach((threadUid) => {
+          removeCollabIcon(threadUid);
+        });
       }
     }
   );

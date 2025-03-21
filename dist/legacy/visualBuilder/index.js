@@ -1,4 +1,4 @@
-import "../chunk-IKZWERSR.js";
+import "../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/index.ts
 import { signal } from "@preact/signals";
@@ -40,8 +40,11 @@ import {
 } from "./utils/updateFocussedState.js";
 import { useHighlightCommentIcon } from "./eventManager/useHighlightCommentIcon.js";
 import { updateHighlightedCommentIconPosition } from "./generators/generateHighlightedComment.js";
-import { updateCollabIconPosition } from "./generators/generateThread.js";
-import { updatePopupPositions } from "./generators/generateThread.js";
+import {
+  updateCollabIconPosition,
+  updatePopupPositions,
+  updateSuggestionListPosition
+} from "./generators/generateThread.js";
 import { useRecalculateVariantDataCSLPValues } from "./eventManager/useRecalculateVariantDataCSLPValues.js";
 import { VB_EmptyBlockParentClass } from "../index.js";
 import { useCollab } from "./eventManager/useCollab.js";
@@ -61,6 +64,7 @@ var _VisualBuilder = class _VisualBuilder {
     this.scrollEventHandler = () => {
       updateCollabIconPosition();
       updatePopupPositions();
+      updateSuggestionListPosition();
       updateHighlightedCommentIconPosition();
     };
     this.resizeEventHandler = () => {
@@ -68,6 +72,7 @@ var _VisualBuilder = class _VisualBuilder {
       updateHighlightedCommentIconPosition();
       updateCollabIconPosition();
       updatePopupPositions();
+      updateSuggestionListPosition();
       if (previousSelectedEditableDOM) {
         this.handlePositionChange(
           previousSelectedEditableDOM
