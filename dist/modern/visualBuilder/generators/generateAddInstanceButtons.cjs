@@ -38,8 +38,11 @@ var import_preact = require("preact");
 var import_addInstanceButton = __toESM(require("../components/addInstanceButton.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
 function generateAddInstanceButton({
-  fieldSchema,
   value,
+  fieldSchema,
+  fieldMetadata,
+  index,
+  loading,
   onClick,
   label
 }) {
@@ -48,10 +51,13 @@ function generateAddInstanceButton({
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       import_addInstanceButton.default,
       {
+        loading,
+        index,
         value,
         label,
         onClick,
-        fieldSchema
+        fieldSchema,
+        fieldMetadata
       }
     ),
     wrapper

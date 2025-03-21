@@ -110,7 +110,11 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
     } else {
       _ContentstackLivePreview.onEntryChangeCallbacks[callbackUid] = onChangeCallback;
     }
-    if (!skipInitialRender) {
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const hasLivePreviewHash = searchParams && searchParams.has("live_preview");
+    const isBuilder = searchParams && searchParams.has("builder");
+    const shouldCallCallback = hasLivePreviewHash && isBuilder;
+    if (!skipInitialRender || shouldCallCallback) {
       onChangeCallback();
     }
     return callbackUid;
@@ -191,7 +195,7 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
    * @returns The version of the SDK as a string.
    */
   static getSdkVersion() {
-    return "3.2.0";
+    return "3.1.2";
   }
 };
 _ContentstackLivePreview.previewConstructors = {};

@@ -12,9 +12,6 @@ import { VisualBuilder } from "../index.js";
 import { addHoverOutline } from "../generators/generateHoverOutline.js";
 import { visualBuilderStyles } from "../visualBuilder.style.js";
 import { VB_EmptyBlockParentClass } from "../../index.js";
-import Config from "../../configManager/configManager.js";
-import { isCollabThread } from "../generators/generateThread.js";
-var config = Config.get();
 function resetCustomCursor(customCursor) {
   if (customCursor) {
     generateCustomCursor({
@@ -22,13 +19,6 @@ function resetCustomCursor(customCursor) {
       customCursor
     });
   }
-}
-function collabCustomCursor(customCursor) {
-  if (!customCursor) return;
-  generateCustomCursor({
-    fieldType: "discussion",
-    customCursor
-  });
 }
 function handleCursorPosition(event, customCursor) {
   if (customCursor) {
@@ -78,8 +68,6 @@ function hideCustomCursor(customCursor) {
 }
 function showCustomCursor(customCursor) {
   hideDefaultCursor();
-  if (config.collab.enable && (!config.collab.isFeedbackMode || config.collab.pauseFeedback))
-    return;
   customCursor?.classList.add("visible");
 }
 function isOverlay(target) {
@@ -94,29 +82,18 @@ async function handleMouseHover(params) {
   throttle(async (params2) => {
     const eventDetails = getCsDataOfElement(params2.event);
     const eventTarget = params2.event.target;
-    if (config?.collab.enable && config?.collab.pauseFeedback) {
-      hideCustomCursor(params2.customCursor);
-      return;
-    }
     if (!eventDetails) {
-      if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget) || isCollabThread(eventTarget))) {
-        handleCursorPosition(params2.event, params2.customCursor);
+      if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget))) {
         hideCustomCursor(params2.customCursor);
         return;
       }
-      if (!config?.collab.enable) {
-        resetCustomCursor(params2.customCursor);
-      }
+      resetCustomCursor(params2.customCursor);
       removeAddInstanceButtons({
         eventTarget: params2.event.target,
         visualBuilderContainer: params2.visualBuilderContainer,
         overlayWrapper: params2.overlayWrapper
       });
       handleCursorPosition(params2.event, params2.customCursor);
-      if (config?.collab.enable && config?.collab.isFeedbackMode) {
-        showCustomCursor(params2.customCursor);
-        collabCustomCursor(params2.customCursor);
-      }
       return;
     }
     const { editableElement, fieldMetadata } = eventDetails;
@@ -128,25 +105,13 @@ async function handleMouseHover(params) {
       return;
     }
     if (params2.customCursor) {
-      const elementUnderCursor = document.elementFromPoint(
-        params2.event.clientX,
-        params2.event.clientY
-      );
+      const elementUnderCursor = document.elementFromPoint(params2.event.clientX, params2.event.clientY);
       if (elementUnderCursor) {
         if (elementUnderCursor.nodeName === "A" || elementUnderCursor.nodeName === "BUTTON") {
           elementUnderCursor.classList.add(
             visualBuilderStyles()["visual-builder__no-cursor-style"]
           );
         }
-      }
-      if (config?.collab.enable && config?.collab.isFeedbackMode) {
-        collabCustomCursor(params2.customCursor);
-        handleCursorPosition(params2.event, params2.customCursor);
-        showCustomCursor(params2.customCursor);
-        return;
-      } else if (config?.collab.enable && !config?.collab.isFeedbackMode) {
-        hideCustomCursor(params2.customCursor);
-        return;
       }
       if (VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM !== editableElement) {
         resetCustomCursor(params2.customCursor);
@@ -181,7 +146,9 @@ async function handleMouseHover(params) {
       handleCursorPosition(params2.event, params2.customCursor);
       showCustomCursor(params2.customCursor);
     }
-    if (!editableElement.classList.contains(VB_EmptyBlockParentClass) && !editableElement.classList.contains("visual-builder__empty-block")) {
+    if (!editableElement.classList.contains(
+      VB_EmptyBlockParentClass
+    ) && !editableElement.classList.contains("visual-builder__empty-block")) {
       addOutline(editableElement);
       FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
         (fieldSchema) => {

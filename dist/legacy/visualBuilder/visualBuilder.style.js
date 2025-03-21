@@ -149,6 +149,13 @@ function visualBuilderStyles() {
             overflow: hidden;
             text-overflow: ellipsis;
         `,
+    "visual-builder__add-button--loading": css`
+            cursor: wait;
+            /* we have not-allowed on disabled, so we need this */
+            &:disabled {
+                cursor: wait;
+            }
+        `,
     "visual-builder__start-editing-btn": css`
             z-index: 1000;
             text-decoration: none;
@@ -665,7 +672,7 @@ var VisualBuilderGlobalStyles = `
        [data-cslp] [contenteditable="true"] {
             outline: none;
         }
-        
+
         @keyframes visual-builder__spinner {
             0% {
                 transform: rotate(0deg);

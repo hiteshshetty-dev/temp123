@@ -1,5 +1,4 @@
 import { IConfigEditInVisualBuilderButton } from '../../types/types.cjs';
-import '../types/collab.types.cjs';
 
 type Position = NonNullable<IConfigEditInVisualBuilderButton['position']>;
 declare function getEditButtonPosition(position: any): Position;

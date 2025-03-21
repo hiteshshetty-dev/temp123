@@ -1,9 +1,9 @@
 import { FieldDataType, ISchemaFieldMap } from '../utils/types/index.types.js';
 import '../../cms/types/contentTypeSchema.types.js';
 
-declare const FieldTypeIconsMap: Record<FieldDataType | "loading" | "empty" | "discussion", any>;
+declare const FieldTypeIconsMap: Record<FieldDataType | "loading" | "empty", any>;
 interface IGenerateCustomCursor {
-    fieldType: FieldDataType | "loading" | "empty" | "discussion";
+    fieldType: FieldDataType | "loading" | "empty";
     customCursor: HTMLDivElement;
     fieldDisabled?: boolean;
 }

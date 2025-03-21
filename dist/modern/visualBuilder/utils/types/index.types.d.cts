@@ -42,5 +42,10 @@ declare enum FieldDataType {
     GLOBAL_FIELD = "global_field",
     TAXONOMY = "taxonomy"
 }
+interface VisualBuilderEditContext {
+    visualBuilderContainer: HTMLDivElement;
+    resizeObserver: ResizeObserver;
+    lastEditedField: Element | null;
+}
 
-export { FieldDataType, type ISchemaFieldMap, type ISchemaIndividualFieldMap, type ITraverseSchemaVisitor };
+export { FieldDataType, type ISchemaFieldMap, type ISchemaIndividualFieldMap, type ITraverseSchemaVisitor, type VisualBuilderEditContext };

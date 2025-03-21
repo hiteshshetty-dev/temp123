@@ -1,16 +1,22 @@
 import { ISchemaFieldMap } from '../utils/types/index.types.js';
+import { CslpData } from '../../cslp/types/cslp.types.js';
+import { Signal } from '@preact/signals';
 import '../../cms/types/contentTypeSchema.types.js';
 
 /**
- * Generates a button element, when clicked, triggers the provided callback function.
+ * Generates a button element, when clicked, sends the add instance message and
+ * then calls the provided callback function.
  * @param onClickCallback - The function to be called when the button is clicked.
  * @returns The generated button element.
  */
-declare function generateAddInstanceButton({ fieldSchema, value, onClick, label, }: {
+declare function generateAddInstanceButton({ value, fieldSchema, fieldMetadata, index, loading, onClick, label, }: {
+    fieldSchema: ISchemaFieldMap | undefined;
     value: any;
+    fieldMetadata: CslpData;
+    index: number;
+    loading: Signal<boolean>;
     onClick: (event: MouseEvent) => void;
     label?: string | undefined;
-    fieldSchema: ISchemaFieldMap | undefined;
 }): HTMLButtonElement;
 /**
  * Returns an array of HTMLButtonElement instances that can be used to add new instances to the visual builder.

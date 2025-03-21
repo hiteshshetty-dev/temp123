@@ -1,5 +1,4 @@
 import { IEditButtonPosition } from '../../types/types.js';
-import '../../visualBuilder/types/collab.types.js';
 
 declare const createSingularEditButton: (editCallback: (e: MouseEvent) => void) => HTMLDivElement;
 declare const createMultipleEditButton: (editCallback: (e: MouseEvent) => void, linkCallback: (e: MouseEvent) => void) => HTMLDivElement;
