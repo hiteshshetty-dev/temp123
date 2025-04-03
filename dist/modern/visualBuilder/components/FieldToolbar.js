@@ -36,6 +36,7 @@ import {
   getFieldVariantStatus,
   VariantRevertDropdown
 } from "./FieldRevert/FieldRevertComponent.js";
+import { LoadingIcon } from "./icons/loading.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 var TOOLTIP_TOP_EDGE_BUFFER = 96;
 function handleReplaceAsset(fieldMetadata) {
@@ -68,22 +69,19 @@ function handleEdit(fieldMetadata) {
   );
 }
 function handleFormFieldFocus(eventDetails) {
-  const { editableElement, fieldMetadata, cslpData } = eventDetails;
-  visualBuilderPostMessage?.send(VisualBuilderPostMessageEvents.TOGGLE_FORM, {
-    fieldMetadata,
-    cslpData
-  }).then(() => {
-    visualBuilderPostMessage?.send(
-      VisualBuilderPostMessageEvents.FOCUS_FIELD,
-      {
-        DOMEditStack: getDOMEditStack(editableElement)
-      }
-    );
-  });
+  const { editableElement } = eventDetails;
+  return visualBuilderPostMessage?.send(
+    VisualBuilderPostMessageEvents.FOCUS_FIELD,
+    {
+      DOMEditStack: getDOMEditStack(editableElement),
+      toggleVisibility: true
+    }
+  );
 }
 function FieldToolbarComponent(props) {
   const { eventDetails, isVariant: isVariantOrParentOfVariant } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
+  const [isFormLoading, setIsFormLoading] = useState(false);
   const parentPath = fieldMetadata?.multipleFieldMetadata?.parentDetails?.parentCslpValue || "";
   const isVariant = !!fieldMetadata?.variant || isVariantOrParentOfVariant;
   const direction = getChildrenDirection(targetElement, parentPath);
@@ -108,12 +106,12 @@ function FieldToolbarComponent(props) {
     }
     fieldType = getFieldType(fieldSchema);
     isModalEditable = ALLOWED_MODAL_EDITABLE_FIELD.includes(fieldType);
-    isReplaceAllowed = ALLOWED_REPLACE_FIELDS.includes(fieldType);
     Icon = fieldIcons[fieldType];
     isMultiple = fieldSchema.multiple || false;
     if (fieldType === FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || fieldMetadata.multipleFieldMetadata?.index === -1);
+    isReplaceAllowed = ALLOWED_REPLACE_FIELDS.includes(fieldType) && !isWholeMultipleField;
   }
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ jsx(
@@ -180,14 +178,26 @@ function FieldToolbarComponent(props) {
         {
           "visual-builder__tooltip--bottom": invertTooltipPosition,
           [visualBuilderStyles()["visual-builder__tooltip--bottom"]]: invertTooltipPosition
+        },
+        {
+          [visualBuilderStyles()["visual-builder__button--comment-loader"]]: isFormLoading,
+          "visual-builder__button--comment-loader": isFormLoading
         }
       ),
       "data-tooltip": "Form",
       "data-testid": `visual-builder-form`,
-      onClick: (e) => {
-        handleFormFieldFocus(eventDetails);
+      onClick: async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsFormLoading(true);
+        try {
+          await handleFormFieldFocus(eventDetails);
+        } finally {
+          setIsFormLoading(false);
+        }
       },
-      children: /* @__PURE__ */ jsx(FormIcon, {})
+      disabled: isFormLoading,
+      children: isFormLoading ? /* @__PURE__ */ jsx(LoadingIcon, {}) : /* @__PURE__ */ jsx(FormIcon, {})
     }
   );
   const toggleVariantDropdown = () => {

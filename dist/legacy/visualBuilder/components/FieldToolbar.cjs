@@ -52,6 +52,7 @@ var import_icons2 = require("./icons/index.cjs");
 var import_getCsDataOfElement = require("../utils/getCsDataOfElement.cjs");
 var import_variant = require("./icons/variant.cjs");
 var import_FieldRevertComponent = require("./FieldRevert/FieldRevertComponent.cjs");
+var import_loading = require("./icons/loading.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 var TOOLTIP_TOP_EDGE_BUFFER = 96;
 function handleReplaceAsset(fieldMetadata) {
@@ -88,24 +89,20 @@ function handleEdit(fieldMetadata) {
 }
 function handleFormFieldFocus(eventDetails) {
   var _a;
-  const { editableElement, fieldMetadata, cslpData } = eventDetails;
-  (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.send(import_postMessage.VisualBuilderPostMessageEvents.TOGGLE_FORM, {
-    fieldMetadata,
-    cslpData
-  }).then(() => {
-    var _a2;
-    (_a2 = import_visualBuilderPostMessage.default) == null ? void 0 : _a2.send(
-      import_postMessage.VisualBuilderPostMessageEvents.FOCUS_FIELD,
-      {
-        DOMEditStack: (0, import_getCsDataOfElement.getDOMEditStack)(editableElement)
-      }
-    );
-  });
+  const { editableElement } = eventDetails;
+  return (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.send(
+    import_postMessage.VisualBuilderPostMessageEvents.FOCUS_FIELD,
+    {
+      DOMEditStack: (0, import_getCsDataOfElement.getDOMEditStack)(editableElement),
+      toggleVisibility: true
+    }
+  );
 }
 function FieldToolbarComponent(props) {
   var _a, _b, _c, _d, _e;
   const { eventDetails, isVariant: isVariantOrParentOfVariant } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
+  const [isFormLoading, setIsFormLoading] = (0, import_compat.useState)(false);
   const parentPath = ((_b = (_a = fieldMetadata == null ? void 0 : fieldMetadata.multipleFieldMetadata) == null ? void 0 : _a.parentDetails) == null ? void 0 : _b.parentCslpValue) || "";
   const isVariant = !!(fieldMetadata == null ? void 0 : fieldMetadata.variant) || isVariantOrParentOfVariant;
   const direction = (0, import_getChildrenDirection.default)(targetElement, parentPath);
@@ -130,12 +127,12 @@ function FieldToolbarComponent(props) {
     }
     fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
     isModalEditable = import_constants.ALLOWED_MODAL_EDITABLE_FIELD.includes(fieldType);
-    isReplaceAllowed = import_constants.ALLOWED_REPLACE_FIELDS.includes(fieldType);
     Icon = import_fields.fieldIcons[fieldType];
     isMultiple = fieldSchema.multiple || false;
     if (fieldType === import_types.FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || ((_c = fieldMetadata.multipleFieldMetadata) == null ? void 0 : _c.index) === -1);
+    isReplaceAllowed = import_constants.ALLOWED_REPLACE_FIELDS.includes(fieldType) && !isWholeMultipleField;
   }
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -202,14 +199,26 @@ function FieldToolbarComponent(props) {
         {
           "visual-builder__tooltip--bottom": invertTooltipPosition,
           [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip--bottom"]]: invertTooltipPosition
+        },
+        {
+          [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--comment-loader"]]: isFormLoading,
+          "visual-builder__button--comment-loader": isFormLoading
         }
       ),
       "data-tooltip": "Form",
       "data-testid": `visual-builder-form`,
-      onClick: (e) => {
-        handleFormFieldFocus(eventDetails);
+      onClick: async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsFormLoading(true);
+        try {
+          await handleFormFieldFocus(eventDetails);
+        } finally {
+          setIsFormLoading(false);
+        }
       },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.FormIcon, {})
+      disabled: isFormLoading,
+      children: isFormLoading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_loading.LoadingIcon, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.FormIcon, {})
     }
   );
   const toggleVariantDropdown = () => {

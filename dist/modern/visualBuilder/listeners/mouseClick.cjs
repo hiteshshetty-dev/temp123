@@ -72,6 +72,13 @@ async function handleBuilderInteraction(params) {
   if (eventTarget?.getAttribute("data-studio-ui") === "true") {
     return;
   }
+  if (params.event.altKey) {
+    if (isAnchorElement) {
+      params.event.preventDefault();
+      params.event.stopPropagation();
+    }
+    return;
+  }
   if (isAnchorElement || elementHasCslp && !eventTarget.closest(".visual-builder__empty-block")) {
     params.event.preventDefault();
     params.event.stopPropagation();
