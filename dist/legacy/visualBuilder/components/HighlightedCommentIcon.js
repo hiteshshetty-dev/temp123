@@ -4,9 +4,12 @@ import "../../chunk-5WRI5ZAA.js";
 import { HighlightCommentIcon } from "./icons/index.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
+import Config from "../../configManager/configManager.js";
+import { toggleCollabPopup } from "../generators/generateThread.js";
 import { jsx } from "preact/jsx-runtime";
 var HighlightedCommentIcon = (props) => {
   const { data } = props;
+  const config = Config.get();
   const handleCommentModal = async () => {
     var _a;
     (_a = visualBuilderPostMessage) == null ? void 0 : _a.send(
@@ -18,8 +21,10 @@ var HighlightedCommentIcon = (props) => {
         absolutePath: data.absolutePath
       }
     );
+    toggleCollabPopup({ threadUid: "", action: "close" });
+    Config.set("collab.isFeedbackMode", true);
   };
-  return /* @__PURE__ */ jsx("div", { onClick: handleCommentModal, children: /* @__PURE__ */ jsx(HighlightCommentIcon, {}) });
+  return /* @__PURE__ */ jsx("div", { className: "collab-icon", onClick: handleCommentModal, children: /* @__PURE__ */ jsx(HighlightCommentIcon, {}) });
 };
 var HighlightedCommentIcon_default = HighlightedCommentIcon;
 export {

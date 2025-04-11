@@ -21,6 +21,7 @@ declare class VisualBuilder {
     private resizeEventHandler;
     private resizeObserver;
     private mutationObserver;
+    private threadMutationObserver;
     constructor();
     destroy: () => void;
 }

@@ -31,6 +31,8 @@ __export(constants_exports, {
   TOP_EDGE_BUFFER: () => TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID: () => VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY: () => VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
+  maxMessageLength: () => maxMessageLength,
+  mentionLimit: () => mentionLimit,
   numericInputRegex: () => numericInputRegex,
   unicodeNonBreakingSpace: () => unicodeNonBreakingSpace
 });
@@ -68,6 +70,8 @@ var DEFAULT_MULTIPLE_FIELDS = [
   import_types.FieldDataType.BLOCK
 ];
 var unicodeNonBreakingSpace = "\xA0";
+var mentionLimit = 20;
+var maxMessageLength = 500;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   ALLOWED_INLINE_EDITABLE_FIELD,
@@ -81,6 +85,8 @@ var unicodeNonBreakingSpace = "\xA0";
   TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
+  maxMessageLength,
+  mentionLimit,
   numericInputRegex,
   unicodeNonBreakingSpace
 });

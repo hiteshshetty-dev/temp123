@@ -1,3 +1,5 @@
+import { ICollabConfig } from '../visualBuilder/types/collab.types.cjs';
+
 declare interface IEditEntrySearchParams {
     hash?: string;
     entry_uid?: string;
@@ -52,6 +54,7 @@ declare enum ILivePreviewModeConfig {
 }
 declare enum ILivePreviewWindowType {
     PREVIEW = "preview",
+    PREVIEW_SHARE = "preview-share",
     BUILDER = "builder",
     INDEPENDENT = "independent"
 }
@@ -76,6 +79,7 @@ declare interface IConfig {
     elements: {
         highlightedElement: HTMLElement | null;
     };
+    collab: ICollabConfig["collab"];
 }
 declare interface IConfigEditInVisualBuilderButton {
     enable: boolean;
@@ -115,6 +119,7 @@ interface IVisualBuilderInitEvent {
     stackDetails: {
         masterLocale: string;
     };
+    collab?: ICollabConfig["collab"];
 }
 type IExportedConfig = Pick<IConfig, "ssr" | "enable" | "cleanCslpOnProduction" | "stackDetails" | "clientUrlParams" | "windowType" | "hash" | "editButton" | "mode">;
 

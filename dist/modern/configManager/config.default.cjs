@@ -106,6 +106,21 @@ function getDefaultConfig() {
     },
     elements: {
       highlightedElement: null
+    },
+    collab: {
+      enable: false,
+      fromShare: false,
+      pauseFeedback: false,
+      isFeedbackMode: false,
+      inviteMetadata: {
+        currentUser: {
+          email: "",
+          uid: ""
+        },
+        users: [],
+        inviteUid: ""
+      },
+      payload: []
     }
   };
 }

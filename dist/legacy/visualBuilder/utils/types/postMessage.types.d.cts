@@ -18,6 +18,14 @@ declare enum VisualBuilderPostMessageEvents {
     MOVE_INSTANCE = "move-instance",
     GET_DISCUSSION_ID = "get-discussion-id-for-comment-modal",
     OPEN_FIELD_COMMENT_MODAL = "open-field-comment-modal",
+    COLLAB_CREATE_THREAD = "collab-create-thread",
+    COLLAB_CREATE_COMMENT = "collab-create-comment",
+    COLLAB_FETCH_COMMENTS = "collab-fetch-comments",
+    COLLAB_EDIT_COMMENT = "collab-edit-comment",
+    COLLAB_DELETE_COMMENT = "collab-delete-comment",
+    COLLAB_RESOLVE_THREAD = "collab-resolve-thread",
+    COLLAB_DELETE_THREAD = "collab-delete-thread",
+    COLLAB_MISSING_THREADS = "collab-missing-threads",
     GET_ALL_ENTRIES_IN_CURRENT_PAGE = "get-entries-in-current-page",
     HIDE_FOCUS_OVERLAY = "hide-focus-overlay",
     SHOW_DRAFT_FIELDS = "show-draft-fields",
@@ -31,7 +39,13 @@ declare enum VisualBuilderPostMessageEvents {
     REMOVE_HIGHLIGHTED_COMMENTS = "remove-highlighted-comments",
     GET_VARIANT_ID = "get-variant-id",
     GET_LOCALE = "get-locale",
-    SEND_VARIANT_AND_LOCALE = "send-variant-and-locale"
+    SEND_VARIANT_AND_LOCALE = "send-variant-and-locale",
+    COLLAB_ENABLE = "collab-enable",
+    COLLAB_DATA_UPDATE = "collab-data-update",
+    COLLAB_DISABLE = "collab-disable",
+    COLLAB_THREADS_REMOVE = "collab-threads-remove",
+    COLLAB_THREAD_REOPEN = "collab-thread-reopen",
+    COLLAB_THREAD_HIGHLIGHT = "collab-thread-highlight"
 }
 
 export { VisualBuilderPostMessageEvents };
