@@ -3,7 +3,7 @@ import "../chunk-5WRI5ZAA.js";
 // src/logger/logger.ts
 var PublicLogger = class {
   static logEvent(logCallback, message) {
-    if (process?.env?.NODE_ENV !== "test") {
+    if (typeof process !== "undefined" && process?.env?.NODE_ENV !== "test") {
       logCallback("Live_Preview_SDK:", ...message);
     }
   }

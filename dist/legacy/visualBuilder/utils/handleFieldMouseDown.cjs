@@ -60,7 +60,9 @@ function handleFieldKeyDown(e) {
   const fieldType = targetElement.getAttribute(
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
-  if (targetElement.tagName === "BUTTON") {
+  if (event.composedPath().some(
+    (element) => element instanceof Element && element.tagName === "BUTTON"
+  )) {
     handleKeyDownOnButton(event);
   }
   if (fieldType === import_types.FieldDataType.NUMBER) {
@@ -73,6 +75,7 @@ function handleKeyDownOnButton(e) {
   if (e.code === "Space" && e.target) {
     e.preventDefault();
     (0, import_insertSpaceAtCursor.insertSpaceAtCursor)(e.target);
+    throttledFieldSync();
   }
 }
 function handleSingleLineFieldKeyDown(e) {

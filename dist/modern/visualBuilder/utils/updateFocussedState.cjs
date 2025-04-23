@@ -78,10 +78,11 @@ function updateFocussedState({
   if (!visualBuilderContainer || !editableElement || !previousSelectedEditableDOM || !overlayWrapper) {
     return;
   }
-  const previousSelectedElementCslp = previousSelectedEditableDOM?.getAttribute("data-cslp");
+  const previousSelectedElementCslp = editableElement?.getAttribute("data-cslp") || "";
+  const previousSelectedElementCslpUniqueId = previousSelectedEditableDOM?.getAttribute("data-cslp-unique-id");
   const newPreviousSelectedElement = document.querySelector(
-    `[data-cslp="${previousSelectedElementCslp}"]`
-  );
+    `[data-cslp-unique-id="${previousSelectedElementCslpUniqueId}"]`
+  ) || document.querySelector(`[data-cslp="${previousSelectedElementCslp}"]`);
   if (!newPreviousSelectedElement && resizeObserver) {
     (0, import_generateOverlay.hideFocusOverlay)({
       visualBuilderOverlayWrapper: overlayWrapper,
@@ -112,8 +113,7 @@ function updateFocussedState({
     psuedoEditableElement.style.cssText = styleString;
     psuedoEditableElement.style.visibility = "visible";
   }
-  const cslp = editableElement?.getAttribute("data-cslp") || "";
-  const fieldMetadata = (0, import_cslp.extractDetailsFromCslp)(cslp);
+  const fieldMetadata = (0, import_cslp.extractDetailsFromCslp)(previousSelectedElementCslp);
   const targetElementDimension = editableElement.getBoundingClientRect();
   if (targetElementDimension.width && targetElementDimension.height) {
     const selectedElement = import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
@@ -152,9 +152,12 @@ function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visu
   let selectedElement = import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
   if (!selectedElement) return;
   const selectedElementCslp = selectedElement?.getAttribute("data-cslp");
-  const newSelectedElement = document.querySelector(
-    `[data-cslp="${selectedElementCslp}"]`
+  const selectedElementCslpUniqueId = selectedElement?.getAttribute(
+    "data-cslp-unique-id"
   );
+  const newSelectedElement = document.querySelector(
+    `[data-cslp-unique-id="${selectedElementCslpUniqueId}"]`
+  ) || document.querySelector(`[data-cslp="${selectedElementCslp}"]`);
   if (!newSelectedElement && resizeObserver) {
     (0, import_generateOverlay.hideFocusOverlay)({
       visualBuilderOverlayWrapper: focusOverlayWrapper,

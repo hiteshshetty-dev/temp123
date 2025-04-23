@@ -36,10 +36,11 @@ var getMessageWithDisplayName = (comment, userState, profile) => {
   var _a;
   if (!comment) return void 0;
   let tempText = sanitizeData(comment.message).replace(/<[^>]*>/g, "");
-  (_a = comment == null ? void 0 : comment.toUsers) == null ? void 0 : _a.forEach((user) => {
+  (_a = comment.toUsers) == null ? void 0 : _a.forEach((user) => {
     const userPattern = new RegExp(`{{${user}}}`, "g");
     const userData = userState.userMap[user];
-    const replacement = profile === "html" ? `<b class="collab-thread-comment--message">@${userData.display || getUserName(userData)}</b>` : `@${userData.display || getUserName(userData)}`;
+    const displayName = userData ? userData.display || getUserName(userData) : `unknown user`;
+    const replacement = profile === "html" ? `<b class="collab-thread-comment--message">@${displayName}</b>` : `@${displayName}`;
     tempText = tempText.replace(userPattern, replacement);
   });
   return tempText;

@@ -25,6 +25,7 @@ import { generateThread } from "../generators/generateThread.js";
 import { isCollabThread } from "../generators/generateThread.js";
 import { toggleCollabPopup } from "../generators/generateThread.js";
 import { fixSvgXPath } from "../utils/collabUtils.js";
+import { v4 as uuidV4 } from "uuid";
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   addFocusOverlay(
@@ -48,6 +49,17 @@ async function handleBuilderInteraction(params) {
   const eventTarget = params.event.target;
   const isAnchorElement = eventTarget instanceof HTMLAnchorElement;
   const elementHasCslp = eventTarget && (eventTarget.hasAttribute("data-cslp") || eventTarget.closest("[data-cslp]"));
+  const duplicates = document.querySelectorAll(
+    `[data-cslp="${eventTarget == null ? void 0 : eventTarget.getAttribute("data-cslp")}"]`
+  );
+  if (duplicates.length > 1) {
+    duplicates.forEach((ele) => {
+      if (!ele.hasAttribute("data-cslp-unique-id")) {
+        const uniqueId = `cslp-${uuidV4()}`;
+        ele.setAttribute("data-cslp-unique-id", uniqueId);
+      }
+    });
+  }
   if ((eventTarget == null ? void 0 : eventTarget.getAttribute("data-studio-ui")) === "true") {
     return;
   }

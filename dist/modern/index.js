@@ -39,13 +39,13 @@ var _LightLivePreviewHoC = class _LightLivePreviewHoC {
   static unsubscribeOnEntryChange() {
   }
   static getSdkVersion() {
-    return "3.2.0";
+    return "3.2.1";
   }
 };
 _LightLivePreviewHoC.previewConstructors = {};
 _LightLivePreviewHoC.onEntryChangeCallbacks = {};
 var LightLivePreviewHoC = _LightLivePreviewHoC;
-var ContentstackLivePreview = process.env.PURGE_PREVIEW_SDK || process.env.REACT_APP_PURGE_PREVIEW_SDK ? LightLivePreviewHoC : ContentstackLivePreviewHOC;
+var ContentstackLivePreview = typeof process !== "undefined" && (process.env.PURGE_PREVIEW_SDK === "true" || process.env.REACT_APP_PURGE_PREVIEW_SDK === "true") ? LightLivePreviewHoC : ContentstackLivePreviewHOC;
 var VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
 var index_default = ContentstackLivePreview;
 export {

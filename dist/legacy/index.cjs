@@ -72,13 +72,13 @@ var _LightLivePreviewHoC = class _LightLivePreviewHoC {
   static unsubscribeOnEntryChange() {
   }
   static getSdkVersion() {
-    return "3.2.0";
+    return "3.2.1";
   }
 };
 _LightLivePreviewHoC.previewConstructors = {};
 _LightLivePreviewHoC.onEntryChangeCallbacks = {};
 var LightLivePreviewHoC = _LightLivePreviewHoC;
-var ContentstackLivePreview = process.env.PURGE_PREVIEW_SDK || process.env.REACT_APP_PURGE_PREVIEW_SDK ? LightLivePreviewHoC : import_contentstack_live_preview_HOC.default;
+var ContentstackLivePreview = typeof process !== "undefined" && (process.env.PURGE_PREVIEW_SDK === "true" || process.env.REACT_APP_PURGE_PREVIEW_SDK === "true") ? LightLivePreviewHoC : import_contentstack_live_preview_HOC.default;
 var VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
 var index_default = ContentstackLivePreview;
 // Annotate the CommonJS export names for ESM import in node:

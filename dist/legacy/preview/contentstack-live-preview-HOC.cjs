@@ -227,7 +227,7 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
    * @returns The version of the SDK as a string.
    */
   static getSdkVersion() {
-    return "3.2.0";
+    return "3.2.1";
   }
 };
 _ContentstackLivePreview.previewConstructors = {};

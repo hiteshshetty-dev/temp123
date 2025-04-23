@@ -52,6 +52,7 @@ var import_generateThread = require("../generators/generateThread.cjs");
 var import_generateThread2 = require("../generators/generateThread.cjs");
 var import_generateThread3 = require("../generators/generateThread.cjs");
 var import_collabUtils = require("../utils/collabUtils.cjs");
+var import_uuid = require("uuid");
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   (0, import_generateOverlay.addFocusOverlay)(
@@ -75,6 +76,17 @@ async function handleBuilderInteraction(params) {
   const eventTarget = params.event.target;
   const isAnchorElement = eventTarget instanceof HTMLAnchorElement;
   const elementHasCslp = eventTarget && (eventTarget.hasAttribute("data-cslp") || eventTarget.closest("[data-cslp]"));
+  const duplicates = document.querySelectorAll(
+    `[data-cslp="${eventTarget == null ? void 0 : eventTarget.getAttribute("data-cslp")}"]`
+  );
+  if (duplicates.length > 1) {
+    duplicates.forEach((ele) => {
+      if (!ele.hasAttribute("data-cslp-unique-id")) {
+        const uniqueId = `cslp-${(0, import_uuid.v4)()}`;
+        ele.setAttribute("data-cslp-unique-id", uniqueId);
+      }
+    });
+  }
   if ((eventTarget == null ? void 0 : eventTarget.getAttribute("data-studio-ui")) === "true") {
     return;
   }

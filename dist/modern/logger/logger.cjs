@@ -25,7 +25,7 @@ __export(logger_exports, {
 module.exports = __toCommonJS(logger_exports);
 var PublicLogger = class {
   static logEvent(logCallback, message) {
-    if (process?.env?.NODE_ENV !== "test") {
+    if (typeof process !== "undefined" && process?.env?.NODE_ENV !== "test") {
       logCallback("Live_Preview_SDK:", ...message);
     }
   }
