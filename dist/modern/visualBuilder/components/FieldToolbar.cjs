@@ -52,6 +52,7 @@ var import_icons2 = require("./icons/index.cjs");
 var import_getCsDataOfElement = require("../utils/getCsDataOfElement.cjs");
 var import_variant = require("./icons/variant.cjs");
 var import_FieldRevertComponent = require("./FieldRevert/FieldRevertComponent.cjs");
+var import_loading = require("./icons/loading.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 var TOOLTIP_TOP_EDGE_BUFFER = 96;
 function handleReplaceAsset(fieldMetadata) {
@@ -84,25 +85,26 @@ function handleEdit(fieldMetadata) {
   );
 }
 function handleFormFieldFocus(eventDetails) {
-  const { editableElement, fieldMetadata, cslpData } = eventDetails;
-  import_visualBuilderPostMessage.default?.send(import_postMessage.VisualBuilderPostMessageEvents.TOGGLE_FORM, {
-    fieldMetadata,
-    cslpData
-  }).then(() => {
-    import_visualBuilderPostMessage.default?.send(
-      import_postMessage.VisualBuilderPostMessageEvents.FOCUS_FIELD,
-      {
-        DOMEditStack: (0, import_getCsDataOfElement.getDOMEditStack)(editableElement)
-      }
-    );
-  });
+  const { editableElement } = eventDetails;
+  return import_visualBuilderPostMessage.default?.send(
+    import_postMessage.VisualBuilderPostMessageEvents.FOCUS_FIELD,
+    {
+      DOMEditStack: (0, import_getCsDataOfElement.getDOMEditStack)(editableElement),
+      toggleVisibility: true
+    }
+  );
 }
 function FieldToolbarComponent(props) {
-  const { eventDetails } = props;
+  const {
+    eventDetails,
+    isVariant: isVariantOrParentOfVariant,
+    entryPermissions
+  } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
+  const [isFormLoading, setIsFormLoading] = (0, import_compat.useState)(false);
   const parentPath = fieldMetadata?.multipleFieldMetadata?.parentDetails?.parentCslpValue || "";
+  const isVariant = !!fieldMetadata?.variant || isVariantOrParentOfVariant;
   const direction = (0, import_getChildrenDirection.default)(targetElement, parentPath);
-  const isVariant = !!fieldMetadata?.variant;
   const [fieldSchema, setFieldSchema] = (0, import_compat.useState)(
     null
   );
@@ -114,25 +116,25 @@ function FieldToolbarComponent(props) {
   let Icon = null;
   let fieldType = null;
   let isWholeMultipleField = false;
+  let disableFieldActions = false;
   if (fieldSchema) {
-    const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(fieldSchema, {
-      editableElement: targetElement,
-      fieldMetadata
-    });
-    if (isDisabled) {
-      return null;
-    }
+    const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
+      fieldSchema,
+      {
+        editableElement: targetElement,
+        fieldMetadata
+      },
+      entryPermissions
+    );
+    disableFieldActions = isDisabled;
     fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
     isModalEditable = import_constants.ALLOWED_MODAL_EDITABLE_FIELD.includes(fieldType);
-    isReplaceAllowed = import_constants.ALLOWED_REPLACE_FIELDS.includes(fieldType);
     Icon = import_fields.fieldIcons[fieldType];
     isMultiple = fieldSchema.multiple || false;
     if (fieldType === import_types.FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || fieldMetadata.multipleFieldMetadata?.index === -1);
-    if (import_constants.DEFAULT_MULTIPLE_FIELDS.includes(fieldType) && isWholeMultipleField) {
-      return null;
-    }
+    isReplaceAllowed = import_constants.ALLOWED_REPLACE_FIELDS.includes(fieldType) && !isWholeMultipleField;
   }
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
   const editButton = Icon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -156,6 +158,7 @@ function FieldToolbarComponent(props) {
         e.stopPropagation();
         handleEdit(fieldMetadata);
       },
+      disabled: disableFieldActions,
       children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Icon, {})
     }
   ) : null;
@@ -185,6 +188,7 @@ function FieldToolbarComponent(props) {
           return;
         }
       },
+      disabled: disableFieldActions,
       children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.ReplaceAssetIcon, {})
     }
   ) : null;
@@ -199,14 +203,26 @@ function FieldToolbarComponent(props) {
         {
           "visual-builder__tooltip--bottom": invertTooltipPosition,
           [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip--bottom"]]: invertTooltipPosition
+        },
+        {
+          [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--comment-loader"]]: isFormLoading,
+          "visual-builder__button--comment-loader": isFormLoading
         }
       ),
       "data-tooltip": "Form",
       "data-testid": `visual-builder-form`,
-      onClick: (e) => {
-        handleFormFieldFocus(eventDetails);
+      onClick: async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsFormLoading(true);
+        try {
+          await handleFormFieldFocus(eventDetails);
+        } finally {
+          setIsFormLoading(false);
+        }
       },
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.FormIcon, {})
+      disabled: isFormLoading,
+      children: isFormLoading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_loading.LoadingIcon, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.FormIcon, {})
     }
   );
   const toggleVariantDropdown = () => {
@@ -279,132 +295,133 @@ function FieldToolbarComponent(props) {
       [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip--bottom"]]: invertTooltipPosition
     }
   );
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "div",
     {
       className: (0, import_classnames.default)(
         "visual-builder__field-toolbar-container",
         (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__field-toolbar-container"]
       ),
-      children: [
-        isVariant && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          import_FieldRevertComponent.FieldRevertComponent,
-          {
-            fieldDataName: fieldMetadata.fieldPathWithIndex,
-            fieldMetadata,
-            variantStatus: fieldVariantStatus,
-            isOpen: isOpenVariantRevert,
-            closeDropdown: closeVariantDropdown
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-          "div",
-          {
-            className: (0, import_classnames.default)(
-              "visual-builder__focused-toolbar__multiple-field-toolbar",
-              (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__multiple-field-toolbar"]
-            ),
-            "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar",
-            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-              "div",
-              {
-                className: (0, import_classnames.default)(
-                  "visual-builder__focused-toolbar__button-group",
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__button-group"]
-                ),
-                children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-                  isVariant ? variantButton : null,
-                  isMultiple && !isWholeMultipleField ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                      "button",
-                      {
-                        "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-left-button",
-                        className: multipleFieldToolbarButtonClasses,
-                        "data-tooltip": direction === "vertical" ? "Move up" : "Move left",
-                        onClick: (e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          (0, import_instanceHandlers.handleMoveInstance)(
-                            fieldMetadata,
-                            "previous"
-                          );
-                        },
-                        disabled: disableMoveLeft,
-                        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                          import_icons.MoveLeftIcon,
-                          {
-                            className: (0, import_classnames.default)({
-                              "visual-builder__rotate--90": direction === "vertical",
-                              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction === "vertical"
-                            }),
-                            disabled: disableMoveLeft
-                          }
-                        )
-                      }
-                    ),
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                      "button",
-                      {
-                        "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-right-button",
-                        className: multipleFieldToolbarButtonClasses,
-                        "data-tooltip": direction === "vertical" ? "Move down" : "Move right",
-                        onClick: (e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          (0, import_instanceHandlers.handleMoveInstance)(
-                            fieldMetadata,
-                            "next"
-                          );
-                        },
-                        disabled: disableMoveRight,
-                        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                          import_icons.MoveRightIcon,
-                          {
-                            className: (0, import_classnames.default)({
-                              "visual-builder__rotate--90": direction === "vertical",
-                              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction === "vertical"
-                            }),
-                            disabled: disableMoveRight
-                          }
-                        )
-                      }
-                    ),
-                    isModalEditable ? editButton : null,
-                    formButton,
-                    isReplaceAllowed ? replaceButton : null,
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                      "button",
-                      {
-                        "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__delete-button",
-                        className: multipleFieldToolbarButtonClasses,
-                        "data-tooltip": "Delete",
-                        onClick: (e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          (0, import_instanceHandlers.handleDeleteInstance)(fieldMetadata);
-                        },
-                        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.DeleteIcon, {})
-                      }
-                    )
-                  ] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-                    isModalEditable ? editButton : null,
-                    isReplaceAllowed ? replaceButton : null,
-                    formButton,
-                    fieldSchema ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                      import_CommentIcon.default,
-                      {
-                        fieldMetadata,
-                        fieldSchema,
-                        invertTooltipPosition
-                      }
-                    ) : null
-                  ] })
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "div",
+        {
+          className: (0, import_classnames.default)(
+            "visual-builder__focused-toolbar__multiple-field-toolbar",
+            (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__multiple-field-toolbar"]
+          ),
+          "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar",
+          children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "div",
+            {
+              className: (0, import_classnames.default)(
+                "visual-builder__focused-toolbar__button-group",
+                (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__button-group"]
+              ),
+              children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+                isVariant ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                  import_FieldRevertComponent.VariantRevertDropdown,
+                  {
+                    fieldDataName: fieldMetadata.fieldPathWithIndex,
+                    fieldMetadata,
+                    variantStatus: fieldVariantStatus,
+                    isOpen: isOpenVariantRevert,
+                    closeDropdown: closeVariantDropdown,
+                    invertTooltipPosition,
+                    toggleVariantDropdown,
+                    disabled: disableFieldActions
+                  }
+                ) : null,
+                isMultiple && !isWholeMultipleField ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                    "button",
+                    {
+                      "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-left-button",
+                      className: multipleFieldToolbarButtonClasses,
+                      "data-tooltip": direction === "vertical" ? "Move up" : "Move left",
+                      onClick: (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        (0, import_instanceHandlers.handleMoveInstance)(
+                          fieldMetadata,
+                          "previous"
+                        );
+                      },
+                      disabled: disableFieldActions || disableMoveLeft,
+                      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                        import_icons.MoveLeftIcon,
+                        {
+                          className: (0, import_classnames.default)({
+                            "visual-builder__rotate--90": direction === "vertical",
+                            [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction === "vertical"
+                          }),
+                          disabled: disableFieldActions || disableMoveLeft
+                        }
+                      )
+                    }
+                  ),
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                    "button",
+                    {
+                      "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-right-button",
+                      className: multipleFieldToolbarButtonClasses,
+                      "data-tooltip": direction === "vertical" ? "Move down" : "Move right",
+                      onClick: (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        (0, import_instanceHandlers.handleMoveInstance)(
+                          fieldMetadata,
+                          "next"
+                        );
+                      },
+                      disabled: disableFieldActions || disableMoveRight,
+                      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                        import_icons.MoveRightIcon,
+                        {
+                          className: (0, import_classnames.default)({
+                            "visual-builder__rotate--90": direction === "vertical",
+                            [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__rotate--90"]]: direction === "vertical"
+                          }),
+                          disabled: disableFieldActions || disableMoveRight
+                        }
+                      )
+                    }
+                  ),
+                  isModalEditable ? editButton : null,
+                  formButton,
+                  isReplaceAllowed ? replaceButton : null,
+                  /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                    "button",
+                    {
+                      "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__delete-button",
+                      className: multipleFieldToolbarButtonClasses,
+                      "data-tooltip": "Delete",
+                      onClick: (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        (0, import_instanceHandlers.handleDeleteInstance)(fieldMetadata);
+                      },
+                      disabled: disableFieldActions,
+                      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.DeleteIcon, {})
+                    }
+                  )
+                ] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+                  isModalEditable ? editButton : null,
+                  isReplaceAllowed ? replaceButton : null,
+                  formButton,
+                  fieldSchema ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                    import_CommentIcon.default,
+                    {
+                      fieldMetadata,
+                      fieldSchema,
+                      invertTooltipPosition
+                    }
+                  ) : null
                 ] })
-              }
-            )
-          }
-        )
-      ]
+              ] })
+            }
+          )
+        }
+      )
     }
   );
 }

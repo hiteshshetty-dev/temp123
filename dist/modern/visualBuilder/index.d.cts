@@ -5,9 +5,11 @@ interface VisualBuilderGlobalStateImpl {
     previousHoveredTargetDOM: Element | null;
     previousEmptyBlockParents: Element[] | [];
     focusFieldValue: string | null;
+    focusFieldReceivedInput: boolean;
     audienceMode: boolean;
     locale: string;
     variant: string | null;
+    focusElementObserver: MutationObserver | null;
 }
 declare class VisualBuilder {
     private customCursor;
@@ -20,6 +22,7 @@ declare class VisualBuilder {
     private resizeEventHandler;
     private resizeObserver;
     private mutationObserver;
+    private threadMutationObserver;
     constructor();
     destroy: () => void;
 }

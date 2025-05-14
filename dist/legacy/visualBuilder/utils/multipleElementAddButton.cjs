@@ -36,11 +36,10 @@ __export(multipleElementAddButton_exports, {
 });
 module.exports = __toCommonJS(multipleElementAddButton_exports);
 var import_generateAddInstanceButtons = require("../generators/generateAddInstanceButtons.cjs");
-var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
-var import_postMessage = require("./types/postMessage.types.cjs");
 var import_getChildrenDirection = __toESM(require("./getChildrenDirection.cjs"), 1);
 var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_mouseHover = require("../listeners/mouseHover.cjs");
+var import_signals = require("@preact/signals");
 var WAIT_FOR_NEW_INSTANCE_TIMEOUT = 4e3;
 function handleAddButtonsForMultiple(eventDetails, elements, config) {
   var _a, _b;
@@ -92,29 +91,24 @@ function handleAddButtonsForMultiple(eventDetails, elements, config) {
       index
     });
   };
+  const loading = (0, import_signals.signal)(false);
   const previousButton = (0, import_generateAddInstanceButtons.generateAddInstanceButton)({
-    onClick: () => {
-      var _a2;
-      (_a2 = import_visualBuilderPostMessage.default) == null ? void 0 : _a2.send(import_postMessage.VisualBuilderPostMessageEvents.ADD_INSTANCE, {
-        fieldMetadata: eventDetails.fieldMetadata,
-        index: prevIndex
-      }).then(onMessageSent.bind(null, prevIndex));
-    },
-    label,
     fieldSchema,
-    value: expectedFieldData
+    value: expectedFieldData,
+    fieldMetadata: eventDetails.fieldMetadata,
+    index: prevIndex,
+    onClick: onMessageSent.bind(null, prevIndex),
+    loading,
+    label
   });
   const nextButton = (0, import_generateAddInstanceButtons.generateAddInstanceButton)({
-    onClick: () => {
-      var _a2;
-      (_a2 = import_visualBuilderPostMessage.default) == null ? void 0 : _a2.send(import_postMessage.VisualBuilderPostMessageEvents.ADD_INSTANCE, {
-        fieldMetadata: eventDetails.fieldMetadata,
-        index: nextIndex
-      }).then(onMessageSent.bind(null, nextIndex));
-    },
-    label,
     fieldSchema,
-    value: expectedFieldData
+    value: expectedFieldData,
+    fieldMetadata: eventDetails.fieldMetadata,
+    index: nextIndex,
+    onClick: onMessageSent.bind(null, nextIndex),
+    loading,
+    label
   });
   if (!visualBuilderContainer.contains(previousButton)) {
     visualBuilderContainer.appendChild(previousButton);

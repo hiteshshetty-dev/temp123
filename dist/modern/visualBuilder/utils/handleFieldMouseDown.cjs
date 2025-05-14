@@ -30,6 +30,7 @@ var import_constants = require("./constants.cjs");
 var import_types = require("./types/index.types.cjs");
 var import_postMessage = require("./types/postMessage.types.cjs");
 var import_insertSpaceAtCursor = require("./insertSpaceAtCursor.cjs");
+var import__ = require("../index.cjs");
 function handleFieldInput(e) {
   const event = e;
   const targetElement = event.target;
@@ -37,6 +38,9 @@ function handleFieldInput(e) {
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
   if (event.type === "input" && import_constants.ALLOWED_INLINE_EDITABLE_FIELD.includes(fieldType)) {
+    if (!import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput) {
+      import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput = true;
+    }
     throttledFieldSync();
   }
 }
@@ -60,7 +64,9 @@ function handleFieldKeyDown(e) {
   const fieldType = targetElement.getAttribute(
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
-  if (targetElement.tagName === "BUTTON") {
+  if (event.composedPath().some(
+    (element) => element instanceof Element && element.tagName === "BUTTON"
+  )) {
     handleKeyDownOnButton(event);
   }
   if (fieldType === import_types.FieldDataType.NUMBER) {
@@ -73,6 +79,7 @@ function handleKeyDownOnButton(e) {
   if (e.code === "Space" && e.target) {
     e.preventDefault();
     (0, import_insertSpaceAtCursor.insertSpaceAtCursor)(e.target);
+    throttledFieldSync();
   }
 }
 function handleSingleLineFieldKeyDown(e) {

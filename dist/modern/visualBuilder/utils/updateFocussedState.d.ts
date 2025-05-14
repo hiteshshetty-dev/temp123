@@ -11,7 +11,7 @@ declare function updateFocussedState({ editableElement, visualBuilderContainer, 
     overlayWrapper: HTMLDivElement | null;
     focusedToolbar: HTMLDivElement | null;
     resizeObserver: ResizeObserver | null;
-}): void;
+}): Promise<void>;
 /**
  * This function is used to resize/reposition focus overlay and toolbar due to a
  * mutation in the DOM or due to changes in a different field (other than the focussed field).

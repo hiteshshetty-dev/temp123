@@ -21,6 +21,14 @@ var VisualBuilderPostMessageEvents = /* @__PURE__ */ ((VisualBuilderPostMessageE
   VisualBuilderPostMessageEvents2["MOVE_INSTANCE"] = "move-instance";
   VisualBuilderPostMessageEvents2["GET_DISCUSSION_ID"] = "get-discussion-id-for-comment-modal";
   VisualBuilderPostMessageEvents2["OPEN_FIELD_COMMENT_MODAL"] = "open-field-comment-modal";
+  VisualBuilderPostMessageEvents2["COLLAB_CREATE_THREAD"] = "collab-create-thread";
+  VisualBuilderPostMessageEvents2["COLLAB_CREATE_COMMENT"] = "collab-create-comment";
+  VisualBuilderPostMessageEvents2["COLLAB_FETCH_COMMENTS"] = "collab-fetch-comments";
+  VisualBuilderPostMessageEvents2["COLLAB_EDIT_COMMENT"] = "collab-edit-comment";
+  VisualBuilderPostMessageEvents2["COLLAB_DELETE_COMMENT"] = "collab-delete-comment";
+  VisualBuilderPostMessageEvents2["COLLAB_RESOLVE_THREAD"] = "collab-resolve-thread";
+  VisualBuilderPostMessageEvents2["COLLAB_DELETE_THREAD"] = "collab-delete-thread";
+  VisualBuilderPostMessageEvents2["COLLAB_MISSING_THREADS"] = "collab-missing-threads";
   VisualBuilderPostMessageEvents2["GET_ALL_ENTRIES_IN_CURRENT_PAGE"] = "get-entries-in-current-page";
   VisualBuilderPostMessageEvents2["HIDE_FOCUS_OVERLAY"] = "hide-focus-overlay";
   VisualBuilderPostMessageEvents2["SHOW_DRAFT_FIELDS"] = "show-draft-fields";
@@ -35,6 +43,12 @@ var VisualBuilderPostMessageEvents = /* @__PURE__ */ ((VisualBuilderPostMessageE
   VisualBuilderPostMessageEvents2["GET_VARIANT_ID"] = "get-variant-id";
   VisualBuilderPostMessageEvents2["GET_LOCALE"] = "get-locale";
   VisualBuilderPostMessageEvents2["SEND_VARIANT_AND_LOCALE"] = "send-variant-and-locale";
+  VisualBuilderPostMessageEvents2["COLLAB_ENABLE"] = "collab-enable";
+  VisualBuilderPostMessageEvents2["COLLAB_DATA_UPDATE"] = "collab-data-update";
+  VisualBuilderPostMessageEvents2["COLLAB_DISABLE"] = "collab-disable";
+  VisualBuilderPostMessageEvents2["COLLAB_THREADS_REMOVE"] = "collab-threads-remove";
+  VisualBuilderPostMessageEvents2["COLLAB_THREAD_REOPEN"] = "collab-thread-reopen";
+  VisualBuilderPostMessageEvents2["COLLAB_THREAD_HIGHLIGHT"] = "collab-thread-highlight";
   return VisualBuilderPostMessageEvents2;
 })(VisualBuilderPostMessageEvents || {});
 export {

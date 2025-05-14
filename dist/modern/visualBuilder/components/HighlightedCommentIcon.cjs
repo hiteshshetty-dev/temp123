@@ -36,9 +36,12 @@ module.exports = __toCommonJS(HighlightedCommentIcon_exports);
 var import_icons = require("./icons/index.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
+var import_generateThread = require("../generators/generateThread.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 var HighlightedCommentIcon = (props) => {
   const { data } = props;
+  const config = import_configManager.default.get();
   const handleCommentModal = async () => {
     import_visualBuilderPostMessage.default?.send(
       import_postMessage.VisualBuilderPostMessageEvents.OPEN_FIELD_COMMENT_MODAL,
@@ -49,8 +52,10 @@ var HighlightedCommentIcon = (props) => {
         absolutePath: data.absolutePath
       }
     );
+    (0, import_generateThread.toggleCollabPopup)({ threadUid: "", action: "close" });
+    import_configManager.default.set("collab.isFeedbackMode", true);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { onClick: handleCommentModal, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.HighlightCommentIcon, {}) });
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "collab-icon", onClick: handleCommentModal, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.HighlightCommentIcon, {}) });
 };
 var HighlightedCommentIcon_default = HighlightedCommentIcon;
 //# sourceMappingURL=HighlightedCommentIcon.cjs.map

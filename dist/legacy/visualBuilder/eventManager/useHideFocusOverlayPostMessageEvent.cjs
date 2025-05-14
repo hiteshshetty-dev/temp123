@@ -36,6 +36,7 @@ module.exports = __toCommonJS(useHideFocusOverlayPostMessageEvent_exports);
 var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 function useHideFocusOverlayPostMessageEvent({
   visualBuilderContainer,
   overlayWrapper,
@@ -46,13 +47,17 @@ function useHideFocusOverlayPostMessageEvent({
   (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.on(
     import_postMessage.VisualBuilderPostMessageEvents.HIDE_FOCUS_OVERLAY,
     (args) => {
-      var _a2;
+      var _a2, _b;
+      if (Boolean((_a2 = args == null ? void 0 : args.data) == null ? void 0 : _a2.fromCollab)) {
+        import_configManager.default.set("collab.enable", true);
+        import_configManager.default.set("collab.pauseFeedback", true);
+      }
       (0, import_generateOverlay.hideOverlay)({
         visualBuilderOverlayWrapper: overlayWrapper,
         visualBuilderContainer,
         focusedToolbar,
         resizeObserver,
-        noTrigger: Boolean((_a2 = args == null ? void 0 : args.data) == null ? void 0 : _a2.noTrigger)
+        noTrigger: Boolean((_b = args == null ? void 0 : args.data) == null ? void 0 : _b.noTrigger)
       });
     }
   );

@@ -36,6 +36,7 @@ module.exports = __toCommonJS(useHideFocusOverlayPostMessageEvent_exports);
 var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
+var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 function useHideFocusOverlayPostMessageEvent({
   visualBuilderContainer,
   overlayWrapper,
@@ -45,6 +46,10 @@ function useHideFocusOverlayPostMessageEvent({
   import_visualBuilderPostMessage.default?.on(
     import_postMessage.VisualBuilderPostMessageEvents.HIDE_FOCUS_OVERLAY,
     (args) => {
+      if (Boolean(args?.data?.fromCollab)) {
+        import_configManager.default.set("collab.enable", true);
+        import_configManager.default.set("collab.pauseFeedback", true);
+      }
       (0, import_generateOverlay.hideOverlay)({
         visualBuilderOverlayWrapper: overlayWrapper,
         visualBuilderContainer,

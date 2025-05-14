@@ -95,6 +95,10 @@ var handleInitData = (initData) => {
     position: initData.editButton?.position ?? stackSdk.live_preview?.position ?? config.editButton.position ?? "top",
     includeByQueryParameter: initData.editButton?.includeByQueryParameter ?? stackSdk.live_preview?.includeByQueryParameter ?? config.editButton.includeByQueryParameter ?? true
   });
+  import_configManager.default.set("editInVisualBuilderButton", {
+    enable: initData.editInVisualBuilderButton?.enable ?? stackSdk.live_preview?.editInVisualBuilderButton?.enable ?? config.editInVisualBuilderButton.enable,
+    position: initData.editInVisualBuilderButton?.position ?? stackSdk.live_preview?.position ?? config.editInVisualBuilderButton.position ?? "bottom-right"
+  });
   handleClientUrlParams(
     initData.clientUrlParams ?? stackSdk.live_preview?.clientUrlParams ?? config.clientUrlParams
   );

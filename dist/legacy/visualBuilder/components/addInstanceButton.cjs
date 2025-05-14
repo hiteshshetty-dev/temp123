@@ -36,28 +36,56 @@ module.exports = __toCommonJS(addInstanceButton_exports);
 var import_classnames = __toESM(require("classnames"), 1);
 var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import_icons = require("./icons/index.cjs");
+var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
+var import_postMessage = require("../utils/types/postMessage.types.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function AddInstanceButtonComponent(props) {
   const fieldSchema = props.fieldSchema;
-  const disabled = fieldSchema && "max_instance" in fieldSchema && fieldSchema.max_instance ? props.value.length >= fieldSchema.max_instance : false;
+  const fieldMetadata = props.fieldMetadata;
+  const index = props.index;
+  const loading = props.loading;
+  const onClick = async (event) => {
+    var _a;
+    loading.value = true;
+    try {
+      await ((_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.send(
+        import_postMessage.VisualBuilderPostMessageEvents.ADD_INSTANCE,
+        {
+          fieldMetadata,
+          index
+        }
+      ));
+    } catch (error) {
+      console.error("Visual Builder: Failed to add instance", error);
+    }
+    loading.value = false;
+    props.onClick(event);
+  };
+  const buttonClassName = (0, import_classnames.default)(
+    "visual-builder__add-button",
+    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__add-button"],
+    {
+      "visual-builder__add-button--with-label": props.label
+    },
+    {
+      [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__add-button--loading"]]: loading.value
+    },
+    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip"]
+  );
+  const maxInstances = fieldSchema && fieldSchema.data_type !== "block" ? fieldSchema.max_instance : void 0;
+  const isMaxInstances = maxInstances ? props.value.length >= maxInstances : false;
+  const disabled = loading.value || isMaxInstances;
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
     "button",
     {
-      className: (0, import_classnames.default)(
-        "visual-builder__add-button",
-        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__add-button"],
-        {
-          "visual-builder__add-button--with-label": props.label
-        },
-        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip"]
-      ),
+      className: buttonClassName,
       "data-tooltip": "Add section",
       "data-testid": "visual-builder-add-instance-button",
       disabled,
-      title: disabled && fieldSchema && "max_instance" in fieldSchema ? `Max ${fieldSchema.max_instance} instances allowed` : void 0,
+      title: maxInstances && isMaxInstances ? `Max ${maxInstances} instances allowed` : void 0,
       onClick: (e) => {
         const event = e;
-        props.onClick(event);
+        onClick(event);
       },
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.PlusIcon, {}),

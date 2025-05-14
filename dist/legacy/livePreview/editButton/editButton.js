@@ -232,6 +232,9 @@ var LivePreviewEditButton = class {
   }
   updateTooltipPosition() {
     var _a;
+    if (!document.getElementById("cslp-tooltip")) {
+      this.createCslpTooltip();
+    }
     const editButton = Config.get().editButton;
     const elements = Config.get().elements;
     if (!elements.highlightedElement || !this.tooltip) return false;
@@ -268,6 +271,11 @@ var LivePreviewEditButton = class {
     return false;
   }
   addEditStyleOnHover(e) {
+    const updateStyles = this.shouldUpdateStyle(e);
+    const shouldRedraw = typeof updateStyles === "undefined" ? true : updateStyles;
+    if (!shouldRedraw) {
+      return;
+    }
     const updateTooltipPosition = ({
       cslpTag,
       highlightedElement
@@ -287,12 +295,28 @@ var LivePreviewEditButton = class {
       addCslpOutline(e, updateTooltipPosition);
     }
   }
+  shouldUpdateStyle(event) {
+    var _a;
+    const editButtonPos = Config.get().editButton.position;
+    const editButtonDomRect = (_a = this.tooltip) == null ? void 0 : _a.getBoundingClientRect();
+    return isPointerWithinEditButtonSafeZone({
+      event,
+      editButtonPos,
+      editButtonDomRect
+    });
+  }
   scrollHandler() {
     var _a;
     if (!this.tooltip) return;
     const cslpTag = this.tooltip.getAttribute("current-data-cslp");
     if (cslpTag) {
-      const { content_type_uid, entry_uid, locale, variant, fieldPathWithIndex } = extractDetailsFromCslp(cslpTag);
+      const {
+        content_type_uid,
+        entry_uid,
+        locale,
+        variant,
+        fieldPathWithIndex
+      } = extractDetailsFromCslp(cslpTag);
       if (inIframe()) {
         (_a = livePreviewPostMessage) == null ? void 0 : _a.send("scroll", {
           field: fieldPathWithIndex,
@@ -396,12 +420,75 @@ effect(function handleWindowTypeChange() {
     toggleEditButtonElement();
   }
 });
+function isPointerWithinEditButtonSafeZone({
+  event,
+  editButtonDomRect,
+  editButtonPos
+}) {
+  const SAFE_ZONE_RATIO = 0.1;
+  const MAX_SAFE_ZONE_DISTANCE = 30;
+  if (!editButtonDomRect || !editButtonPos) {
+    return void 0;
+  }
+  if (!(editButtonDomRect.x > 0) || !(editButtonDomRect.y > 0)) {
+    return void 0;
+  }
+  const isTop = editButtonPos.includes("top");
+  const isLeft = editButtonPos.includes("left");
+  const isBottom = editButtonPos.includes("bottom");
+  const isVertical = isTop || isBottom;
+  const cslpElement = event.composedPath().find((target) => {
+    const element2 = target;
+    if (element2.nodeName === "BODY") {
+      return false;
+    }
+    if (typeof (element2 == null ? void 0 : element2.hasAttribute) !== "function") {
+      return false;
+    }
+    return element2.hasAttribute("data-cslp");
+  });
+  if (!cslpElement) {
+    return void 0;
+  }
+  const element = cslpElement;
+  const elementRect = element.getBoundingClientRect();
+  let safeZoneDistance = isVertical ? (
+    // if vertical positioning ("top"/"bottom")
+    // button is rendered along the width
+    elementRect.width * SAFE_ZONE_RATIO
+  ) : (
+    // button is rendered along the height
+    elementRect.height * SAFE_ZONE_RATIO
+  );
+  safeZoneDistance = safeZoneDistance > MAX_SAFE_ZONE_DISTANCE ? MAX_SAFE_ZONE_DISTANCE : safeZoneDistance;
+  const tooltipX2 = editButtonDomRect.x + editButtonDomRect.width;
+  const tooltipY2 = editButtonDomRect.y + editButtonDomRect.height;
+  const safeX1 = editButtonDomRect.x - safeZoneDistance;
+  const safeX2 = tooltipX2 + safeZoneDistance;
+  const safeY1 = editButtonDomRect.y - safeZoneDistance;
+  const safeY2 = tooltipY2 + safeZoneDistance;
+  if (isTop || isBottom) {
+    const verticalSafeDistance = isTop ? Math.abs(tooltipY2 - event.clientY) : Math.abs(editButtonDomRect.y - event.clientY);
+    const isInSafeZone = event.clientX > safeX1 && event.clientX < safeX2 && verticalSafeDistance < safeZoneDistance;
+    if (isInSafeZone) {
+      return false;
+    }
+  } else {
+    const horizontalSafeDistance = isLeft ? Math.abs(tooltipX2 - event.clientX) : Math.abs(editButtonDomRect.x - event.clientX);
+    const isInSafeZone = event.clientY > safeY1 && event.clientY < safeY2 && horizontalSafeDistance < safeZoneDistance;
+    if (isInSafeZone) {
+      return false;
+    }
+  }
+  return true;
+}
 export {
   LivePreviewEditButton,
   createMultipleEditButton,
   createSingularEditButton,
   doesEditButtonExist,
   getEditButtonPosition,
+  isPointerWithinEditButtonSafeZone,
   shouldRenderEditButton,
   toggleEditButtonElement
 };

@@ -30,6 +30,11 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/visualBuilder/eventManager/useVariantsPostMessageEvent.ts
 var useVariantsPostMessageEvent_exports = {};
 __export(useVariantsPostMessageEvent_exports, {
+  addVariantFieldClass: () => addVariantFieldClass,
+  removeVariantFieldClass: () => removeVariantFieldClass,
+  setAudienceMode: () => setAudienceMode,
+  setLocale: () => setLocale,
+  setVariant: () => setVariant,
   useVariantFieldsPostMessageEvent: () => useVariantFieldsPostMessageEvent
 });
 module.exports = __toCommonJS(useVariantsPostMessageEvent_exports);
@@ -37,6 +42,7 @@ var import__ = require("../index.cjs");
 var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
+var import_fieldSchemaMap = require("../utils/fieldSchemaMap.cjs");
 function addVariantFieldClass(variant_uid, highlightVariantFields) {
   const elements = document.querySelectorAll(`[data-cslp]`);
   elements.forEach((element) => {
@@ -93,6 +99,7 @@ function useVariantFieldsPostMessageEvent() {
     import_postMessage.VisualBuilderPostMessageEvents.GET_VARIANT_ID,
     (event) => {
       setVariant(event.data.variant);
+      import_fieldSchemaMap.FieldSchemaMap.clear();
     }
   );
   (_b = import_visualBuilderPostMessage.default) == null ? void 0 : _b.on(
@@ -127,6 +134,11 @@ function useVariantFieldsPostMessageEvent() {
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  addVariantFieldClass,
+  removeVariantFieldClass,
+  setAudienceMode,
+  setLocale,
+  setVariant,
   useVariantFieldsPostMessageEvent
 });
 //# sourceMappingURL=useVariantsPostMessageEvent.cjs.map

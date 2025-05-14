@@ -37,6 +37,10 @@ function getUserInitData() {
       position: "top",
       includeByQueryParameter: true
     },
+    editInVisualBuilderButton: {
+      enable: true,
+      position: "bottom-right"
+    },
     mode: "preview",
     stackDetails: {
       apiKey: "",
@@ -66,6 +70,10 @@ function getDefaultConfig() {
       exclude: [],
       position: "top",
       includeByQueryParameter: true
+    },
+    editInVisualBuilderButton: {
+      enable: true,
+      position: "bottom-right"
     },
     hash: "",
     mode: 1,
@@ -98,6 +106,21 @@ function getDefaultConfig() {
     },
     elements: {
       highlightedElement: null
+    },
+    collab: {
+      enable: false,
+      fromShare: false,
+      pauseFeedback: false,
+      isFeedbackMode: false,
+      inviteMetadata: {
+        currentUser: {
+          email: "",
+          uid: ""
+        },
+        users: [],
+        inviteUid: ""
+      },
+      payload: []
     }
   };
 }

@@ -8,6 +8,7 @@ var ILivePreviewModeConfig = /* @__PURE__ */ ((ILivePreviewModeConfig2) => {
 })(ILivePreviewModeConfig || {});
 var ILivePreviewWindowType = /* @__PURE__ */ ((ILivePreviewWindowType2) => {
   ILivePreviewWindowType2["PREVIEW"] = "preview";
+  ILivePreviewWindowType2["PREVIEW_SHARE"] = "preview-share";
   ILivePreviewWindowType2["BUILDER"] = "builder";
   ILivePreviewWindowType2["INDEPENDENT"] = "independent";
   return ILivePreviewWindowType2;

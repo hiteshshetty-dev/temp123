@@ -112,7 +112,7 @@ function visualBuilderStyles() {
             color: #6c5ce7;
             overflow: hidden;
 
-            z-index: 2147483647 !important;
+            z-index: 2147483646 !important;
 
             display: grid;
             grid-template-columns: min-content 0fr;
@@ -149,12 +149,17 @@ function visualBuilderStyles() {
             overflow: hidden;
             text-overflow: ellipsis;
         `,
+    "visual-builder__add-button--loading": css`
+            cursor: wait;
+            /* we have not-allowed on disabled, so we need this */
+            &:disabled {
+                cursor: wait;
+            }
+        `,
     "visual-builder__start-editing-btn": css`
             z-index: 1000;
             text-decoration: none;
             position: fixed;
-            bottom: 30px;
-            right: 30px;
             box-shadow:
                 0px 4px 15px 0px rgba(108, 92, 231, 0.2),
                 0px 3px 14px 3px rgba(0, 0, 0, 0.12),
@@ -201,6 +206,22 @@ function visualBuilderStyles() {
                 letter-spacing: 0.01rem;
                 text-transform: capitalize;
             }
+        `,
+    "visual-builder__start-editing-btn__bottom-right": css`
+            bottom: 30px;
+            right: 30px;
+        `,
+    "visual-builder__start-editing-btn__bottom-left": css`
+            bottom: 30px;
+            left: 30px;
+        `,
+    "visual-builder__start-editing-btn__top-right": css`
+            top: 30px;
+            right: 30px;
+        `,
+    "visual-builder__start-editing-btn__top-left": css`
+            top: 30px;
+            left: 30px;
         `,
     "visual-builder__cursor-icon": css`
             height: 40px;
@@ -300,6 +321,15 @@ function visualBuilderStyles() {
                 border-color 0.15s ease-in-out,
                 box-shadow 0.15s ease-in-out;
             // vertical-align: middle;
+            &:disabled {
+                cursor: not-allowed;
+                svg {
+                    fill: #999;
+                    path {
+                        fill: #999;
+                    }
+                }
+            }
         `,
     "visual-builder__button--primary": css`
             background-color: #6c5ce7;
@@ -335,6 +365,7 @@ function visualBuilderStyles() {
             }
         `,
     "visual-builder__button--comment-loader": css`
+            cursor: wait !important;
             svg.loader {
                 height: 16px;
                 width: 16px;
@@ -364,7 +395,7 @@ function visualBuilderStyles() {
                 gap: 8px;
             }
 
-            .visual-builder__button:hover {
+            .visual-builder__button:enabled:hover {
                 background-color: #f5f5f5;
 
                 svg {
@@ -493,7 +524,7 @@ function visualBuilderStyles() {
             position: absolute;
             outline: 2px dashed #6c5ce7;
             transition: var(--outline-transition);
-            z-index: 2147483647 !important;
+            z-index: 2147483646 !important;
         `,
     "visual-builder__hover-outline--hidden": css`
             visibility: hidden;
@@ -587,6 +618,8 @@ function visualBuilderStyles() {
         `,
     "variant-field-revert-component__dropdown-content": css`
             position: absolute;
+            top: -12px;
+            left: -4px;
             background-color: #ffffff;
             min-width: max-content;
             box-shadow:
@@ -600,6 +633,7 @@ function visualBuilderStyles() {
         `,
     "variant-field-revert-component__dropdown-content__list-item": css`
             color: black;
+            font-weight: 400;
             padding: 9.6px 16px;
             text-decoration: none;
             display: block;
@@ -648,7 +682,7 @@ var VisualBuilderGlobalStyles = `
        [data-cslp] [contenteditable="true"] {
             outline: none;
         }
-        
+
         @keyframes visual-builder__spinner {
             0% {
                 transform: rotate(0deg);

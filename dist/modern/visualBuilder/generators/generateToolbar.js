@@ -11,23 +11,36 @@ import {
 import FieldToolbarComponent from "../components/FieldToolbar.js";
 import { render } from "preact";
 import FieldLabelWrapperComponent from "../components/fieldLabelWrapper.js";
+import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
 import { jsx } from "preact/jsx-runtime";
-function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement);
-  appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay);
+  appendFieldToolbar(
+    eventDetails,
+    focusedToolbarElement,
+    hideOverlay,
+    isVariant
+  );
 }
-function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
+async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ))
     return;
+  const entryPermissions = await getEntryPermissionsCached({
+    entryUid: eventDetails.fieldMetadata.entry_uid,
+    contentTypeUid: eventDetails.fieldMetadata.content_type_uid,
+    locale: eventDetails.fieldMetadata.locale
+  });
   const wrapper = document.createDocumentFragment();
   render(
     /* @__PURE__ */ jsx(
       FieldToolbarComponent,
       {
         eventDetails,
-        hideOverlay
+        hideOverlay,
+        isVariant,
+        entryPermissions
       }
     ),
     wrapper
@@ -35,7 +48,9 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   focusedToolbarElement.append(wrapper);
 }
 function appendFieldPathDropdown(eventDetails, focusedToolbarElement) {
-  if (document.querySelector(".visual-builder__focused-toolbar__field-label-wrapper"))
+  if (document.querySelector(
+    ".visual-builder__focused-toolbar__field-label-wrapper"
+  ))
     return;
   const { editableElement: targetElement, fieldMetadata } = eventDetails;
   const targetElementDimension = targetElement.getBoundingClientRect();

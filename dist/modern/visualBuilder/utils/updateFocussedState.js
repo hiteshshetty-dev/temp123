@@ -9,14 +9,17 @@ import {
   hideFocusOverlay
 } from "../generators/generateOverlay.js";
 import { hideHoverOutline } from "../listeners/mouseHover.js";
+import { getEntryPermissionsCached } from "./getEntryPermissionsCached.js";
 import {
   LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX,
   RIGHT_EDGE_BUFFER,
   TOOLBAR_EDGE_BUFFER,
   TOP_EDGE_BUFFER
 } from "./constants.js";
+import { FieldSchemaMap } from "./fieldSchemaMap.js";
 import getChildrenDirection from "./getChildrenDirection.js";
 import { getPsuedoEditableElementStyles } from "./getPsuedoEditableStylesElement.js";
+import { isFieldDisabled } from "./isFieldDisabled.js";
 function positionToolbar({
   focusedToolbar,
   selectedElementDimension
@@ -42,7 +45,7 @@ function positionToolbar({
     }
   }
 }
-function updateFocussedState({
+async function updateFocussedState({
   editableElement,
   visualBuilderContainer,
   overlayWrapper,
@@ -53,10 +56,11 @@ function updateFocussedState({
   if (!visualBuilderContainer || !editableElement || !previousSelectedEditableDOM || !overlayWrapper) {
     return;
   }
-  const previousSelectedElementCslp = previousSelectedEditableDOM?.getAttribute("data-cslp");
+  const previousSelectedElementCslp = editableElement?.getAttribute("data-cslp") || "";
+  const previousSelectedElementCslpUniqueId = previousSelectedEditableDOM?.getAttribute("data-cslp-unique-id");
   const newPreviousSelectedElement = document.querySelector(
-    `[data-cslp="${previousSelectedElementCslp}"]`
-  );
+    `[data-cslp-unique-id="${previousSelectedElementCslpUniqueId}"]`
+  ) || document.querySelector(`[data-cslp="${previousSelectedElementCslp}"]`);
   if (!newPreviousSelectedElement && resizeObserver) {
     hideFocusOverlay({
       visualBuilderOverlayWrapper: overlayWrapper,
@@ -71,8 +75,24 @@ function updateFocussedState({
     previousSelectedEditableDOM = newPreviousSelectedElement;
     VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = previousSelectedEditableDOM;
   }
+  const cslp = editableElement?.getAttribute("data-cslp") || "";
+  const fieldMetadata = extractDetailsFromCslp(cslp);
   hideHoverOutline(visualBuilderContainer);
-  addFocusOverlay(previousSelectedEditableDOM, overlayWrapper);
+  const fieldSchema = await FieldSchemaMap.getFieldSchema(
+    fieldMetadata.content_type_uid,
+    fieldMetadata.fieldPath
+  );
+  const entryAcl = await getEntryPermissionsCached({
+    entryUid: fieldMetadata.entry_uid,
+    contentTypeUid: fieldMetadata.content_type_uid,
+    locale: fieldMetadata.locale
+  });
+  const { isDisabled } = isFieldDisabled(
+    fieldSchema,
+    { editableElement, fieldMetadata },
+    entryAcl
+  );
+  addFocusOverlay(previousSelectedEditableDOM, overlayWrapper, isDisabled);
   const psuedoEditableElement = visualBuilderContainer.querySelector(
     ".visual-builder__pseudo-editable-element"
   );
@@ -87,8 +107,6 @@ function updateFocussedState({
     psuedoEditableElement.style.cssText = styleString;
     psuedoEditableElement.style.visibility = "visible";
   }
-  const cslp = editableElement?.getAttribute("data-cslp") || "";
-  const fieldMetadata = extractDetailsFromCslp(cslp);
   const targetElementDimension = editableElement.getBoundingClientRect();
   if (targetElementDimension.width && targetElementDimension.height) {
     const selectedElement = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
@@ -127,9 +145,12 @@ function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visu
   let selectedElement = VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
   if (!selectedElement) return;
   const selectedElementCslp = selectedElement?.getAttribute("data-cslp");
-  const newSelectedElement = document.querySelector(
-    `[data-cslp="${selectedElementCslp}"]`
+  const selectedElementCslpUniqueId = selectedElement?.getAttribute(
+    "data-cslp-unique-id"
   );
+  const newSelectedElement = document.querySelector(
+    `[data-cslp-unique-id="${selectedElementCslpUniqueId}"]`
+  ) || document.querySelector(`[data-cslp="${selectedElementCslp}"]`);
   if (!newSelectedElement && resizeObserver) {
     hideFocusOverlay({
       visualBuilderOverlayWrapper: focusOverlayWrapper,

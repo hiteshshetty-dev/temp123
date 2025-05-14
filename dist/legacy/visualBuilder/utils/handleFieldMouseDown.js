@@ -11,6 +11,7 @@ import {
 import { FieldDataType } from "./types/index.types.js";
 import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
 import { insertSpaceAtCursor } from "./insertSpaceAtCursor.js";
+import { VisualBuilder } from "../index.js";
 function handleFieldInput(e) {
   const event = e;
   const targetElement = event.target;
@@ -18,6 +19,9 @@ function handleFieldInput(e) {
     VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
   if (event.type === "input" && ALLOWED_INLINE_EDITABLE_FIELD.includes(fieldType)) {
+    if (!VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput) {
+      VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput = true;
+    }
     throttledFieldSync();
   }
 }
@@ -41,7 +45,9 @@ function handleFieldKeyDown(e) {
   const fieldType = targetElement.getAttribute(
     VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
-  if (targetElement.tagName === "BUTTON") {
+  if (event.composedPath().some(
+    (element) => element instanceof Element && element.tagName === "BUTTON"
+  )) {
     handleKeyDownOnButton(event);
   }
   if (fieldType === FieldDataType.NUMBER) {
@@ -54,6 +60,7 @@ function handleKeyDownOnButton(e) {
   if (e.code === "Space" && e.target) {
     e.preventDefault();
     insertSpaceAtCursor(e.target);
+    throttledFieldSync();
   }
 }
 function handleSingleLineFieldKeyDown(e) {

@@ -114,18 +114,20 @@ function hideFocusOverlay(elements) {
         childNode.removeAttribute("style");
       }
     });
-    if (!noTrigger) {
+    if (!noTrigger && // send update when focussed field has received input
+    import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput) {
       sendFieldEvent({
         visualBuilderContainer,
         eventType: import_postMessage.VisualBuilderPostMessageEvents.UPDATE_FIELD
       });
-    } else {
+    } else if (noTrigger) {
       const { previousSelectedEditableDOM, focusFieldValue } = import__.VisualBuilder.VisualBuilderGlobalState.value || {};
       if (previousSelectedEditableDOM && "innerText" in previousSelectedEditableDOM && focusFieldValue != null) {
         previousSelectedEditableDOM.innerText = focusFieldValue;
       }
     }
     import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldValue = null;
+    import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput = false;
     (0, import_handleIndividualFields.cleanIndividualFieldResidual)({
       overlayWrapper: visualBuilderOverlayWrapper,
       visualBuilderContainer,
@@ -167,6 +169,11 @@ function sendFieldEvent(options) {
   }
 }
 function hideOverlay(params) {
+  const focusElementObserver = import__.VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver;
+  if (focusElementObserver) {
+    focusElementObserver.disconnect();
+    import__.VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver = null;
+  }
   hideFocusOverlay({
     visualBuilderContainer: params.visualBuilderContainer,
     visualBuilderOverlayWrapper: params.visualBuilderOverlayWrapper,

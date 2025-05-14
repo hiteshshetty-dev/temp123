@@ -39,23 +39,36 @@ var import_constants = require("../utils/constants.cjs");
 var import_FieldToolbar = __toESM(require("../components/FieldToolbar.cjs"), 1);
 var import_preact = require("preact");
 var import_fieldLabelWrapper = __toESM(require("../components/fieldLabelWrapper.cjs"), 1);
+var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
-function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement);
-  appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay);
+  appendFieldToolbar(
+    eventDetails,
+    focusedToolbarElement,
+    hideOverlay,
+    isVariant
+  );
 }
-function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
+async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ))
     return;
+  const entryPermissions = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+    entryUid: eventDetails.fieldMetadata.entry_uid,
+    contentTypeUid: eventDetails.fieldMetadata.content_type_uid,
+    locale: eventDetails.fieldMetadata.locale
+  });
   const wrapper = document.createDocumentFragment();
   (0, import_preact.render)(
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       import_FieldToolbar.default,
       {
         eventDetails,
-        hideOverlay
+        hideOverlay,
+        isVariant,
+        entryPermissions
       }
     ),
     wrapper
@@ -63,7 +76,9 @@ function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay) {
   focusedToolbarElement.append(wrapper);
 }
 function appendFieldPathDropdown(eventDetails, focusedToolbarElement) {
-  if (document.querySelector(".visual-builder__focused-toolbar__field-label-wrapper"))
+  if (document.querySelector(
+    ".visual-builder__focused-toolbar__field-label-wrapper"
+  ))
     return;
   const { editableElement: targetElement, fieldMetadata } = eventDetails;
   const targetElementDimension = targetElement.getBoundingClientRect();

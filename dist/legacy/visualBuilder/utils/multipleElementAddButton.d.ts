@@ -29,7 +29,7 @@ declare function removeAddInstanceButtons(elements: {
     eventTarget: EventTarget | null;
 }, forceRemoveAll?: boolean): void;
 /**
- * This function that observes the parent element and focuses the newly added instance.
+ * This function observes the parent element and focuses the newly added instance.
  *
  * @param parentCslp The parent cslp value.
  * @param index The index of the new instance.

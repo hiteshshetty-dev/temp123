@@ -32,6 +32,7 @@ var FieldRevertComponent_exports = {};
 __export(FieldRevertComponent_exports, {
   BASE_VARIANT_STATUS: () => BASE_VARIANT_STATUS,
   FieldRevertComponent: () => FieldRevertComponent,
+  VariantRevertDropdown: () => VariantRevertDropdown,
   getFieldVariantStatus: () => getFieldVariantStatus
 });
 module.exports = __toCommonJS(FieldRevertComponent_exports);
@@ -39,6 +40,9 @@ var import_classnames = __toESM(require("classnames"), 1);
 var import_compat = require("preact/compat");
 var import_visualBuilder = require("../../visualBuilder.style.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../../utils/visualBuilderPostMessage.cjs"), 1);
+var import_variant = require("../icons/variant.cjs");
+var import_icons = require("../icons/index.cjs");
+var import_useHandleOutsideClick = __toESM(require("./useHandleOutsideClick.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
 var BASE_VARIANT_STATUS = {
   isAddedInstances: false,
@@ -66,18 +70,6 @@ var FieldRevertComponent = (props) => {
     isOpen,
     closeDropdown
   } = props;
-  const dropdownRef = (0, import_compat.useRef)(null);
-  (0, import_compat.useEffect)(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        closeDropdown();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   const getDropdownItems = () => {
     const {
       isAddedInstances,
@@ -152,11 +144,11 @@ var FieldRevertComponent = (props) => {
         "variant-field-revert-component",
         (0, import_visualBuilder.visualBuilderStyles)()["variant-field-revert-component"]
       ),
-      ref: dropdownRef,
       onClick: (e) => e.stopPropagation(),
       children: isOpen && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "div",
         {
+          "data-testid": "variant-field-revert-component__dropdown-content",
           className: (0, import_classnames.default)(
             "variant-field-revert-component__dropdown-content",
             (0, import_visualBuilder.visualBuilderStyles)()["variant-field-revert-component__dropdown-content"]
@@ -183,10 +175,68 @@ var FieldRevertComponent = (props) => {
     }
   );
 };
+var VariantRevertDropdown = (props) => {
+  const {
+    closeDropdown,
+    invertTooltipPosition,
+    toggleVariantDropdown,
+    variantStatus = BASE_VARIANT_STATUS,
+    disabled
+  } = props;
+  const dropdownRef = (0, import_compat.useRef)(null);
+  (0, import_useHandleOutsideClick.default)(dropdownRef, closeDropdown);
+  const hasDropdownItems = Object.values(variantStatus).some(
+    (value) => value
+  );
+  const buttonClassNames = (0, import_classnames.default)(
+    "visual-builder__button visual-builder__button--secondary",
+    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],
+    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--secondary"],
+    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip"],
+    {
+      "visual-builder__tooltip--bottom": invertTooltipPosition,
+      [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip--bottom"]]: invertTooltipPosition
+    }
+  );
+  if (!hasDropdownItems) {
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "button",
+      {
+        className: (0, import_classnames.default)(buttonClassNames),
+        style: { padding: "6px" },
+        "data-tooltip": "Variant",
+        "data-testid": `visual-builder-canvas-variant-icon`,
+        disabled,
+        children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_variant.VariantIcon, {})
+      }
+    );
+  }
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { ref: dropdownRef, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      "button",
+      {
+        className: (0, import_classnames.default)(
+          buttonClassNames,
+          (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__variant-button"]
+        ),
+        "data-tooltip": "Variant Revert",
+        "data-testid": `visual-builder-canvas-variant-revert`,
+        onClick: toggleVariantDropdown,
+        disabled,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_variant.VariantIcon, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretIcon, { open: props.isOpen })
+        ]
+      }
+    ),
+    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FieldRevertComponent, { ...props })
+  ] });
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   BASE_VARIANT_STATUS,
   FieldRevertComponent,
+  VariantRevertDropdown,
   getFieldVariantStatus
 });
 //# sourceMappingURL=FieldRevertComponent.cjs.map

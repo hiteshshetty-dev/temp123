@@ -1,5 +1,6 @@
 import { OnEntryChangeCallback, OnEntryChangeConfig, OnEntryChangeCallbackUID, OnEntryChangeUnsubscribeParameters } from '../livePreview/types/onEntryChangeCallback.type.js';
-import { IInitData } from '../types/types.js';
+import { IInitData, IExportedConfig } from '../types/types.js';
+import '../visualBuilder/types/collab.types.js';
 
 declare class ContentstackLivePreview {
     private static previewConstructors;
@@ -19,6 +20,7 @@ declare class ContentstackLivePreview {
      * This hash could be used when data is fetched manually.
      */
     static get hash(): string;
+    static get config(): IExportedConfig;
     private static isInitialized;
     private static initializePreview;
     /**

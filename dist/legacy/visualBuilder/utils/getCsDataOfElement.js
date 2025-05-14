@@ -23,14 +23,29 @@ function getCsDataOfElement(event) {
     fieldMetadata
   };
 }
+function getPrefix(cslp) {
+  let prefix;
+  if (cslp.startsWith("v2:")) {
+    const variantPrefix = cslp.split(":")[1];
+    const content_type_uid = variantPrefix.split(".")[0];
+    const euid = variantPrefix.split(".")[1].split("_")[0];
+    const locale = variantPrefix.split(".")[2];
+    prefix = `${content_type_uid}.${euid}.${locale}`;
+  } else {
+    prefix = cslp;
+  }
+  return prefix.split(".").slice(0, 3).join(".");
+}
 function getDOMEditStack(ele) {
   var _a;
   const cslpSet = [];
   let curr = ele.closest(`[${DATA_CSLP_ATTR_SELECTOR}]`);
   while (curr) {
     const cslp = curr.getAttribute(DATA_CSLP_ATTR_SELECTOR);
-    const entryPrefix = cslp.split(".").slice(0, 3).join(".");
-    const hasSamePrevPrefix = (cslpSet.at(0) || "").startsWith(entryPrefix);
+    const entryPrefix = getPrefix(cslp);
+    const hasSamePrevPrefix = getPrefix(cslpSet.at(0) || "").startsWith(
+      entryPrefix
+    );
     if (!hasSamePrevPrefix) {
       cslpSet.unshift(cslp);
     }

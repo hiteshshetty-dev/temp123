@@ -39,9 +39,12 @@ var import_cslp = require("../../cslp/index.cjs");
 var import_generateAddInstanceButtons = require("../generators/generateAddInstanceButtons.cjs");
 var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_mouseHover = require("../listeners/mouseHover.cjs");
+var import_getEntryPermissionsCached = require("./getEntryPermissionsCached.cjs");
 var import_constants = require("./constants.cjs");
+var import_fieldSchemaMap = require("./fieldSchemaMap.cjs");
 var import_getChildrenDirection = __toESM(require("./getChildrenDirection.cjs"), 1);
 var import_getPsuedoEditableStylesElement = require("./getPsuedoEditableStylesElement.cjs");
+var import_isFieldDisabled = require("./isFieldDisabled.cjs");
 function positionToolbar({
   focusedToolbar,
   selectedElementDimension
@@ -67,7 +70,7 @@ function positionToolbar({
     }
   }
 }
-function updateFocussedState({
+async function updateFocussedState({
   editableElement,
   visualBuilderContainer,
   overlayWrapper,
@@ -78,10 +81,11 @@ function updateFocussedState({
   if (!visualBuilderContainer || !editableElement || !previousSelectedEditableDOM || !overlayWrapper) {
     return;
   }
-  const previousSelectedElementCslp = previousSelectedEditableDOM?.getAttribute("data-cslp");
+  const previousSelectedElementCslp = editableElement?.getAttribute("data-cslp") || "";
+  const previousSelectedElementCslpUniqueId = previousSelectedEditableDOM?.getAttribute("data-cslp-unique-id");
   const newPreviousSelectedElement = document.querySelector(
-    `[data-cslp="${previousSelectedElementCslp}"]`
-  );
+    `[data-cslp-unique-id="${previousSelectedElementCslpUniqueId}"]`
+  ) || document.querySelector(`[data-cslp="${previousSelectedElementCslp}"]`);
   if (!newPreviousSelectedElement && resizeObserver) {
     (0, import_generateOverlay.hideFocusOverlay)({
       visualBuilderOverlayWrapper: overlayWrapper,
@@ -96,8 +100,24 @@ function updateFocussedState({
     previousSelectedEditableDOM = newPreviousSelectedElement;
     import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = previousSelectedEditableDOM;
   }
+  const cslp = editableElement?.getAttribute("data-cslp") || "";
+  const fieldMetadata = (0, import_cslp.extractDetailsFromCslp)(cslp);
   (0, import_mouseHover.hideHoverOutline)(visualBuilderContainer);
-  (0, import_generateOverlay.addFocusOverlay)(previousSelectedEditableDOM, overlayWrapper);
+  const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
+    fieldMetadata.content_type_uid,
+    fieldMetadata.fieldPath
+  );
+  const entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+    entryUid: fieldMetadata.entry_uid,
+    contentTypeUid: fieldMetadata.content_type_uid,
+    locale: fieldMetadata.locale
+  });
+  const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
+    fieldSchema,
+    { editableElement, fieldMetadata },
+    entryAcl
+  );
+  (0, import_generateOverlay.addFocusOverlay)(previousSelectedEditableDOM, overlayWrapper, isDisabled);
   const psuedoEditableElement = visualBuilderContainer.querySelector(
     ".visual-builder__pseudo-editable-element"
   );
@@ -112,8 +132,6 @@ function updateFocussedState({
     psuedoEditableElement.style.cssText = styleString;
     psuedoEditableElement.style.visibility = "visible";
   }
-  const cslp = editableElement?.getAttribute("data-cslp") || "";
-  const fieldMetadata = (0, import_cslp.extractDetailsFromCslp)(cslp);
   const targetElementDimension = editableElement.getBoundingClientRect();
   if (targetElementDimension.width && targetElementDimension.height) {
     const selectedElement = import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
@@ -152,9 +170,12 @@ function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visu
   let selectedElement = import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM;
   if (!selectedElement) return;
   const selectedElementCslp = selectedElement?.getAttribute("data-cslp");
-  const newSelectedElement = document.querySelector(
-    `[data-cslp="${selectedElementCslp}"]`
+  const selectedElementCslpUniqueId = selectedElement?.getAttribute(
+    "data-cslp-unique-id"
   );
+  const newSelectedElement = document.querySelector(
+    `[data-cslp-unique-id="${selectedElementCslpUniqueId}"]`
+  ) || document.querySelector(`[data-cslp="${selectedElementCslp}"]`);
   if (!newSelectedElement && resizeObserver) {
     (0, import_generateOverlay.hideFocusOverlay)({
       visualBuilderOverlayWrapper: focusOverlayWrapper,

@@ -34,9 +34,7 @@ __export(handleIndividualFields_exports, {
   handleIndividualFields: () => handleIndividualFields
 });
 module.exports = __toCommonJS(handleIndividualFields_exports);
-var import_lodash_es = require("lodash-es");
 var import__ = require("../index.cjs");
-var import_generatePseudoEditableField = require("../generators/generatePseudoEditableField.cjs");
 var import_constants = require("./constants.cjs");
 var import_fieldSchemaMap = require("./fieldSchemaMap.cjs");
 var import_getFieldData = require("./getFieldData.cjs");
@@ -44,11 +42,12 @@ var import_getFieldType = require("./getFieldType.cjs");
 var import_handleFieldMouseDown = require("./handleFieldMouseDown.cjs");
 var import_isFieldDisabled = require("./isFieldDisabled.cjs");
 var import_multipleElementAddButton = require("./multipleElementAddButton.cjs");
-var import_updateFocussedState = require("./updateFocussedState.cjs");
-var import_types = require("./types/index.types.cjs");
-var import_getMultilinePlaintext = require("./getMultilinePlaintext.cjs");
 var import_postMessage = require("./types/postMessage.types.cjs");
 var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
+var import_isFieldMultiple = require("./isFieldMultiple.cjs");
+var import_handleInlineEditableField = require("./handleInlineEditableField.cjs");
+var import_pasteAsPlainText = require("./pasteAsPlainText.cjs");
+var import_getEntryPermissionsCached = require("./getEntryPermissionsCached.cjs");
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -67,12 +66,21 @@ async function handleIndividualFields(eventDetails, elements) {
     )
   ]);
   const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
-  const { isDisabled: disabled } = (0, import_isFieldDisabled.isFieldDisabled)(fieldSchema, eventDetails);
+  const entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+    entryUid: entry_uid,
+    contentTypeUid: content_type_uid,
+    locale
+  });
+  const { isDisabled: disabled } = (0, import_isFieldDisabled.isFieldDisabled)(
+    fieldSchema,
+    eventDetails,
+    entryAcl
+  );
   editableElement.setAttribute(
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
     fieldType
   );
-  if (isFieldMultiple(fieldSchema)) {
+  if ((0, import_isFieldMultiple.isFieldMultiple)(fieldSchema)) {
     if (lastEditedField !== editableElement) {
       const addButtonLabel = fieldSchema.data_type === "blocks" ? (
         // ? `Add ${fieldSchema.display_name ?? "Modular Block"}`
@@ -94,95 +102,17 @@ async function handleIndividualFields(eventDetails, elements) {
       );
     }
   }
-  !disabled && handleInlineEditing();
-  function handleInlineEditing() {
-    if (!import_constants.ALLOWED_INLINE_EDITABLE_FIELD.includes(fieldType)) return;
-    const index = Number(fieldMetadata.instance.fieldPathWithIndex.split(".").at(-1));
-    const isInstance = Number.isFinite(index);
-    if (isFieldMultiple(fieldSchema)) {
-      let expectedFieldInstanceData = null;
-      if (Array.isArray(expectedFieldData)) {
-        if (!isInstance) {
-          return;
-        }
-        if (index >= expectedFieldData.length) {
-        } else {
-          expectedFieldInstanceData = expectedFieldData.at(index);
-        }
-      } else {
-        expectedFieldInstanceData = expectedFieldData;
-      }
-      enableInlineEditing(expectedFieldInstanceData);
-    } else {
-      let expectedFieldInstanceData = null;
-      if (isInstance) {
-        if (index !== 0) {
-          return;
-        }
-        expectedFieldInstanceData = Array.isArray(expectedFieldData) ? expectedFieldData.at(0) : expectedFieldData;
-      }
-      enableInlineEditing(expectedFieldInstanceData ?? expectedFieldData);
-    }
-    function enableInlineEditing(expectedFieldData2) {
-      let actualEditableField = editableElement;
-      import__.VisualBuilder.VisualBuilderGlobalState.value.focusFieldValue = actualEditableField?.innerText;
-      const elementComputedDisplay = window.getComputedStyle(actualEditableField).display;
-      let textContent = editableElement.innerText || editableElement.textContent || "";
-      if (fieldType === import_types.FieldDataType.MULTILINE) {
-        textContent = (0, import_getMultilinePlaintext.getMultilinePlaintext)(actualEditableField);
-        actualEditableField.addEventListener("paste", pasteAsPlainText);
-      }
-      const expectedTextContent = expectedFieldData2;
-      if (expectedTextContent && textContent !== expectedTextContent || (0, import_generatePseudoEditableField.isEllipsisActive)(editableElement)) {
-        const pseudoEditableField = (0, import_generatePseudoEditableField.generatePseudoEditableElement)(
-          { editableElement },
-          { textContent: expectedFieldData2 }
-        );
-        editableElement.style.visibility = "hidden";
-        pseudoEditableField.setAttribute(
-          import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
-          fieldType
-        );
-        visualBuilderContainer.appendChild(pseudoEditableField);
-        actualEditableField = pseudoEditableField;
-        if (fieldType === import_types.FieldDataType.MULTILINE)
-          actualEditableField.addEventListener(
-            "paste",
-            pasteAsPlainText
-          );
-        elements.resizeObserver.observe(pseudoEditableField);
-      } else if (elementComputedDisplay === "inline") {
-        const onInlineElementInput = (0, import_lodash_es.throttle)(() => {
-          const overlayWrapper = visualBuilderContainer.querySelector(
-            ".visual-builder__overlay__wrapper"
-          );
-          const focusedToolbar = visualBuilderContainer.querySelector(
-            ".visual-builder__focused-toolbar"
-          );
-          (0, import_updateFocussedState.updateFocussedState)({
-            editableElement: actualEditableField,
-            visualBuilderContainer,
-            overlayWrapper,
-            focusedToolbar,
-            resizeObserver
-          });
-        }, 200);
-        actualEditableField.addEventListener(
-          "input",
-          onInlineElementInput
-        );
-      }
-      actualEditableField.setAttribute("contenteditable", "true");
-      actualEditableField.addEventListener("input", import_handleFieldMouseDown.handleFieldInput);
-      actualEditableField.addEventListener("keydown", import_handleFieldMouseDown.handleFieldKeyDown);
-      actualEditableField.focus();
-      return;
-    }
+  if (disabled) {
+    return;
   }
-}
-function isFieldMultiple(fieldSchema) {
-  return fieldSchema && (fieldSchema.multiple || fieldSchema.data_type === "reference" && // @ts-ignore
-  fieldSchema.field_metadata.ref_multiple);
+  (0, import_handleInlineEditableField.handleInlineEditableField)({
+    fieldType,
+    fieldSchema,
+    fieldMetadata,
+    expectedFieldData,
+    editableElement,
+    elements
+  });
 }
 function cleanIndividualFieldResidual(elements) {
   const { overlayWrapper, visualBuilderContainer, focusedToolbar } = elements;
@@ -210,7 +140,7 @@ function cleanIndividualFieldResidual(elements) {
     );
     previousSelectedEditableDOM.removeEventListener(
       "paste",
-      pasteAsPlainText
+      import_pasteAsPlainText.pasteAsPlainText
     );
     elements.resizeObserver.unobserve(previousSelectedEditableDOM);
   }
@@ -219,7 +149,7 @@ function cleanIndividualFieldResidual(elements) {
   );
   if (pseudoEditableElement) {
     elements.resizeObserver.unobserve(pseudoEditableElement);
-    pseudoEditableElement.removeEventListener("paste", pasteAsPlainText);
+    pseudoEditableElement.removeEventListener("paste", import_pasteAsPlainText.pasteAsPlainText);
     pseudoEditableElement.remove();
     if (previousSelectedEditableDOM) {
       previousSelectedEditableDOM.style.removeProperty(
@@ -229,25 +159,17 @@ function cleanIndividualFieldResidual(elements) {
   }
   if (focusedToolbar) {
     focusedToolbar.innerHTML = "";
-    const toolbarEvents = [import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE, import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID];
+    const toolbarEvents = [
+      import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE,
+      import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID
+    ];
     toolbarEvents.forEach((event) => {
-      import_visualBuilderPostMessage.default?.unregisterEvent?.(event);
+      if (import_visualBuilderPostMessage.default?.requestMessageHandlers?.has(event)) {
+        import_visualBuilderPostMessage.default?.unregisterEvent?.(event);
+      }
     });
   }
 }
-var pasteAsPlainText = (0, import_lodash_es.debounce)(
-  (e) => {
-    e.preventDefault();
-    const clipboardData = e.clipboardData;
-    document.execCommand(
-      "inserttext",
-      false,
-      clipboardData?.getData("text/plain")
-    );
-  },
-  100,
-  { leading: true }
-);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   cleanIndividualFieldResidual,

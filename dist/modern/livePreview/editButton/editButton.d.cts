@@ -1,4 +1,5 @@
 import { IEditButtonPosition } from '../../types/types.cjs';
+import '../../visualBuilder/types/collab.types.cjs';
 
 declare const createSingularEditButton: (editCallback: (e: MouseEvent) => void) => HTMLDivElement;
 declare const createMultipleEditButton: (editCallback: (e: MouseEvent) => void, linkCallback: (e: MouseEvent) => void) => HTMLDivElement;
@@ -15,6 +16,7 @@ declare class LivePreviewEditButton {
     private createCslpTooltip;
     private updateTooltipPosition;
     private addEditStyleOnHover;
+    private shouldUpdateStyle;
     private scrollHandler;
     /**
      * Generates the redirect URL for editing a specific entry in the Live Preview SDK.
@@ -31,5 +33,17 @@ declare class LivePreviewEditButton {
      */
     destroy(): void;
 }
+/**
+ * Find first element with cslp on the event composed path,
+ * do safe zone calculation for the element based on its
+ * width and height, and return true if mouse pointer is
+ * within the safe zone. Returns undefined when this cannot
+ * be determined.
+ */
+declare function isPointerWithinEditButtonSafeZone({ event, editButtonDomRect, editButtonPos, }: {
+    event: MouseEvent;
+    editButtonDomRect: DOMRect | undefined;
+    editButtonPos: string | undefined;
+}): boolean | undefined;
 
-export { LivePreviewEditButton, createMultipleEditButton, createSingularEditButton, doesEditButtonExist, getEditButtonPosition, shouldRenderEditButton, toggleEditButtonElement };
+export { LivePreviewEditButton, createMultipleEditButton, createSingularEditButton, doesEditButtonExist, getEditButtonPosition, isPointerWithinEditButtonSafeZone, shouldRenderEditButton, toggleEditButtonElement };

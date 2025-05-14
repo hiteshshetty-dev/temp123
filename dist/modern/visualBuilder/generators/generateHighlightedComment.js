@@ -22,9 +22,9 @@ function highlightCommentIconOnCanvas(payload) {
       iconContainer.style.position = "fixed";
       iconContainer.style.top = `${top - highlighCommentOffset}px`;
       iconContainer.style.left = `${left - highlighCommentOffset}px`;
-      iconContainer.style.zIndex = "1000";
+      iconContainer.style.zIndex = "900";
       iconContainer.style.cursor = "pointer";
-      iconContainer.className = "highlighted-comment";
+      iconContainer.className = "highlighted-comment collab-icon";
       render(
         h(HighlightedCommentIcon, { data }),
         // Use h directly with Preact

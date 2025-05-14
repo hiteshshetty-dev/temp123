@@ -5,8 +5,11 @@ import { render } from "preact";
 import AddInstanceButtonComponent from "../components/addInstanceButton.js";
 import { jsx } from "preact/jsx-runtime";
 function generateAddInstanceButton({
-  fieldSchema,
   value,
+  fieldSchema,
+  fieldMetadata,
+  index,
+  loading,
   onClick,
   label
 }) {
@@ -15,10 +18,13 @@ function generateAddInstanceButton({
     /* @__PURE__ */ jsx(
       AddInstanceButtonComponent,
       {
+        loading,
+        index,
         value,
         label,
         onClick,
-        fieldSchema
+        fieldSchema,
+        fieldMetadata
       }
     ),
     wrapper

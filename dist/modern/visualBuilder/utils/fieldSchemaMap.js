@@ -59,6 +59,7 @@ var _FieldSchemaMap = class _FieldSchemaMap {
    */
   static clear() {
     _FieldSchemaMap.fieldSchema = {};
+    _FieldSchemaMap.fieldSchemaPromise = {};
   }
 };
 _FieldSchemaMap.fieldSchema = {};

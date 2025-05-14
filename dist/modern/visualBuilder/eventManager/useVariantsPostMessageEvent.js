@@ -5,6 +5,7 @@ import { VisualBuilder } from "../index.js";
 import { visualBuilderStyles } from "../visualBuilder.style.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
+import { FieldSchemaMap } from "../utils/fieldSchemaMap.js";
 function addVariantFieldClass(variant_uid, highlightVariantFields) {
   const elements = document.querySelectorAll(`[data-cslp]`);
   elements.forEach((element) => {
@@ -60,6 +61,7 @@ function useVariantFieldsPostMessageEvent() {
     VisualBuilderPostMessageEvents.GET_VARIANT_ID,
     (event) => {
       setVariant(event.data.variant);
+      FieldSchemaMap.clear();
     }
   );
   visualBuilderPostMessage?.on(
@@ -92,6 +94,11 @@ function useVariantFieldsPostMessageEvent() {
   );
 }
 export {
+  addVariantFieldClass,
+  removeVariantFieldClass,
+  setAudienceMode,
+  setLocale,
+  setVariant,
   useVariantFieldsPostMessageEvent
 };
 //# sourceMappingURL=useVariantsPostMessageEvent.js.map

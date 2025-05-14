@@ -69,7 +69,7 @@ var handleClientUrlParams = (userConfig) => {
   import_configManager.default.set("clientUrlParams.url", url);
 };
 var handleInitData = (initData) => {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
   const config = import_configManager.default.get();
   const stackSdk = initData.stackSdk || config.stackSdk;
   import_configManager.default.set(
@@ -96,8 +96,12 @@ var handleInitData = (initData) => {
     position: ((_n = initData.editButton) == null ? void 0 : _n.position) ?? ((_o = stackSdk.live_preview) == null ? void 0 : _o.position) ?? config.editButton.position ?? "top",
     includeByQueryParameter: ((_p = initData.editButton) == null ? void 0 : _p.includeByQueryParameter) ?? ((_q = stackSdk.live_preview) == null ? void 0 : _q.includeByQueryParameter) ?? config.editButton.includeByQueryParameter ?? true
   });
+  import_configManager.default.set("editInVisualBuilderButton", {
+    enable: ((_r = initData.editInVisualBuilderButton) == null ? void 0 : _r.enable) ?? ((_t = (_s = stackSdk.live_preview) == null ? void 0 : _s.editInVisualBuilderButton) == null ? void 0 : _t.enable) ?? config.editInVisualBuilderButton.enable,
+    position: ((_u = initData.editInVisualBuilderButton) == null ? void 0 : _u.position) ?? ((_v = stackSdk.live_preview) == null ? void 0 : _v.position) ?? config.editInVisualBuilderButton.position ?? "bottom-right"
+  });
   handleClientUrlParams(
-    initData.clientUrlParams ?? ((_r = stackSdk.live_preview) == null ? void 0 : _r.clientUrlParams) ?? config.clientUrlParams
+    initData.clientUrlParams ?? ((_w = stackSdk.live_preview) == null ? void 0 : _w.clientUrlParams) ?? config.clientUrlParams
   );
   if (initData.mode) {
     switch (initData.mode) {
@@ -118,7 +122,7 @@ var handleInitData = (initData) => {
   }
   import_configManager.default.set(
     "debug",
-    initData.debug ?? ((_s = stackSdk.live_preview) == null ? void 0 : _s.debug) ?? config.debug
+    initData.debug ?? ((_x = stackSdk.live_preview) == null ? void 0 : _x.debug) ?? config.debug
   );
   handleStackDetails(initData, stackSdk);
 };

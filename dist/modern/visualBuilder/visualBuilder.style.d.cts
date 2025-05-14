@@ -6,7 +6,12 @@ declare function visualBuilderStyles(): {
     "visual-builder__overlay": string;
     "visual-builder__add-button": string;
     "visual-builder__add-button-label": string;
+    "visual-builder__add-button--loading": string;
     "visual-builder__start-editing-btn": string;
+    "visual-builder__start-editing-btn__bottom-right": string;
+    "visual-builder__start-editing-btn__bottom-left": string;
+    "visual-builder__start-editing-btn__top-right": string;
+    "visual-builder__start-editing-btn__top-left": string;
     "visual-builder__cursor-icon": string;
     "visual-builder__cursor-pointer": string;
     "visual-builder__cursor-icon--loader": string;
@@ -54,6 +59,6 @@ declare function visualBuilderStyles(): {
     "visual-builder__field-toolbar-container": string;
     "visual-builder__variant-button": string;
 };
-declare const VisualBuilderGlobalStyles = "\n       @import url(\"https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap\");\n\n       [data-cslp] [contenteditable=\"true\"] {\n            outline: none;\n        }\n        \n        @keyframes visual-builder__spinner {\n            0% {\n                transform: rotate(0deg);\n            }\n            100% {\n                transform: rotate(360deg);\n            }\n        }\n\n";
+declare const VisualBuilderGlobalStyles = "\n       @import url(\"https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap\");\n\n       [data-cslp] [contenteditable=\"true\"] {\n            outline: none;\n        }\n\n        @keyframes visual-builder__spinner {\n            0% {\n                transform: rotate(0deg);\n            }\n            100% {\n                transform: rotate(360deg);\n            }\n        }\n\n";
 
 export { VisualBuilderGlobalStyles, visualBuilderStyles };

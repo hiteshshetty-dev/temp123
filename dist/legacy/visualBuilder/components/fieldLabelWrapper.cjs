@@ -47,6 +47,7 @@ var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import_CslpError = require("./CslpError.cjs");
 var import_errorHandling = require("../utils/errorHandling.cjs");
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
+var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 async function getFieldDisplayNames(fieldMetadata) {
   var _a;
@@ -96,9 +97,15 @@ function FieldLabelWrapperComponent(props) {
         setError(true);
         return;
       }
+      const entryPermissions = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+        entryUid: props.fieldMetadata.entry_uid,
+        contentTypeUid: props.fieldMetadata.content_type_uid,
+        locale: props.fieldMetadata.locale
+      });
       const { isDisabled: fieldDisabled, reason } = (0, import_isFieldDisabled.isFieldDisabled)(
         fieldSchema,
-        eventDetails
+        eventDetails,
+        entryPermissions
       );
       const currentFieldDisplayName = (displayNames2 == null ? void 0 : displayNames2[props.fieldMetadata.cslpValue]) ?? fieldSchema.display_name;
       const hasParentPaths = !!((_a = props == null ? void 0 : props.parentPaths) == null ? void 0 : _a.length);

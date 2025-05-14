@@ -36,6 +36,9 @@ module.exports = __toCommonJS(isFieldDisabled_exports);
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 var import__ = require("../index.cjs");
 var getDisableReason = (flags) => {
+  if (flags.updateRestrictDueToEntryUpdateRestriction) {
+    return "You do not have permission to edit this entry" /* EntryUpdateRestricted */;
+  }
   if (flags.updateRestrictDueToRole) return "You have only read access to this field" /* ReadOnly */;
   if (flags.updateRestrictDueToNonLocalizableFields)
     return "Editing this field is restricted in localized entries" /* LocalizedEntry */;
@@ -49,7 +52,7 @@ var getDisableReason = (flags) => {
     return "This field is not editable as it doesn't match the selected variant" /* DisabledVariant */;
   return "" /* None */;
 };
-var isFieldDisabled = (fieldSchemaMap, eventFieldDetails) => {
+var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions) => {
   var _a, _b;
   const { editableElement, fieldMetadata } = eventFieldDetails;
   const masterLocale = import_configManager.default.get().stackDetails.masterLocale || "en-us";
@@ -70,6 +73,9 @@ var isFieldDisabled = (fieldSchemaMap, eventFieldDetails) => {
     updateRestrictDueToAudienceMode: false,
     updateRestrictDueToDisabledVariant: false
   };
+  if (entryPermissions && !entryPermissions.update) {
+    flags.updateRestrictDueToEntryUpdateRestriction = true;
+  }
   if (import__.VisualBuilder.VisualBuilderGlobalState.value.audienceMode && !editableElement.classList.contains("visual-builder__variant-field") && !editableElement.classList.contains("visual-builder__base-field")) {
     if (editableElement.classList.contains(
       "visual-builder__disabled-variant-field"

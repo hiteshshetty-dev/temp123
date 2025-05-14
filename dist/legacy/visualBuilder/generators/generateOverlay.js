@@ -79,18 +79,20 @@ function hideFocusOverlay(elements) {
         childNode.removeAttribute("style");
       }
     });
-    if (!noTrigger) {
+    if (!noTrigger && // send update when focussed field has received input
+    VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput) {
       sendFieldEvent({
         visualBuilderContainer,
         eventType: VisualBuilderPostMessageEvents.UPDATE_FIELD
       });
-    } else {
+    } else if (noTrigger) {
       const { previousSelectedEditableDOM, focusFieldValue } = VisualBuilder.VisualBuilderGlobalState.value || {};
       if (previousSelectedEditableDOM && "innerText" in previousSelectedEditableDOM && focusFieldValue != null) {
         previousSelectedEditableDOM.innerText = focusFieldValue;
       }
     }
     VisualBuilder.VisualBuilderGlobalState.value.focusFieldValue = null;
+    VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput = false;
     cleanIndividualFieldResidual({
       overlayWrapper: visualBuilderOverlayWrapper,
       visualBuilderContainer,
@@ -132,6 +134,11 @@ function sendFieldEvent(options) {
   }
 }
 function hideOverlay(params) {
+  const focusElementObserver = VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver;
+  if (focusElementObserver) {
+    focusElementObserver.disconnect();
+    VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver = null;
+  }
   hideFocusOverlay({
     visualBuilderContainer: params.visualBuilderContainer,
     visualBuilderOverlayWrapper: params.visualBuilderOverlayWrapper,

@@ -28,15 +28,59 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/index.ts
-var src_exports = {};
-__export(src_exports, {
+var index_exports = {};
+__export(index_exports, {
   VB_EmptyBlockParentClass: () => VB_EmptyBlockParentClass,
-  default: () => src_default
+  default: () => index_default
 });
-module.exports = __toCommonJS(src_exports);
+module.exports = __toCommonJS(index_exports);
 var import_contentstack_live_preview_HOC = __toESM(require("./preview/contentstack-live-preview-HOC.cjs"), 1);
+var _LightLivePreviewHoC = class _LightLivePreviewHoC {
+  static init() {
+    if (typeof window === "undefined") {
+      return Promise.resolve(_LightLivePreviewHoC.previewConstructors);
+    }
+    return _LightLivePreviewHoC.initializePreview();
+  }
+  static initializePreview() {
+    _LightLivePreviewHoC.previewConstructors = {
+      livePreview: {},
+      visualBuilder: {}
+    };
+    _LightLivePreviewHoC.onEntryChangeCallbacks = {};
+    return Promise.resolve(_LightLivePreviewHoC.previewConstructors);
+  }
+  static get hash() {
+    return "";
+  }
+  static get config() {
+    return {};
+  }
+  static isInitialized() {
+    return false;
+  }
+  static onEntryChange(callback, config = {}) {
+    const { skipInitialRender = false } = config;
+    if (!skipInitialRender) {
+      callback();
+    }
+    return "live-preview-id";
+  }
+  static onLiveEdit(callback) {
+    return "live-preview-id";
+  }
+  static unsubscribeOnEntryChange() {
+  }
+  static getSdkVersion() {
+    return "3.2.2";
+  }
+};
+_LightLivePreviewHoC.previewConstructors = {};
+_LightLivePreviewHoC.onEntryChangeCallbacks = {};
+var LightLivePreviewHoC = _LightLivePreviewHoC;
+var ContentstackLivePreview = typeof process !== "undefined" && (process.env.PURGE_PREVIEW_SDK === "true" || process.env.REACT_APP_PURGE_PREVIEW_SDK === "true") ? LightLivePreviewHoC : import_contentstack_live_preview_HOC.default;
 var VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
-var src_default = import_contentstack_live_preview_HOC.default;
+var index_default = ContentstackLivePreview;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   VB_EmptyBlockParentClass

@@ -1,16 +1,16 @@
 import "../chunk-5WRI5ZAA.js";
 
 // src/preview/contentstack-live-preview-HOC.ts
+import { cloneDeep, isEmpty, pick } from "lodash-es";
 import { v4 as uuidv4 } from "uuid";
-import { isEmpty } from "lodash-es";
 import { getUserInitData } from "../configManager/config.default.js";
 import Config, { updateConfigFromUrl } from "../configManager/configManager.js";
-import { VisualBuilder } from "../visualBuilder/index.js";
 import LivePreview from "../livePreview/live-preview.js";
+import { handlePageTraversal } from "../livePreview/onPageTraversal.js";
 import { removeFromOnChangeSubscribers } from "../livePreview/removeFromOnChangeSubscribers.js";
 import { PublicLogger } from "../logger/logger.js";
-import { handlePageTraversal } from "../livePreview/onPageTraversal.js";
 import { handleWebCompare } from "../timeline/compare/compare.js";
+import { VisualBuilder } from "../visualBuilder/index.js";
 var _ContentstackLivePreview = class _ContentstackLivePreview {
   /**
    * Initializes the Live Preview SDK with the provided user configuration.
@@ -43,6 +43,25 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
       updateConfigFromUrl();
     }
     return Config.get().hash;
+  }
+  static get config() {
+    if (!_ContentstackLivePreview.isInitialized()) {
+      updateConfigFromUrl();
+    }
+    const config = Config.get();
+    const clonedConfig = cloneDeep(config);
+    const configToShare = pick(clonedConfig, [
+      "ssr",
+      "enable",
+      "cleanCslpOnProduction",
+      "stackDetails",
+      "clientUrlParams",
+      "windowType",
+      "hash",
+      "editButton",
+      "mode"
+    ]);
+    return configToShare;
   }
   static isInitialized() {
     return !isEmpty(_ContentstackLivePreview.previewConstructors);
@@ -91,7 +110,11 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
     } else {
       _ContentstackLivePreview.onEntryChangeCallbacks[callbackUid] = onChangeCallback;
     }
-    if (!skipInitialRender) {
+    const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+    const hasLivePreviewHash = searchParams && searchParams.has("live_preview");
+    const isBuilder = searchParams && searchParams.has("builder");
+    const shouldCallCallback = hasLivePreviewHash && isBuilder;
+    if (!skipInitialRender || shouldCallCallback) {
       onChangeCallback();
     }
     return callbackUid;
@@ -172,7 +195,7 @@ var _ContentstackLivePreview = class _ContentstackLivePreview {
    * @returns The version of the SDK as a string.
    */
   static getSdkVersion() {
-    return "3.0.2";
+    return "3.2.2";
   }
 };
 _ContentstackLivePreview.previewConstructors = {};

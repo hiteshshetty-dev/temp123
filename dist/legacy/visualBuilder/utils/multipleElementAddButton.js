@@ -5,11 +5,10 @@ import {
   generateAddInstanceButton,
   getAddInstanceButtons
 } from "../generators/generateAddInstanceButtons.js";
-import visualBuilderPostMessage from "./visualBuilderPostMessage.js";
-import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
 import getChildrenDirection from "./getChildrenDirection.js";
 import { hideOverlay } from "../generators/generateOverlay.js";
 import { hideHoverOutline } from "../listeners/mouseHover.js";
+import { signal } from "@preact/signals";
 var WAIT_FOR_NEW_INSTANCE_TIMEOUT = 4e3;
 function handleAddButtonsForMultiple(eventDetails, elements, config) {
   var _a, _b;
@@ -61,29 +60,24 @@ function handleAddButtonsForMultiple(eventDetails, elements, config) {
       index
     });
   };
+  const loading = signal(false);
   const previousButton = generateAddInstanceButton({
-    onClick: () => {
-      var _a2;
-      (_a2 = visualBuilderPostMessage) == null ? void 0 : _a2.send(VisualBuilderPostMessageEvents.ADD_INSTANCE, {
-        fieldMetadata: eventDetails.fieldMetadata,
-        index: prevIndex
-      }).then(onMessageSent.bind(null, prevIndex));
-    },
-    label,
     fieldSchema,
-    value: expectedFieldData
+    value: expectedFieldData,
+    fieldMetadata: eventDetails.fieldMetadata,
+    index: prevIndex,
+    onClick: onMessageSent.bind(null, prevIndex),
+    loading,
+    label
   });
   const nextButton = generateAddInstanceButton({
-    onClick: () => {
-      var _a2;
-      (_a2 = visualBuilderPostMessage) == null ? void 0 : _a2.send(VisualBuilderPostMessageEvents.ADD_INSTANCE, {
-        fieldMetadata: eventDetails.fieldMetadata,
-        index: nextIndex
-      }).then(onMessageSent.bind(null, nextIndex));
-    },
-    label,
     fieldSchema,
-    value: expectedFieldData
+    value: expectedFieldData,
+    fieldMetadata: eventDetails.fieldMetadata,
+    index: nextIndex,
+    onClick: onMessageSent.bind(null, nextIndex),
+    loading,
+    label
   });
   if (!visualBuilderContainer.contains(previousButton)) {
     visualBuilderContainer.appendChild(previousButton);
