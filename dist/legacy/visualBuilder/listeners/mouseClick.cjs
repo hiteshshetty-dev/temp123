@@ -212,11 +212,20 @@ async function handleFieldSchemaAndIndividualFields(params, eventDetails, fieldM
     content_type_uid,
     fieldPath
   );
-  const entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
-    entryUid: entry_uid,
-    contentTypeUid: content_type_uid,
-    locale
-  });
+  let entryAcl;
+  try {
+    entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+      entryUid: entry_uid,
+      contentTypeUid: content_type_uid,
+      locale
+    });
+  } catch (error) {
+    console.error(
+      "[Visual Builder] Error retrieving entry permissions:",
+      error
+    );
+    return;
+  }
   if (fieldSchema) {
     const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
       fieldSchema,

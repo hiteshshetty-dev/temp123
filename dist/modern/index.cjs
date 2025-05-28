@@ -35,50 +35,8 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 var import_contentstack_live_preview_HOC = __toESM(require("./preview/contentstack-live-preview-HOC.cjs"), 1);
-var _LightLivePreviewHoC = class _LightLivePreviewHoC {
-  static init() {
-    if (typeof window === "undefined") {
-      return Promise.resolve(_LightLivePreviewHoC.previewConstructors);
-    }
-    return _LightLivePreviewHoC.initializePreview();
-  }
-  static initializePreview() {
-    _LightLivePreviewHoC.previewConstructors = {
-      livePreview: {},
-      visualBuilder: {}
-    };
-    _LightLivePreviewHoC.onEntryChangeCallbacks = {};
-    return Promise.resolve(_LightLivePreviewHoC.previewConstructors);
-  }
-  static get hash() {
-    return "";
-  }
-  static get config() {
-    return {};
-  }
-  static isInitialized() {
-    return false;
-  }
-  static onEntryChange(callback, config = {}) {
-    const { skipInitialRender = false } = config;
-    if (!skipInitialRender) {
-      callback();
-    }
-    return "live-preview-id";
-  }
-  static onLiveEdit(callback) {
-    return "live-preview-id";
-  }
-  static unsubscribeOnEntryChange() {
-  }
-  static getSdkVersion() {
-    return "3.2.2";
-  }
-};
-_LightLivePreviewHoC.previewConstructors = {};
-_LightLivePreviewHoC.onEntryChangeCallbacks = {};
-var LightLivePreviewHoC = _LightLivePreviewHoC;
-var ContentstackLivePreview = typeof process !== "undefined" && (process.env.PURGE_PREVIEW_SDK === "true" || process.env.REACT_APP_PURGE_PREVIEW_SDK === "true") ? LightLivePreviewHoC : import_contentstack_live_preview_HOC.default;
+var import_light_sdk = __toESM(require("./light-sdk.cjs"), 1);
+var ContentstackLivePreview = typeof process !== "undefined" && (process.env.PURGE_PREVIEW_SDK === "true" || process.env.REACT_APP_PURGE_PREVIEW_SDK === "true") ? import_light_sdk.default : import_contentstack_live_preview_HOC.default;
 var VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
 var index_default = ContentstackLivePreview;
 // Annotate the CommonJS export names for ESM import in node:

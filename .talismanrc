@@ -1,0 +1,14 @@
+fileignoreconfig:
+- filename: dist/legacy/light-sdk.cjs
+  checksum: 502453ce9b6c182339e5ee293219ca005aee54e497b1747d6a656a3f133d12d8
+- filename: dist/modern/light-sdk.cjs
+  checksum: 39798971ae0cd65c21c7cd8d656d619e66f189173aca1d3b921280369e79533f
+- filename: dist/modern/visualBuilder/listeners/mouseClick.cjs.map
+  checksum: 594106cec967af064b27fdc414dcdc02caa24fc7e59a72a39f0cdeda39fc8c90
+- filename: dist/legacy/visualBuilder/listeners/mouseClick.cjs.map
+  checksum: 884c487715f31c0b1be1fb67e907eec41dfd4bf9773b7b295a0467cba34ac44e
+- filename: dist/legacy/visualBuilder/listeners/mouseClick.js.map
+  checksum: cac14368c84833da7ef51642d4f61cbf45cddebcf6e71983e98407160cefca17
+- filename: dist/modern/visualBuilder/listeners/mouseClick.js.map
+  checksum: 2d8b3bcc84e077478d5b383b1d94f173b34cafd32a4416deb576fb7614c947a5
+version: "1.0"

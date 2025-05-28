@@ -201,11 +201,19 @@ async function handleMouseHover(params) {
       import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
         (fieldSchema) => {
           if (!fieldSchema) return;
+          let entryAcl;
           (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
             entryUid: fieldMetadata.entry_uid,
             contentTypeUid: fieldMetadata.content_type_uid,
             locale: fieldMetadata.locale
-          }).then((entryAcl) => {
+          }).then((data) => {
+            entryAcl = data;
+          }).catch((error) => {
+            console.error(
+              "[Visual Builder] Error retrieving entry permissions:",
+              error
+            );
+          }).finally(() => {
             if (!params2.customCursor) return;
             const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
               fieldSchema,
@@ -228,12 +236,20 @@ async function handleMouseHover(params) {
       addOutline(editableElement);
       import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
         (fieldSchema) => {
+          let entryAcl;
           if (!fieldSchema) return;
           (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
             entryUid: fieldMetadata.entry_uid,
             contentTypeUid: fieldMetadata.content_type_uid,
             locale: fieldMetadata.locale
-          }).then((entryAcl) => {
+          }).then((data) => {
+            entryAcl = data;
+          }).catch((error) => {
+            console.error(
+              "[Visual Builder] Error retrieving entry permissions:",
+              error
+            );
+          }).finally(() => {
             const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
               fieldSchema,
               eventDetails,
