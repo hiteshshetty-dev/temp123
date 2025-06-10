@@ -59,6 +59,10 @@ var useCollab = () => {
           "collab.pauseFeedback",
           data?.data?.collab?.pauseFeedback
         );
+        import_configManager.default.set(
+          "collab.isFeedbackMode",
+          data?.data?.collab?.isFeedbackMode
+        );
         (0, import_generateThread.showAllCollabIcons)();
         return;
       }

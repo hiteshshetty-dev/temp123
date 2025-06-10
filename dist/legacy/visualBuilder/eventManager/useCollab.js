@@ -28,7 +28,7 @@ var useCollab = () => {
   const collabEnable = (_a = visualBuilderPostMessage) == null ? void 0 : _a.on(
     VisualBuilderPostMessageEvents.COLLAB_ENABLE,
     (data) => {
-      var _a2, _b2, _c2, _d2, _e2, _f2, _g;
+      var _a2, _b2, _c2, _d2, _e2, _f2, _g, _h, _i;
       if (!((_a2 = data == null ? void 0 : data.data) == null ? void 0 : _a2.collab)) {
         console.error("Invalid collab data structure:", data);
         return;
@@ -37,6 +37,10 @@ var useCollab = () => {
         Config.set(
           "collab.pauseFeedback",
           (_e2 = (_d2 = data == null ? void 0 : data.data) == null ? void 0 : _d2.collab) == null ? void 0 : _e2.pauseFeedback
+        );
+        Config.set(
+          "collab.isFeedbackMode",
+          (_g = (_f2 = data == null ? void 0 : data.data) == null ? void 0 : _f2.collab) == null ? void 0 : _g.isFeedbackMode
         );
         showAllCollabIcons();
         return;
@@ -48,7 +52,7 @@ var useCollab = () => {
       );
       Config.set(
         "collab.pauseFeedback",
-        (_g = (_f2 = data == null ? void 0 : data.data) == null ? void 0 : _f2.collab) == null ? void 0 : _g.pauseFeedback
+        (_i = (_h = data == null ? void 0 : data.data) == null ? void 0 : _h.collab) == null ? void 0 : _i.pauseFeedback
       );
       Config.set(
         "collab.inviteMetadata",

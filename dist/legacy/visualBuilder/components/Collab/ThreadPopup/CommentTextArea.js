@@ -62,26 +62,29 @@ var MentionSuggestionsList = ({
         }
       },
       ref: listRef,
-      children: filteredUsers.map((user, index) => {
-        var _a2;
-        return /* @__PURE__ */ jsx(
-          "li",
-          {
-            onClick: () => insertMention(user),
-            className: classNames(
-              "collab-thread-body--input--textarea--suggestionsList--item",
-              collabStyles()["collab-thread-body--input--textarea--suggestionsList--item"],
-              index === selectedIndex ? collabStyles()["collab-thread-body--input--textarea--suggestionsList--item-selected"] : ""
-            ),
-            ref: (el) => itemRefs.current[index] = el,
-            onKeyDown: (e) => e.key === "Enter" ? insertMention(user) : handleKeyDown(e),
-            tabIndex: -1,
-            "aria-selected": index === selectedIndex,
-            children: (((_a2 = user.display) == null ? void 0 : _a2.length) || 0) > 20 ? /* @__PURE__ */ jsx(Tooltip, { content: user.display || "", children: (user.display || "").substring(0, 18) + "..." }) : user.display || ""
-          },
-          user.uid
-        );
-      })
+      children: filteredUsers.map((user, index) => /* @__PURE__ */ jsx(
+        "li",
+        {
+          onClick: () => insertMention(user),
+          className: classNames(
+            "collab-thread-body--input--textarea--suggestionsList--item",
+            collabStyles()["collab-thread-body--input--textarea--suggestionsList--item"],
+            index === selectedIndex ? collabStyles()["collab-thread-body--input--textarea--suggestionsList--item-selected"] : ""
+          ),
+          ref: (el) => itemRefs.current[index] = el,
+          onKeyDown: (e) => e.key === "Enter" ? insertMention(user) : handleKeyDown(e),
+          tabIndex: -1,
+          "aria-selected": index === selectedIndex,
+          children: user.display === user.email ? user.display.length > 20 ? /* @__PURE__ */ jsx(Tooltip, { content: user.display || "", children: (user.display || "").substring(0, 18) + "..." }) : user.display : /* @__PURE__ */ jsx(
+            Tooltip,
+            {
+              content: user.display + " - " + user.email || "",
+              children: user.display.length > 20 ? (user.display || "").substring(0, 18) + "..." : user.display
+            }
+          )
+        },
+        user.uid
+      ))
     }
   );
 };

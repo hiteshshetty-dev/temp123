@@ -51,7 +51,7 @@ var useCollab = () => {
   const collabEnable = (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.on(
     import_postMessage.VisualBuilderPostMessageEvents.COLLAB_ENABLE,
     (data) => {
-      var _a2, _b2, _c2, _d2, _e2, _f2, _g;
+      var _a2, _b2, _c2, _d2, _e2, _f2, _g, _h, _i;
       if (!((_a2 = data == null ? void 0 : data.data) == null ? void 0 : _a2.collab)) {
         console.error("Invalid collab data structure:", data);
         return;
@@ -60,6 +60,10 @@ var useCollab = () => {
         import_configManager.default.set(
           "collab.pauseFeedback",
           (_e2 = (_d2 = data == null ? void 0 : data.data) == null ? void 0 : _d2.collab) == null ? void 0 : _e2.pauseFeedback
+        );
+        import_configManager.default.set(
+          "collab.isFeedbackMode",
+          (_g = (_f2 = data == null ? void 0 : data.data) == null ? void 0 : _f2.collab) == null ? void 0 : _g.isFeedbackMode
         );
         (0, import_generateThread.showAllCollabIcons)();
         return;
@@ -71,7 +75,7 @@ var useCollab = () => {
       );
       import_configManager.default.set(
         "collab.pauseFeedback",
-        (_g = (_f2 = data == null ? void 0 : data.data) == null ? void 0 : _f2.collab) == null ? void 0 : _g.pauseFeedback
+        (_i = (_h = data == null ? void 0 : data.data) == null ? void 0 : _h.collab) == null ? void 0 : _i.pauseFeedback
       );
       import_configManager.default.set(
         "collab.inviteMetadata",

@@ -74,7 +74,13 @@ var MentionSuggestionsList = ({
           onKeyDown: (e) => e.key === "Enter" ? insertMention(user) : handleKeyDown(e),
           tabIndex: -1,
           "aria-selected": index === selectedIndex,
-          children: (user.display?.length || 0) > 20 ? /* @__PURE__ */ jsx(Tooltip, { content: user.display || "", children: (user.display || "").substring(0, 18) + "..." }) : user.display || ""
+          children: user.display === user.email ? user.display.length > 20 ? /* @__PURE__ */ jsx(Tooltip, { content: user.display || "", children: (user.display || "").substring(0, 18) + "..." }) : user.display : /* @__PURE__ */ jsx(
+            Tooltip,
+            {
+              content: user.display + " - " + user.email || "",
+              children: user.display.length > 20 ? (user.display || "").substring(0, 18) + "..." : user.display
+            }
+          )
         },
         user.uid
       ))

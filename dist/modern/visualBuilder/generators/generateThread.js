@@ -279,6 +279,7 @@ function hideAllCollabIcons() {
     ".visual-builder__collab-wrapper .collab-thread"
   );
   icons?.forEach((icon) => icon?.classList.add(hiddenClass));
+  toggleCollabPopup({ threadUid: "", action: "close" });
 }
 function showAllCollabIcons() {
   const icons = document.querySelectorAll(
