@@ -27,26 +27,32 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/visualBuilder/utils/getPsuedoEditableStylesElement.ts
-var getPsuedoEditableStylesElement_exports = {};
-__export(getPsuedoEditableStylesElement_exports, {
-  getPsuedoEditableElementStyles: () => getPsuedoEditableElementStyles
+// src/visualBuilder/utils/getPsuedoEditableEssentialStyles.ts
+var getPsuedoEditableEssentialStyles_exports = {};
+__export(getPsuedoEditableEssentialStyles_exports, {
+  getPsuedoEditableEssentialStyles: () => getPsuedoEditableEssentialStyles
 });
-module.exports = __toCommonJS(getPsuedoEditableStylesElement_exports);
+module.exports = __toCommonJS(getPsuedoEditableEssentialStyles_exports);
 var import_getCamelCaseStyles = __toESM(require("./getCamelCaseStyles.cjs"), 1);
-var import_getPsuedoEditableEssentialStyles = require("./getPsuedoEditableEssentialStyles.cjs");
-var import_getStyleOfAnElement = __toESM(require("./getStyleOfAnElement.cjs"), 1);
-function getPsuedoEditableElementStyles(psuedoEditableElement, camelCase) {
-  let styles = (0, import_getStyleOfAnElement.default)(psuedoEditableElement);
-  const rect = psuedoEditableElement.getBoundingClientRect();
-  if (camelCase) {
-    styles = (0, import_getCamelCaseStyles.default)(styles);
-  }
-  const overrides = (0, import_getPsuedoEditableEssentialStyles.getPsuedoEditableEssentialStyles)({ rect, camelCase });
-  return { ...styles, ...overrides };
+function getPsuedoEditableEssentialStyles({
+  rect,
+  camelCase
+}) {
+  const overrides = {
+    position: "absolute",
+    top: `${rect.top + window.scrollY}px`,
+    left: `${rect.left + window.scrollX}px`,
+    height: "auto",
+    "min-height": `${Math.abs(rect.height)}px`,
+    "white-space": "normal",
+    "text-transform": "none",
+    "text-wrap-mode": "wrap",
+    "text-overflow": "visible"
+  };
+  return camelCase ? (0, import_getCamelCaseStyles.default)(overrides) : overrides;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  getPsuedoEditableElementStyles
+  getPsuedoEditableEssentialStyles
 });
-//# sourceMappingURL=getPsuedoEditableStylesElement.cjs.map
+//# sourceMappingURL=getPsuedoEditableEssentialStyles.cjs.map

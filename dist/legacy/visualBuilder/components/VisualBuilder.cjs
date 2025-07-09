@@ -36,8 +36,12 @@ module.exports = __toCommonJS(VisualBuilder_exports);
 var import_classnames = __toESM(require("classnames"), 1);
 var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_visualBuilder = require("../visualBuilder.style.cjs");
+var import_utils = require("../../utils/index.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function VisualBuilderComponent(props) {
+  if (!(0, import_utils.isOpenInBuilder)()) {
+    return null;
+  }
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
     /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
       "style",

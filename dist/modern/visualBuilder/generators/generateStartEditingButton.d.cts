@@ -1,9 +1,8 @@
 /**
  * Generates a start editing button for the visual builder.
  *
- * @param visualBuilderContainer - The HTMLDivElement that wraps the visual builder.
- * @returns The generated HTMLAnchorElement representing the start editing button, or undefined if the visualBuilderContainer is null.
+ * @returns The generated HTMLAnchorElement representing the start editing button, or undefined if the button cannot be created.
  */
-declare function generateStartEditingButton(visualBuilderContainer: HTMLDivElement | null): HTMLAnchorElement | undefined;
+declare function generateStartEditingButton(): HTMLAnchorElement | undefined;
 
 export { generateStartEditingButton };

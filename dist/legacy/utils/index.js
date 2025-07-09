@@ -24,10 +24,19 @@ function isOpeningInTimeline() {
   }
   return false;
 }
+function isOpenInBuilder() {
+  if (hasWindow()) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const builder = urlParams.get("builder");
+    return !!builder;
+  }
+  return false;
+}
 export {
   addLivePreviewQueryTags,
   addParamsToUrl,
   hasWindow,
+  isOpenInBuilder,
   isOpeningInTimeline
 };
 //# sourceMappingURL=index.js.map

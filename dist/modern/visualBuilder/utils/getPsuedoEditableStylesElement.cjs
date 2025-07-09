@@ -34,20 +34,16 @@ __export(getPsuedoEditableStylesElement_exports, {
 });
 module.exports = __toCommonJS(getPsuedoEditableStylesElement_exports);
 var import_getCamelCaseStyles = __toESM(require("./getCamelCaseStyles.cjs"), 1);
+var import_getPsuedoEditableEssentialStyles = require("./getPsuedoEditableEssentialStyles.cjs");
 var import_getStyleOfAnElement = __toESM(require("./getStyleOfAnElement.cjs"), 1);
 function getPsuedoEditableElementStyles(psuedoEditableElement, camelCase) {
   let styles = (0, import_getStyleOfAnElement.default)(psuedoEditableElement);
+  const rect = psuedoEditableElement.getBoundingClientRect();
   if (camelCase) {
     styles = (0, import_getCamelCaseStyles.default)(styles);
   }
-  const rect = psuedoEditableElement.getBoundingClientRect();
-  styles.position = "absolute";
-  styles.top = `${rect.top + window.scrollY}px`;
-  styles.left = `${rect.left + window.scrollX}px`;
-  styles.height = "auto";
-  styles.whiteSpace = "pre-line";
-  styles.textTransform = "none";
-  return styles;
+  const overrides = (0, import_getPsuedoEditableEssentialStyles.getPsuedoEditableEssentialStyles)({ rect, camelCase });
+  return { ...styles, ...overrides };
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

@@ -36,12 +36,14 @@ module.exports = __toCommonJS(components_exports);
 var import_preact = require("preact");
 var import_VisualBuilder = __toESM(require("./VisualBuilder.cjs"), 1);
 var import_visualBuilder = require("../visualBuilder.style.cjs");
+var import_utils = require("../../utils/index.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function initUI(props) {
   const visualBuilderDOM = document.querySelector(
     `.visual-builder__container`
   );
-  if (!visualBuilderDOM) {
+  const isInBuilder = (0, import_utils.isOpenInBuilder)();
+  if (!visualBuilderDOM && isInBuilder) {
     const visualBuilderContainer = document.createElement("div");
     visualBuilderContainer.classList.add(
       (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__container"],

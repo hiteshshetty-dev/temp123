@@ -59,8 +59,12 @@ var LivePreview = class {
       );
     }
     if (config.enable) {
-      if (typeof document !== void 0 && document.readyState === "complete") {
-        this.requestDataSync();
+      if (typeof document !== void 0) {
+        if (document.readyState === "interactive" || document.readyState === "complete") {
+          this.requestDataSync();
+        } else {
+          document.addEventListener("DOMContentLoaded", this.requestDataSync);
+        }
       } else {
         window.addEventListener("load", this.requestDataSync);
       }

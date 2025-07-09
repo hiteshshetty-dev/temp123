@@ -7,8 +7,12 @@ import {
   visualBuilderStyles,
   VisualBuilderGlobalStyles
 } from "../visualBuilder.style.js";
+import { isOpenInBuilder } from "../../utils/index.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 function VisualBuilderComponent(props) {
+  if (!isOpenInBuilder()) {
+    return null;
+  }
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(
       "style",

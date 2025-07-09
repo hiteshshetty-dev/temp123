@@ -23,6 +23,7 @@ __export(utils_exports, {
   addLivePreviewQueryTags: () => import_addLivePreviewQueryTags.addLivePreviewQueryTags,
   addParamsToUrl: () => addParamsToUrl,
   hasWindow: () => hasWindow,
+  isOpenInBuilder: () => isOpenInBuilder,
   isOpeningInTimeline: () => isOpeningInTimeline
 });
 module.exports = __toCommonJS(utils_exports);
@@ -49,11 +50,20 @@ function isOpeningInTimeline() {
   }
   return false;
 }
+function isOpenInBuilder() {
+  if (hasWindow()) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const builder = urlParams.get("builder");
+    return !!builder;
+  }
+  return false;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   addLivePreviewQueryTags,
   addParamsToUrl,
   hasWindow,
+  isOpenInBuilder,
   isOpeningInTimeline
 });
 //# sourceMappingURL=index.cjs.map

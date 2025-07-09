@@ -34,17 +34,21 @@ __export(generateStartEditingButton_exports, {
 });
 module.exports = __toCommonJS(generateStartEditingButton_exports);
 var import_preact = require("preact");
-var import_logger = require("../../logger/logger.cjs");
 var import_startEditingButton = __toESM(require("../components/startEditingButton.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
-function generateStartEditingButton(visualBuilderContainer) {
-  if (!visualBuilderContainer) {
-    import_logger.PublicLogger.warn("Visual builder overlay not found.");
-    return;
+function generateStartEditingButton() {
+  const existingButton = document.querySelector(
+    ".visual-builder__start-editing-btn"
+  );
+  if (existingButton) {
+    return existingButton;
   }
   const wrapper = document.createDocumentFragment();
   (0, import_preact.render)(/* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_startEditingButton.default, {}), wrapper);
-  visualBuilderContainer?.appendChild(wrapper);
+  if (wrapper.children.length === 0) {
+    return void 0;
+  }
+  document.body.appendChild(wrapper);
   const startEditingButton = document.querySelector(
     ".visual-builder__start-editing-btn"
   );

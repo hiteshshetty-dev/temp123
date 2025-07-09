@@ -4,12 +4,14 @@ import "../../chunk-5WRI5ZAA.js";
 import { render } from "preact";
 import VisualBuilderComponent from "./VisualBuilder.js";
 import { visualBuilderStyles } from "../visualBuilder.style.js";
+import { isOpenInBuilder } from "../../utils/index.js";
 import { jsx } from "preact/jsx-runtime";
 function initUI(props) {
   const visualBuilderDOM = document.querySelector(
     `.visual-builder__container`
   );
-  if (!visualBuilderDOM) {
+  const isInBuilder = isOpenInBuilder();
+  if (!visualBuilderDOM && isInBuilder) {
     const visualBuilderContainer = document.createElement("div");
     visualBuilderContainer.classList.add(
       visualBuilderStyles()["visual-builder__container"],

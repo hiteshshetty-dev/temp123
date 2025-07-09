@@ -312,7 +312,7 @@ var _VisualBuilder = class _VisualBuilder {
       }
     }).catch(() => {
       if (!inIframe()) {
-        generateStartEditingButton(this.visualBuilderContainer);
+        generateStartEditingButton();
       }
     });
   }
