@@ -45,6 +45,19 @@ function useOnEntryUpdatePostMessageEvent() {
     }
   );
 }
+function useOnReloadPostMessageEvent() {
+  livePreviewPostMessage?.on(
+    LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_RELOAD,
+    (event) => {
+      setConfigFromParams({
+        live_preview: event.data.hash
+      });
+      if (window) {
+        window.location?.reload();
+      }
+    }
+  );
+}
 function sendInitializeLivePreviewPostMessageEvent() {
   livePreviewPostMessage?.send(
     LIVE_PREVIEW_POST_MESSAGE_EVENTS.INIT,
@@ -83,6 +96,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
     }
     useHistoryPostMessageEvent();
     useOnEntryUpdatePostMessageEvent();
+    useOnReloadPostMessageEvent();
   }).catch((e) => {
   });
 }
@@ -95,6 +109,7 @@ function sendCurrentPageUrlPostMessageEvent() {
 export {
   sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent
+  useOnEntryUpdatePostMessageEvent,
+  useOnReloadPostMessageEvent
 };
 //# sourceMappingURL=postMessageEvent.hooks.js.map

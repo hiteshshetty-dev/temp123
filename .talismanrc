@@ -1,14 +1,18 @@
 fileignoreconfig:
-- filename: dist/legacy/light-sdk.cjs
-  checksum: 502453ce9b6c182339e5ee293219ca005aee54e497b1747d6a656a3f133d12d8
-- filename: dist/modern/light-sdk.cjs
-  checksum: 39798971ae0cd65c21c7cd8d656d619e66f189173aca1d3b921280369e79533f
-- filename: dist/modern/visualBuilder/listeners/mouseClick.cjs.map
-  checksum: 594106cec967af064b27fdc414dcdc02caa24fc7e59a72a39f0cdeda39fc8c90
-- filename: dist/legacy/visualBuilder/listeners/mouseClick.cjs.map
-  checksum: 884c487715f31c0b1be1fb67e907eec41dfd4bf9773b7b295a0467cba34ac44e
-- filename: dist/legacy/visualBuilder/listeners/mouseClick.js.map
-  checksum: cac14368c84833da7ef51642d4f61cbf45cddebcf6e71983e98407160cefca17
-- filename: dist/modern/visualBuilder/listeners/mouseClick.js.map
-  checksum: 2d8b3bcc84e077478d5b383b1d94f173b34cafd32a4416deb576fb7614c947a5
+- filename: dist/legacy/livePreview/eventManager/livePreviewEventManager.cjs.map
+  checksum: 3645ac01303504f9849a018ddd4547d18d74952e9cf876b278152f1b2cd224d1
+- filename: dist/modern/visualBuilder/utils/visualBuilderPostMessage.cjs.map
+  checksum: 6cc30c67e3b1020ab08ca1a7ae3934008bd347644cb3e0297aec8c6d2437fdb3
+- filename: dist/modern/livePreview/eventManager/livePreviewEventManager.cjs.map
+  checksum: 1d52c6f7e2d08aefc96a8ba3314412dc7aaf30e0a8dcb90174efae10e2368e00
+- filename: dist/legacy/chunk-AGJOB2TZ.js.map
+  checksum: 827918b5ecb724a507beaef325daaf5ea918c7cc87e664af5df884271cf6d4c4
+- filename: dist/modern/timeline/timelinePostMessage/timelinePostMessage.cjs.map
+  checksum: 62a0541d9f4a4ee79d7b68a15cb8408df173cfaa1218fc4733c04dd6b73967d8
+- filename: dist/legacy/timeline/timelinePostMessage/timelinePostMessage.cjs.map
+  checksum: 1c1bc3c8b80e00a2648abb15a0ac0884dfbdcc4c81eaca19825453831fa6c3d1
+- filename: dist/legacy/visualBuilder/utils/visualBuilderPostMessage.cjs.map
+  checksum: 411bfd2c3908265b987f757ef283a887651ae1a6c802b7fe19a3f2d6049561c1
+- filename: dist/modern/chunk-NLJZU4ST.js.map
+  checksum: f043c51573f3d4d2f4c9d160e829aad5285f0d9b90c904efc26e7b6d5aa1de31
 version: "1.0"

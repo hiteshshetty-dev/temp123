@@ -18,9 +18,9 @@ var require_dist = __commonJS({
           }
           return e3.prototype.replace = function(e4) {
             !function(e5, t3) {
-              var r2, o2, s2, u;
+              var r2, o2, s2, u, a;
               if (t3.debug = null !== (r2 = e5.debug) && void 0 !== r2 ? r2 : t3.debug, "" === e5.channelId) throw new Error((0, i.getErrorMessage)(n.ERROR_MESSAGES.common.channelIdRequired));
-              t3.channelId = null !== (o2 = e5.channelId) && void 0 !== o2 ? o2 : t3.channelId, t3.suppressErrors = null !== (s2 = e5.suppressErrors) && void 0 !== s2 ? s2 : t3.suppressErrors, t3.targetOrigin = null !== (u = e5.targetOrigin) && void 0 !== u ? u : t3.targetOrigin, e5.target ? t3.targetWindow = e5.target : window ? t3.targetWindow = window : t3.targetWindow = { postMessage: function() {
+              t3.channelId = null !== (o2 = e5.channelId) && void 0 !== o2 ? o2 : t3.channelId, t3.suppressErrors = null !== (s2 = e5.suppressErrors) && void 0 !== s2 ? s2 : t3.suppressErrors, t3.targetOrigin = null !== (u = e5.targetOrigin) && void 0 !== u ? u : t3.targetOrigin, t3.eventOnOpener = null !== (a = e5.eventOnOpener) && void 0 !== a ? a : t3.eventOnOpener, e5.target ? t3.targetWindow = e5.target : window ? t3.targetWindow = window : t3.targetWindow = { postMessage: function() {
               } };
             }(e4, this.config);
           }, e3.prototype.set = function(e4, t3) {
@@ -69,7 +69,7 @@ var require_dist = __commonJS({
         var n = r(450);
         t2.getDefaultConfig = function() {
           return { targetOrigin: n.ANY_ORIGIN, targetWindow: { postMessage: function() {
-          } }, debug: false, channelId: "", suppressErrors: false };
+          } }, debug: false, channelId: "", suppressErrors: false, eventOnOpener: false };
         };
       }, 156: function(e2, t2, r) {
         "use strict";
@@ -175,7 +175,7 @@ var require_dist = __commonJS({
         var a = r(834), c = r(706), d = r(450), l = r(897), f = r(628), h = r(768), g = r(610), p = r(574), v = function() {
           function e3(e4, t3) {
             if (void 0 === t3 && (t3 = {}), this.requestMessageHandlers = /* @__PURE__ */ new Map(), this.responseMessageHandlers = /* @__PURE__ */ new Map(), !e4) throw new Error((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.channelIdRequired));
-            this.config = new c.Config(), this.config.replace(n(n({}, t3), { channelId: e4 })), this.logger = new f.Logger(this.config), this.postMessage = new l.PostMessage(this.logger, this.config), this.handleIncomingMessage = this.handleIncomingMessage.bind(this), this.send = this.send.bind(this), this.on = this.on.bind(this), this.unregisterEvent = this.unregisterEvent.bind(this), window ? window.addEventListener("message", this.handleIncomingMessage) : this.logger.debug((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.windowNotFound));
+            this.config = new c.Config(), this.config.replace(n(n({}, t3), { channelId: e4 })), this.logger = new f.Logger(this.config), this.postMessage = new l.PostMessage(this.logger, this.config), this.handleIncomingMessage = this.handleIncomingMessage.bind(this), this.send = this.send.bind(this), this.on = this.on.bind(this), this.unregisterEvent = this.unregisterEvent.bind(this), window ? this.config.get("eventOnOpener") ? window.opener.addEventListener("message", this.handleIncomingMessage) : window.addEventListener("message", this.handleIncomingMessage) : this.logger.debug((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.windowNotFound));
           }
           return e3.prototype.handleIncomingMessage = function(e4) {
             return s(this, void 0, void 0, function() {
@@ -882,4 +882,4 @@ var require_dist = __commonJS({
 export {
   require_dist
 };
-//# sourceMappingURL=chunk-LNSFZGX4.js.map
+//# sourceMappingURL=chunk-NLJZU4ST.js.map

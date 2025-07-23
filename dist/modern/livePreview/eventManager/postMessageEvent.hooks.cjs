@@ -32,7 +32,8 @@ var postMessageEvent_hooks_exports = {};
 __export(postMessageEvent_hooks_exports, {
   sendInitializeLivePreviewPostMessageEvent: () => sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent: () => useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent
+  useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent,
+  useOnReloadPostMessageEvent: () => useOnReloadPostMessageEvent
 });
 module.exports = __toCommonJS(postMessageEvent_hooks_exports);
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
@@ -79,6 +80,19 @@ function useOnEntryUpdatePostMessageEvent() {
     }
   );
 }
+function useOnReloadPostMessageEvent() {
+  import_livePreviewEventManager.default?.on(
+    import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_RELOAD,
+    (event) => {
+      (0, import_configManager.setConfigFromParams)({
+        live_preview: event.data.hash
+      });
+      if (window) {
+        window.location?.reload();
+      }
+    }
+  );
+}
 function sendInitializeLivePreviewPostMessageEvent() {
   import_livePreviewEventManager.default?.send(
     import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.INIT,
@@ -117,6 +131,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
     }
     useHistoryPostMessageEvent();
     useOnEntryUpdatePostMessageEvent();
+    useOnReloadPostMessageEvent();
   }).catch((e) => {
   });
 }
@@ -130,6 +145,7 @@ function sendCurrentPageUrlPostMessageEvent() {
 0 && (module.exports = {
   sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent
+  useOnEntryUpdatePostMessageEvent,
+  useOnReloadPostMessageEvent
 });
 //# sourceMappingURL=postMessageEvent.hooks.cjs.map
