@@ -7,13 +7,10 @@ interface HistoryLivePreviewPostMessageEventData {
 interface OnChangeLivePreviewPostMessageEventData {
     hash: string;
 }
-interface OnReloadLivePreviewPostMessageEventData {
-    hash: string;
-}
 interface LivePreviewInitEventResponse {
     contentTypeUid: string;
     entryUid: string;
     windowType: ILivePreviewWindowType;
 }
 
-export type { HistoryLivePreviewPostMessageEventData, LivePreviewInitEventResponse, OnChangeLivePreviewPostMessageEventData, OnReloadLivePreviewPostMessageEventData };
+export type { HistoryLivePreviewPostMessageEventData, LivePreviewInitEventResponse, OnChangeLivePreviewPostMessageEventData };

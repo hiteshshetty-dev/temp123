@@ -203,7 +203,9 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
-        focusElementObserver: null
+        focusElementObserver: null,
+        referenceParentMap: {},
+        isFocussed: false
       };
       if (this.visualBuilderContainer) {
         window.document.body.removeChild(this.visualBuilderContainer);
@@ -335,7 +337,9 @@ _VisualBuilder.VisualBuilderGlobalState = signal({
   audienceMode: false,
   locale: Config.get().stackDetails.masterLocale || "en-us",
   variant: null,
-  focusElementObserver: null
+  focusElementObserver: null,
+  referenceParentMap: {},
+  isFocussed: false
 });
 var VisualBuilder = _VisualBuilder;
 export {

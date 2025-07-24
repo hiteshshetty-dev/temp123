@@ -12,12 +12,11 @@ import {
   handleAddButtonsForMultiple,
   removeAddInstanceButtons
 } from "./multipleElementAddButton.js";
-import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
-import visualBuilderPostMessage from "./visualBuilderPostMessage.js";
 import { isFieldMultiple } from "./isFieldMultiple.js";
 import { handleInlineEditableField } from "./handleInlineEditableField.js";
 import { pasteAsPlainText } from "./pasteAsPlainText.js";
 import { getEntryPermissionsCached } from "./getEntryPermissionsCached.js";
+import { removeFieldToolbar } from "../generators/generateToolbar.js";
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -128,16 +127,7 @@ function cleanIndividualFieldResidual(elements) {
     }
   }
   if (focusedToolbar) {
-    focusedToolbar.innerHTML = "";
-    const toolbarEvents = [
-      VisualBuilderPostMessageEvents.DELETE_INSTANCE,
-      VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID
-    ];
-    toolbarEvents.forEach((event) => {
-      if (visualBuilderPostMessage?.requestMessageHandlers?.has(event)) {
-        visualBuilderPostMessage?.unregisterEvent?.(event);
-      }
-    });
+    removeFieldToolbar(focusedToolbar);
   }
 }
 export {

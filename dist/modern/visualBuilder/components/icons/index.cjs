@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,6 +17,14 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/visualBuilder/components/icons/index.tsx
@@ -22,6 +32,8 @@ var icons_exports = {};
 __export(icons_exports, {
   AddCommentIcon: () => AddCommentIcon,
   CaretIcon: () => CaretIcon,
+  CaretRightIcon: () => CaretRightIcon,
+  ContentTypeIcon: () => ContentTypeIcon,
   DeleteIcon: () => DeleteIcon,
   EditIcon: () => EditIcon,
   FormIcon: () => FormIcon,
@@ -35,6 +47,8 @@ __export(icons_exports, {
   WarningOctagonIcon: () => WarningOctagonIcon
 });
 module.exports = __toCommonJS(icons_exports);
+var import_visualBuilder = require("../../visualBuilder.style.cjs");
+var import_classnames = __toESM(require("classnames"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
 var generateIconStyles = ({ disabled = false }) => ({
   opacity: disabled ? 0.5 : 1,
@@ -387,10 +401,40 @@ function WarningOctagonIcon() {
     }
   );
 }
+function ContentTypeIcon() {
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    "div",
+    {
+      className: (0, import_classnames.default)(
+        "visual-builder__content-type-icon",
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__content-type-icon"]
+      ),
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { width: "32", height: "32", viewBox: "0 0 32 32", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M4 22L16 29L28 22", stroke: "#fff", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M4 16L16 23L28 16", stroke: "#fff", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M4 10L16 17L28 10L16 3L4 10Z", stroke: "#fff", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" })
+      ] })
+    }
+  );
+}
+function CaretRightIcon() {
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+    "div",
+    {
+      className: (0, import_classnames.default)(
+        "visual-builder__caret-right-icon",
+        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__caret-right-icon"]
+      ),
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", { width: "32", height: "32", viewBox: "0 0 32 32", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { "fill-rule": "evenodd", "clip-rule": "evenodd", d: "M11.4697 5.46967C11.7626 5.17678 12.2374 5.17678 12.5303 5.46967L22.5303 15.4697C22.8232 15.7626 22.8232 16.2374 22.5303 16.5303L12.5303 26.5303C12.2374 26.8232 11.7626 26.8232 11.4697 26.5303C11.1768 26.2374 11.1768 25.7626 11.4697 25.4697L20.9393 16L11.4697 6.53033C11.1768 6.23744 11.1768 5.76256 11.4697 5.46967Z", fill: "#fff" }) })
+    }
+  );
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   AddCommentIcon,
   CaretIcon,
+  CaretRightIcon,
+  ContentTypeIcon,
   DeleteIcon,
   EditIcon,
   FormIcon,

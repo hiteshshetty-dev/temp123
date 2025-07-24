@@ -47,21 +47,6 @@ function useOnEntryUpdatePostMessageEvent() {
     }
   );
 }
-function useOnReloadPostMessageEvent() {
-  var _a;
-  (_a = livePreviewPostMessage) == null ? void 0 : _a.on(
-    LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_RELOAD,
-    (event) => {
-      var _a2;
-      setConfigFromParams({
-        live_preview: event.data.hash
-      });
-      if (window) {
-        (_a2 = window.location) == null ? void 0 : _a2.reload();
-      }
-    }
-  );
-}
 function sendInitializeLivePreviewPostMessageEvent() {
   var _a;
   (_a = livePreviewPostMessage) == null ? void 0 : _a.send(
@@ -70,7 +55,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.2.5",
+        sdkVersion: "3.3.0",
         mode: Config.get().mode
       }
     }
@@ -102,7 +87,6 @@ function sendInitializeLivePreviewPostMessageEvent() {
     }
     useHistoryPostMessageEvent();
     useOnEntryUpdatePostMessageEvent();
-    useOnReloadPostMessageEvent();
   }).catch((e) => {
   });
 }
@@ -116,7 +100,6 @@ function sendCurrentPageUrlPostMessageEvent() {
 export {
   sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent,
-  useOnReloadPostMessageEvent
+  useOnEntryUpdatePostMessageEvent
 };
 //# sourceMappingURL=postMessageEvent.hooks.js.map

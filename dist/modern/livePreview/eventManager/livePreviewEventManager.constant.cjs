@@ -30,8 +30,7 @@ var LIVE_PREVIEW_POST_MESSAGE_EVENTS = {
   HISTORY: "history",
   CHECK_ENTRY_PAGE: "check-entry-page",
   URL_CHANGE: "url-change",
-  VARIANT_PATCH: "variant-patch-update",
-  ON_RELOAD: "cslp-reload"
+  VARIANT_PATCH: "variant-patch-update"
 };
 var LIVE_PREVIEW_CHANNEL_ID = "live-preview";
 // Annotate the CommonJS export names for ESM import in node:

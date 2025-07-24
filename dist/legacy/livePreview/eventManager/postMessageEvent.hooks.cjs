@@ -32,8 +32,7 @@ var postMessageEvent_hooks_exports = {};
 __export(postMessageEvent_hooks_exports, {
   sendInitializeLivePreviewPostMessageEvent: () => sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent: () => useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent,
-  useOnReloadPostMessageEvent: () => useOnReloadPostMessageEvent
+  useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent
 });
 module.exports = __toCommonJS(postMessageEvent_hooks_exports);
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
@@ -82,21 +81,6 @@ function useOnEntryUpdatePostMessageEvent() {
     }
   );
 }
-function useOnReloadPostMessageEvent() {
-  var _a;
-  (_a = import_livePreviewEventManager.default) == null ? void 0 : _a.on(
-    import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_RELOAD,
-    (event) => {
-      var _a2;
-      (0, import_configManager.setConfigFromParams)({
-        live_preview: event.data.hash
-      });
-      if (window) {
-        (_a2 = window.location) == null ? void 0 : _a2.reload();
-      }
-    }
-  );
-}
 function sendInitializeLivePreviewPostMessageEvent() {
   var _a;
   (_a = import_livePreviewEventManager.default) == null ? void 0 : _a.send(
@@ -105,7 +89,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: import_configManager.default.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.2.5",
+        sdkVersion: "3.3.0",
         mode: import_configManager.default.get().mode
       }
     }
@@ -137,7 +121,6 @@ function sendInitializeLivePreviewPostMessageEvent() {
     }
     useHistoryPostMessageEvent();
     useOnEntryUpdatePostMessageEvent();
-    useOnReloadPostMessageEvent();
   }).catch((e) => {
   });
 }
@@ -152,7 +135,6 @@ function sendCurrentPageUrlPostMessageEvent() {
 0 && (module.exports = {
   sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent,
-  useOnReloadPostMessageEvent
+  useOnEntryUpdatePostMessageEvent
 });
 //# sourceMappingURL=postMessageEvent.hooks.cjs.map

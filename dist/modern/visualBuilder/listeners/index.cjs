@@ -53,7 +53,9 @@ var eventHandlers = {
       event,
       overlayWrapper: params.overlayWrapper,
       visualBuilderContainer: params.visualBuilderContainer,
-      customCursor: params.customCursor
+      customCursor: params.customCursor,
+      resizeObserver: params.resizeObserver,
+      focusedToolbar: params.focusedToolbar
     });
   },
   mouseleave: (params) => () => {
