@@ -24,7 +24,8 @@ __export(livePreviewPostMessageEvent_type_exports, {
 });
 module.exports = __toCommonJS(livePreviewPostMessageEvent_type_exports);
 var OnChangeLivePreviewPostMessageEventTypes = {
-  HASH_CHANGE: "hash-change"
+  HASH_CHANGE: "hash_change",
+  URL_CHANGE: "url_change"
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

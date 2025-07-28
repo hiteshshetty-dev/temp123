@@ -48,17 +48,20 @@ function useOnEntryUpdatePostMessageEvent() {
         setConfigFromParams({
           live_preview: event.data.hash
         });
-        if (!ssr && !event_type || !ssr && event_type === OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+        if (!ssr && !event_type) {
           onChange();
-        } else if (ssr) {
-          if (!event_type && window) {
-            window.location.reload();
-          }
-          if (event_type === OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
-            const newUrl = new URL(window.location.href);
-            newUrl.searchParams.set("live_preview", event.data.hash);
-            window.history.pushState({}, "", newUrl.toString());
-          }
+        }
+        if (!window) return;
+        if (ssr && !event_type) {
+          window.location.reload();
+        }
+        if (event_type === OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set("live_preview", event.data.hash);
+          console.log("on change event newUrl", newUrl.toString());
+          window.history.pushState({}, "", newUrl.toString());
+        }
+        if (event_type === OnChangeLivePreviewPostMessageEventTypes.URL_CHANGE) {
         }
       } catch (error) {
         console.error("Error handling live preview update:", error);

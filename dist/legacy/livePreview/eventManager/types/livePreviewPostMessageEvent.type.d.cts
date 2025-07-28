@@ -1,6 +1,10 @@
 import { ILivePreviewWindowType } from '../../../types/types.cjs';
 import '../../../visualBuilder/types/collab.types.cjs';
 
+declare const OnChangeLivePreviewPostMessageEventTypes: {
+    readonly HASH_CHANGE: "hash_change";
+    readonly URL_CHANGE: "url_change";
+};
 interface HistoryLivePreviewPostMessageEventData {
     type: "forward" | "backward" | "reload";
 }
@@ -9,7 +13,7 @@ interface OnChangeLivePreviewPostMessageEventData {
     entry_uid?: string;
     content_type_uid?: string;
     _metadata?: {
-        event_type: "hash-change" | "entry-change";
+        event_type: typeof OnChangeLivePreviewPostMessageEventTypes[keyof typeof OnChangeLivePreviewPostMessageEventTypes];
     };
 }
 interface OnReloadLivePreviewPostMessageEventData {
@@ -24,4 +28,4 @@ interface LivePreviewInitEventResponse {
     windowType: ILivePreviewWindowType;
 }
 
-export type { HistoryLivePreviewPostMessageEventData, LivePreviewInitEventResponse, OnChangeLivePreviewPostMessageEventData, OnHashChangeLivePreviewPostMessageEventData, OnReloadLivePreviewPostMessageEventData };
+export { type HistoryLivePreviewPostMessageEventData, type LivePreviewInitEventResponse, type OnChangeLivePreviewPostMessageEventData, OnChangeLivePreviewPostMessageEventTypes, type OnHashChangeLivePreviewPostMessageEventData, type OnReloadLivePreviewPostMessageEventData };
