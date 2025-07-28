@@ -32,8 +32,7 @@ var generateToolbar_exports = {};
 __export(generateToolbar_exports, {
   appendFieldPathDropdown: () => appendFieldPathDropdown,
   appendFieldToolbar: () => appendFieldToolbar,
-  appendFocusedToolbar: () => appendFocusedToolbar,
-  removeFieldToolbar: () => removeFieldToolbar
+  appendFocusedToolbar: () => appendFocusedToolbar
 });
 module.exports = __toCommonJS(generateToolbar_exports);
 var import_constants = require("../utils/constants.cjs");
@@ -41,14 +40,9 @@ var import_FieldToolbar = __toESM(require("../components/FieldToolbar.cjs"), 1);
 var import_preact = require("preact");
 var import_fieldLabelWrapper = __toESM(require("../components/fieldLabelWrapper.cjs"), 1);
 var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
-var import_postMessage = require("../utils/types/postMessage.types.cjs");
-var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
 var import_jsx_runtime = require("preact/jsx-runtime");
-function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false, options) {
-  appendFieldPathDropdown(eventDetails, focusedToolbarElement, options);
-  if (options == null ? void 0 : options.isHover) {
-    return;
-  }
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
+  appendFieldPathDropdown(eventDetails, focusedToolbarElement);
   appendFieldToolbar(
     eventDetails,
     focusedToolbarElement,
@@ -56,11 +50,10 @@ function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, 
     isVariant
   );
 }
-async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false, options) {
-  const { isHover } = options || {};
+async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
-  ) && !isHover)
+  ))
     return;
   const entryPermissions = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
     entryUid: eventDetails.fieldMetadata.entry_uid,
@@ -82,24 +75,12 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
   );
   focusedToolbarElement.append(wrapper);
 }
-function appendFieldPathDropdown(eventDetails, focusedToolbarElement, options) {
-  const { isHover } = options || {};
-  const fieldLabelWrapper = document.querySelector(
+function appendFieldPathDropdown(eventDetails, focusedToolbarElement) {
+  if (document.querySelector(
     ".visual-builder__focused-toolbar__field-label-wrapper"
-  );
+  ))
+    return;
   const { editableElement: targetElement, fieldMetadata } = eventDetails;
-  if (fieldLabelWrapper) {
-    if (isHover) {
-      const fieldCslp = fieldLabelWrapper.getAttribute("data-hovered-cslp");
-      if (fieldCslp === fieldMetadata.cslpValue) {
-        return;
-      } else {
-        removeFieldToolbar(focusedToolbarElement);
-      }
-    } else {
-      return;
-    }
-  }
   const targetElementDimension = targetElement.getBoundingClientRect();
   const distanceFromTop = targetElementDimension.top + window.scrollY - import_constants.TOOLBAR_EDGE_BUFFER;
   const adjustedDistanceFromTop = targetElementDimension.top + window.scrollY < import_constants.TOP_EDGE_BUFFER ? distanceFromTop + targetElementDimension.height + import_constants.TOP_EDGE_BUFFER : distanceFromTop;
@@ -155,24 +136,10 @@ function collectParentCSLPPaths(targetElement, count) {
   }
   return cslpPaths;
 }
-function removeFieldToolbar(toolbar) {
-  toolbar.innerHTML = "";
-  const toolbarEvents = [
-    import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE,
-    import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID
-  ];
-  toolbarEvents.forEach((event) => {
-    var _a, _b, _c, _d;
-    if ((_b = (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
-      (_d = (_c = import_visualBuilderPostMessage.default) == null ? void 0 : _c.unregisterEvent) == null ? void 0 : _d.call(_c, event);
-    }
-  });
-}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   appendFieldPathDropdown,
   appendFieldToolbar,
-  appendFocusedToolbar,
-  removeFieldToolbar
+  appendFocusedToolbar
 });
 //# sourceMappingURL=generateToolbar.cjs.map

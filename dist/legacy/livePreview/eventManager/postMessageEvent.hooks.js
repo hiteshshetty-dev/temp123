@@ -6,6 +6,9 @@ import { ILivePreviewWindowType } from "../../types/types.js";
 import { addParamsToUrl } from "../../utils/index.js";
 import livePreviewPostMessage from "./livePreviewEventManager.js";
 import { LIVE_PREVIEW_POST_MESSAGE_EVENTS } from "./livePreviewEventManager.constant.js";
+import {
+  OnChangeLivePreviewPostMessageEventTypes
+} from "./types/livePreviewPostMessageEvent.type.js";
 function useHistoryPostMessageEvent() {
   var _a;
   (_a = livePreviewPostMessage) == null ? void 0 : _a.on(
@@ -37,12 +40,44 @@ function useOnEntryUpdatePostMessageEvent() {
   (_a = livePreviewPostMessage) == null ? void 0 : _a.on(
     LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_CHANGE,
     (event) => {
+      var _a2;
+      try {
+        const { ssr, onChange } = Config.get();
+        const event_type = (_a2 = event.data._metadata) == null ? void 0 : _a2.event_type;
+        console.log("on change event", event.data);
+        setConfigFromParams({
+          live_preview: event.data.hash
+        });
+        if (!ssr && !event_type || !ssr && event_type === OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+          onChange();
+        } else if (ssr) {
+          if (!event_type && window) {
+            window.location.reload();
+          }
+          if (event_type === OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set("live_preview", event.data.hash);
+            window.history.pushState({}, "", newUrl.toString());
+          }
+        }
+      } catch (error) {
+        console.error("Error handling live preview update:", error);
+        return;
+      }
+    }
+  );
+}
+function useOnReloadPostMessageEvent() {
+  var _a;
+  (_a = livePreviewPostMessage) == null ? void 0 : _a.on(
+    LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_RELOAD,
+    (event) => {
+      var _a2;
       setConfigFromParams({
         live_preview: event.data.hash
       });
-      const { ssr, onChange } = Config.get();
-      if (!ssr) {
-        onChange();
+      if (window) {
+        (_a2 = window.location) == null ? void 0 : _a2.reload();
       }
     }
   );
@@ -55,7 +90,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.3.0",
+        sdkVersion: "3.2.5",
         mode: Config.get().mode
       }
     }
@@ -87,6 +122,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
     }
     useHistoryPostMessageEvent();
     useOnEntryUpdatePostMessageEvent();
+    useOnReloadPostMessageEvent();
   }).catch((e) => {
   });
 }
@@ -100,6 +136,7 @@ function sendCurrentPageUrlPostMessageEvent() {
 export {
   sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent
+  useOnEntryUpdatePostMessageEvent,
+  useOnReloadPostMessageEvent
 };
 //# sourceMappingURL=postMessageEvent.hooks.js.map

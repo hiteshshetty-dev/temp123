@@ -12,14 +12,9 @@ import FieldToolbarComponent from "../components/FieldToolbar.js";
 import { render } from "preact";
 import FieldLabelWrapperComponent from "../components/fieldLabelWrapper.js";
 import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
-import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
-import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { jsx } from "preact/jsx-runtime";
-function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false, options) {
-  appendFieldPathDropdown(eventDetails, focusedToolbarElement, options);
-  if (options == null ? void 0 : options.isHover) {
-    return;
-  }
+function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
+  appendFieldPathDropdown(eventDetails, focusedToolbarElement);
   appendFieldToolbar(
     eventDetails,
     focusedToolbarElement,
@@ -27,11 +22,10 @@ function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, 
     isVariant
   );
 }
-async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false, options) {
-  const { isHover } = options || {};
+async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false) {
   if (focusedToolbarElement.querySelector(
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
-  ) && !isHover)
+  ))
     return;
   const entryPermissions = await getEntryPermissionsCached({
     entryUid: eventDetails.fieldMetadata.entry_uid,
@@ -53,24 +47,12 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
   );
   focusedToolbarElement.append(wrapper);
 }
-function appendFieldPathDropdown(eventDetails, focusedToolbarElement, options) {
-  const { isHover } = options || {};
-  const fieldLabelWrapper = document.querySelector(
+function appendFieldPathDropdown(eventDetails, focusedToolbarElement) {
+  if (document.querySelector(
     ".visual-builder__focused-toolbar__field-label-wrapper"
-  );
+  ))
+    return;
   const { editableElement: targetElement, fieldMetadata } = eventDetails;
-  if (fieldLabelWrapper) {
-    if (isHover) {
-      const fieldCslp = fieldLabelWrapper.getAttribute("data-hovered-cslp");
-      if (fieldCslp === fieldMetadata.cslpValue) {
-        return;
-      } else {
-        removeFieldToolbar(focusedToolbarElement);
-      }
-    } else {
-      return;
-    }
-  }
   const targetElementDimension = targetElement.getBoundingClientRect();
   const distanceFromTop = targetElementDimension.top + window.scrollY - TOOLBAR_EDGE_BUFFER;
   const adjustedDistanceFromTop = targetElementDimension.top + window.scrollY < TOP_EDGE_BUFFER ? distanceFromTop + targetElementDimension.height + TOP_EDGE_BUFFER : distanceFromTop;
@@ -126,23 +108,9 @@ function collectParentCSLPPaths(targetElement, count) {
   }
   return cslpPaths;
 }
-function removeFieldToolbar(toolbar) {
-  toolbar.innerHTML = "";
-  const toolbarEvents = [
-    VisualBuilderPostMessageEvents.DELETE_INSTANCE,
-    VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID
-  ];
-  toolbarEvents.forEach((event) => {
-    var _a, _b, _c, _d;
-    if ((_b = (_a = visualBuilderPostMessage) == null ? void 0 : _a.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
-      (_d = (_c = visualBuilderPostMessage) == null ? void 0 : _c.unregisterEvent) == null ? void 0 : _d.call(_c, event);
-    }
-  });
-}
 export {
   appendFieldPathDropdown,
   appendFieldToolbar,
-  appendFocusedToolbar,
-  removeFieldToolbar
+  appendFocusedToolbar
 };
 //# sourceMappingURL=generateToolbar.js.map

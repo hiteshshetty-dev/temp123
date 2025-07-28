@@ -134,7 +134,6 @@ function sendFieldEvent(options) {
   }
 }
 function hideOverlay(params) {
-  VisualBuilder.VisualBuilderGlobalState.value.isFocussed = false;
   const focusElementObserver = VisualBuilder.VisualBuilderGlobalState.value.focusElementObserver;
   if (focusElementObserver) {
     focusElementObserver.disconnect();

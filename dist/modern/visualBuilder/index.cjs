@@ -214,9 +214,7 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
-        focusElementObserver: null,
-        referenceParentMap: {},
-        isFocussed: false
+        focusElementObserver: null
       };
       if (this.visualBuilderContainer) {
         window.document.body.removeChild(this.visualBuilderContainer);
@@ -348,9 +346,7 @@ _VisualBuilder.VisualBuilderGlobalState = (0, import_signals.signal)({
   audienceMode: false,
   locale: import_configManager.default.get().stackDetails.masterLocale || "en-us",
   variant: null,
-  focusElementObserver: null,
-  referenceParentMap: {},
-  isFocussed: false
+  focusElementObserver: null
 });
 var VisualBuilder = _VisualBuilder;
 // Annotate the CommonJS export names for ESM import in node:

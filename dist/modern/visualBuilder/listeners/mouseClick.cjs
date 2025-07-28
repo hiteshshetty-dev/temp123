@@ -31,8 +31,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var mouseClick_exports = {};
 __export(mouseClick_exports, {
   addFocusedToolbar: () => addFocusedToolbar,
-  default: () => mouseClick_default,
-  handleBuilderInteraction: () => handleBuilderInteraction
+  default: () => mouseClick_default
 });
 module.exports = __toCommonJS(mouseClick_exports);
 var import_handleIndividualFields = require("../utils/handleIndividualFields.cjs");
@@ -71,8 +70,7 @@ function addFocusedToolbar(params) {
     params.eventDetails,
     params.focusedToolbar,
     params.hideOverlay,
-    params.isVariant,
-    params.options
+    params.isVariant
   );
 }
 async function handleBuilderInteraction(params) {
@@ -187,7 +185,6 @@ function isSameSelectedElement(previousSelectedElement, editableElement, params)
   return !!(previousSelectedElement && previousSelectedElement === editableElement && !params.reEvaluate);
 }
 function addOverlayAndToolbar(params, eventDetails, editableElement, isVariant) {
-  import__.VisualBuilder.VisualBuilderGlobalState.value.isFocussed = true;
   addOverlay({
     overlayWrapper: params.overlayWrapper,
     resizeObserver: params.resizeObserver,
@@ -267,7 +264,6 @@ function observeEditableElementChanges(params, editableElement) {
 var mouseClick_default = handleBuilderInteraction;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  addFocusedToolbar,
-  handleBuilderInteraction
+  addFocusedToolbar
 });
 //# sourceMappingURL=mouseClick.cjs.map

@@ -6,6 +6,17 @@ interface HistoryLivePreviewPostMessageEventData {
 }
 interface OnChangeLivePreviewPostMessageEventData {
     hash: string;
+    entry_uid?: string;
+    content_type_uid?: string;
+    _metadata?: {
+        event_type: "hash-change" | "entry-change";
+    };
+}
+interface OnReloadLivePreviewPostMessageEventData {
+    hash: string;
+}
+interface OnHashChangeLivePreviewPostMessageEventData {
+    hash: string;
 }
 interface LivePreviewInitEventResponse {
     contentTypeUid: string;
@@ -13,4 +24,4 @@ interface LivePreviewInitEventResponse {
     windowType: ILivePreviewWindowType;
 }
 
-export type { HistoryLivePreviewPostMessageEventData, LivePreviewInitEventResponse, OnChangeLivePreviewPostMessageEventData };
+export type { HistoryLivePreviewPostMessageEventData, LivePreviewInitEventResponse, OnChangeLivePreviewPostMessageEventData, OnHashChangeLivePreviewPostMessageEventData, OnReloadLivePreviewPostMessageEventData };

@@ -32,7 +32,8 @@ var postMessageEvent_hooks_exports = {};
 __export(postMessageEvent_hooks_exports, {
   sendInitializeLivePreviewPostMessageEvent: () => sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent: () => useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent
+  useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent,
+  useOnReloadPostMessageEvent: () => useOnReloadPostMessageEvent
 });
 module.exports = __toCommonJS(postMessageEvent_hooks_exports);
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
@@ -40,6 +41,7 @@ var import_types = require("../../types/types.cjs");
 var import_utils = require("../../utils/index.cjs");
 var import_livePreviewEventManager = __toESM(require("./livePreviewEventManager.cjs"), 1);
 var import_livePreviewEventManager2 = require("./livePreviewEventManager.constant.cjs");
+var import_livePreviewPostMessageEvent = require("./types/livePreviewPostMessageEvent.type.cjs");
 function useHistoryPostMessageEvent() {
   import_livePreviewEventManager.default?.on(
     import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.HISTORY,
@@ -69,12 +71,41 @@ function useOnEntryUpdatePostMessageEvent() {
   import_livePreviewEventManager.default?.on(
     import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_CHANGE,
     (event) => {
+      try {
+        const { ssr, onChange } = import_configManager.default.get();
+        const event_type = event.data._metadata?.event_type;
+        console.log("on change event", event.data);
+        (0, import_configManager.setConfigFromParams)({
+          live_preview: event.data.hash
+        });
+        if (!ssr && !event_type || !ssr && event_type === import_livePreviewPostMessageEvent.OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+          onChange();
+        } else if (ssr) {
+          if (!event_type && window) {
+            window.location.reload();
+          }
+          if (event_type === import_livePreviewPostMessageEvent.OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set("live_preview", event.data.hash);
+            window.history.pushState({}, "", newUrl.toString());
+          }
+        }
+      } catch (error) {
+        console.error("Error handling live preview update:", error);
+        return;
+      }
+    }
+  );
+}
+function useOnReloadPostMessageEvent() {
+  import_livePreviewEventManager.default?.on(
+    import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_RELOAD,
+    (event) => {
       (0, import_configManager.setConfigFromParams)({
         live_preview: event.data.hash
       });
-      const { ssr, onChange } = import_configManager.default.get();
-      if (!ssr) {
-        onChange();
+      if (window) {
+        window.location?.reload();
       }
     }
   );
@@ -86,7 +117,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: import_configManager.default.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.3.0",
+        sdkVersion: "3.2.5",
         mode: import_configManager.default.get().mode
       }
     }
@@ -117,6 +148,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
     }
     useHistoryPostMessageEvent();
     useOnEntryUpdatePostMessageEvent();
+    useOnReloadPostMessageEvent();
   }).catch((e) => {
   });
 }
@@ -130,6 +162,7 @@ function sendCurrentPageUrlPostMessageEvent() {
 0 && (module.exports = {
   sendInitializeLivePreviewPostMessageEvent,
   useHistoryPostMessageEvent,
-  useOnEntryUpdatePostMessageEvent
+  useOnEntryUpdatePostMessageEvent,
+  useOnReloadPostMessageEvent
 });
 //# sourceMappingURL=postMessageEvent.hooks.cjs.map

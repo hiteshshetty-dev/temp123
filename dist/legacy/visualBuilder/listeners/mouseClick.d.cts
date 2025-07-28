@@ -8,11 +8,8 @@ type HandleBuilderInteractionParams = Omit<EventListenerHandlerParams, "eventDet
 type AddFocusedToolbarParams = Pick<EventListenerHandlerParams, "eventDetails" | "focusedToolbar"> & {
     hideOverlay: () => void;
     isVariant: boolean;
-    options?: {
-        isHover?: boolean;
-    };
 };
 declare function addFocusedToolbar(params: AddFocusedToolbarParams): void;
 declare function handleBuilderInteraction(params: HandleBuilderInteractionParams): Promise<void>;
 
-export { type HandleBuilderInteractionParams, addFocusedToolbar, handleBuilderInteraction as default, handleBuilderInteraction };
+export { addFocusedToolbar, handleBuilderInteraction as default };

@@ -1,7 +1,7 @@
 import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/listeners/mouseHover.ts
-import { debounce, throttle } from "lodash-es";
+import { throttle } from "lodash-es";
 import { getCsDataOfElement } from "../utils/getCsDataOfElement.js";
 import { removeAddInstanceButtons } from "../utils/multipleElementAddButton.js";
 import { generateCustomCursor } from "../generators/generateCustomCursor.js";
@@ -15,7 +15,6 @@ import { VB_EmptyBlockParentClass } from "../../index.js";
 import Config from "../../configManager/configManager.js";
 import { isCollabThread } from "../generators/generateThread.js";
 import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
-import { appendFieldPathDropdown } from "../generators/generateToolbar.js";
 var config = Config.get();
 function resetCustomCursor(customCursor) {
   if (customCursor) {
@@ -40,41 +39,10 @@ function handleCursorPosition(event, customCursor) {
     customCursor.style.top = `${mouseY}px`;
   }
 }
-function addOutline(params) {
-  if (!params) {
-    return;
-  }
-  const { editableElement, eventDetails, content_type_uid, fieldPath, fieldMetadata, fieldDisabled } = params;
+function addOutline(editableElement, isFieldDisabled2) {
   if (!editableElement) return;
-  addHoverOutline(editableElement, fieldDisabled);
-  FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
-    (fieldSchema) => {
-      let entryAcl;
-      if (!fieldSchema) return;
-      getEntryPermissionsCached({
-        entryUid: fieldMetadata.entry_uid,
-        contentTypeUid: fieldMetadata.content_type_uid,
-        locale: fieldMetadata.locale
-      }).then((data) => {
-        entryAcl = data;
-      }).catch((error) => {
-        console.error(
-          "[Visual Builder] Error retrieving entry permissions:",
-          error
-        );
-      }).finally(() => {
-        const { isDisabled: fieldDisabled2 } = isFieldDisabled(
-          fieldSchema,
-          eventDetails,
-          entryAcl
-        );
-        addHoverOutline(editableElement, fieldDisabled2);
-      });
-    }
-  );
+  addHoverOutline(editableElement, isFieldDisabled2);
 }
-var debouncedAddOutline = debounce(addOutline, 50, { trailing: true });
-var showOutline = (params) => debouncedAddOutline(params);
 function hideDefaultCursor() {
   if ((document == null ? void 0 : document.body) && !document.body.classList.contains(
     visualBuilderStyles()["visual-builder__default-cursor--disabled"]
@@ -115,16 +83,6 @@ function showCustomCursor(customCursor) {
     return;
   customCursor == null ? void 0 : customCursor.classList.add("visible");
 }
-var debouncedRenderHoverToolbar = debounce(async (params) => {
-  const eventDetails = getCsDataOfElement(params.event);
-  if (!eventDetails || !params.overlayWrapper || !params.visualBuilderContainer || !params.focusedToolbar) {
-    return;
-  }
-  appendFieldPathDropdown(eventDetails, params.focusedToolbar, {
-    isHover: true
-  });
-}, 50, { trailing: true });
-var showHoverToolbar = async (params) => await debouncedRenderHoverToolbar(params);
 function isOverlay(target) {
   return target.classList.contains("visual-builder__overlay");
 }
@@ -133,158 +91,151 @@ function isContentEditable(target) {
     return target.getAttribute("contenteditable") === "true";
   return false;
 }
-function isFieldPathDropdown(target) {
-  return target.classList.contains("visual-builder__focused-toolbar__field-label-wrapper") || target.classList.contains("visual-builder__focused-toolbar__field-label-wrapper__current-field");
-}
-var throttledMouseHover = throttle(async (params) => {
-  const eventDetails = getCsDataOfElement(params.event);
-  const eventTarget = params.event.target;
-  if ((config == null ? void 0 : config.collab.enable) && (config == null ? void 0 : config.collab.pauseFeedback)) {
-    hideCustomCursor(params.customCursor);
-    return;
-  }
-  if (!eventDetails) {
-    if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget) || isCollabThread(eventTarget))) {
-      handleCursorPosition(params.event, params.customCursor);
-      hideCustomCursor(params.customCursor);
+async function handleMouseHover(params) {
+  throttle(async (params2) => {
+    const eventDetails = getCsDataOfElement(params2.event);
+    const eventTarget = params2.event.target;
+    if ((config == null ? void 0 : config.collab.enable) && (config == null ? void 0 : config.collab.pauseFeedback)) {
+      hideCustomCursor(params2.customCursor);
       return;
     }
-    if (eventTarget && isFieldPathDropdown(eventTarget)) {
-      params.customCursor && hideCustomCursor(params.customCursor);
-      showOutline();
-      showHoverToolbar({
-        event: params.event,
-        overlayWrapper: params.overlayWrapper,
-        visualBuilderContainer: params.visualBuilderContainer,
-        previousSelectedEditableDOM: VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
-        focusedToolbar: params.focusedToolbar,
-        resizeObserver: params.resizeObserver
-      });
-    }
-    if (!(config == null ? void 0 : config.collab.enable)) {
-      resetCustomCursor(params.customCursor);
-    }
-    removeAddInstanceButtons({
-      eventTarget: params.event.target,
-      visualBuilderContainer: params.visualBuilderContainer,
-      overlayWrapper: params.overlayWrapper
-    });
-    handleCursorPosition(params.event, params.customCursor);
-    if ((config == null ? void 0 : config.collab.enable) && (config == null ? void 0 : config.collab.isFeedbackMode)) {
-      showCustomCursor(params.customCursor);
-      collabCustomCursor(params.customCursor);
-    }
-    return;
-  }
-  const { editableElement, fieldMetadata } = eventDetails;
-  const { content_type_uid, fieldPath } = fieldMetadata;
-  if (VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM && VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM.isSameNode(
-    editableElement
-  )) {
-    hideCustomCursor(params.customCursor);
-    return;
-  }
-  if (params.customCursor) {
-    const elementUnderCursor = document.elementFromPoint(
-      params.event.clientX,
-      params.event.clientY
-    );
-    if (elementUnderCursor) {
-      if (elementUnderCursor.nodeName === "A" || elementUnderCursor.nodeName === "BUTTON") {
-        elementUnderCursor.classList.add(
-          visualBuilderStyles()["visual-builder__no-cursor-style"]
-        );
+    if (!eventDetails) {
+      if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget) || isCollabThread(eventTarget))) {
+        handleCursorPosition(params2.event, params2.customCursor);
+        hideCustomCursor(params2.customCursor);
+        return;
       }
-    }
-    if ((config == null ? void 0 : config.collab.enable) && (config == null ? void 0 : config.collab.isFeedbackMode)) {
-      collabCustomCursor(params.customCursor);
-      handleCursorPosition(params.event, params.customCursor);
-      showCustomCursor(params.customCursor);
-      return;
-    } else if ((config == null ? void 0 : config.collab.enable) && !(config == null ? void 0 : config.collab.isFeedbackMode)) {
-      hideCustomCursor(params.customCursor);
-      return;
-    }
-    if (VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM !== editableElement) {
-      resetCustomCursor(params.customCursor);
+      if (!(config == null ? void 0 : config.collab.enable)) {
+        resetCustomCursor(params2.customCursor);
+      }
       removeAddInstanceButtons({
-        eventTarget: params.event.target,
-        visualBuilderContainer: params.visualBuilderContainer,
-        overlayWrapper: params.overlayWrapper
+        eventTarget: params2.event.target,
+        visualBuilderContainer: params2.visualBuilderContainer,
+        overlayWrapper: params2.overlayWrapper
       });
+      handleCursorPosition(params2.event, params2.customCursor);
+      if ((config == null ? void 0 : config.collab.enable) && (config == null ? void 0 : config.collab.isFeedbackMode)) {
+        showCustomCursor(params2.customCursor);
+        collabCustomCursor(params2.customCursor);
+      }
+      return;
     }
-    if (!FieldSchemaMap.hasFieldSchema(content_type_uid, fieldPath)) {
-      generateCustomCursor({
-        fieldType: "loading",
-        customCursor: params.customCursor
-      });
+    const { editableElement, fieldMetadata } = eventDetails;
+    const { content_type_uid, fieldPath } = fieldMetadata;
+    if (VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM && VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM.isSameNode(
+      editableElement
+    )) {
+      hideCustomCursor(params2.customCursor);
+      return;
     }
-    FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
-      (fieldSchema) => {
-        if (!fieldSchema) return;
-        let entryAcl;
-        getEntryPermissionsCached({
-          entryUid: fieldMetadata.entry_uid,
-          contentTypeUid: fieldMetadata.content_type_uid,
-          locale: fieldMetadata.locale
-        }).then((data) => {
-          entryAcl = data;
-        }).catch((error) => {
-          console.error(
-            "[Visual Builder] Error retrieving entry permissions:",
-            error
+    if (params2.customCursor) {
+      const elementUnderCursor = document.elementFromPoint(
+        params2.event.clientX,
+        params2.event.clientY
+      );
+      if (elementUnderCursor) {
+        if (elementUnderCursor.nodeName === "A" || elementUnderCursor.nodeName === "BUTTON") {
+          elementUnderCursor.classList.add(
+            visualBuilderStyles()["visual-builder__no-cursor-style"]
           );
-        }).finally(() => {
-          if (!params.customCursor) return;
-          const { isDisabled: fieldDisabled } = isFieldDisabled(
-            fieldSchema,
-            eventDetails,
-            entryAcl
-          );
-          const fieldType = getFieldType(fieldSchema);
-          generateCustomCursor({
-            fieldType,
-            customCursor: params.customCursor,
-            fieldDisabled
-          });
+        }
+      }
+      if ((config == null ? void 0 : config.collab.enable) && (config == null ? void 0 : config.collab.isFeedbackMode)) {
+        collabCustomCursor(params2.customCursor);
+        handleCursorPosition(params2.event, params2.customCursor);
+        showCustomCursor(params2.customCursor);
+        return;
+      } else if ((config == null ? void 0 : config.collab.enable) && !(config == null ? void 0 : config.collab.isFeedbackMode)) {
+        hideCustomCursor(params2.customCursor);
+        return;
+      }
+      if (VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM !== editableElement) {
+        resetCustomCursor(params2.customCursor);
+        removeAddInstanceButtons({
+          eventTarget: params2.event.target,
+          visualBuilderContainer: params2.visualBuilderContainer,
+          overlayWrapper: params2.overlayWrapper
         });
       }
-    );
-    handleCursorPosition(params.event, params.customCursor);
-    showCustomCursor(params.customCursor);
-  }
-  if (!editableElement.classList.contains(VB_EmptyBlockParentClass) && !editableElement.classList.contains("visual-builder__empty-block")) {
-    showOutline({
-      editableElement,
-      eventDetails,
-      content_type_uid,
-      fieldPath,
-      fieldMetadata
-    });
-    const isFocussed = VisualBuilder.VisualBuilderGlobalState.value.isFocussed;
-    if (!isFocussed) {
-      showHoverToolbar({
-        event: params.event,
-        overlayWrapper: params.overlayWrapper,
-        visualBuilderContainer: params.visualBuilderContainer,
-        previousSelectedEditableDOM: VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
-        focusedToolbar: params.focusedToolbar,
-        resizeObserver: params.resizeObserver
-      });
+      if (!FieldSchemaMap.hasFieldSchema(content_type_uid, fieldPath)) {
+        generateCustomCursor({
+          fieldType: "loading",
+          customCursor: params2.customCursor
+        });
+      }
+      FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
+        (fieldSchema) => {
+          if (!fieldSchema) return;
+          let entryAcl;
+          getEntryPermissionsCached({
+            entryUid: fieldMetadata.entry_uid,
+            contentTypeUid: fieldMetadata.content_type_uid,
+            locale: fieldMetadata.locale
+          }).then((data) => {
+            entryAcl = data;
+          }).catch((error) => {
+            console.error(
+              "[Visual Builder] Error retrieving entry permissions:",
+              error
+            );
+          }).finally(() => {
+            if (!params2.customCursor) return;
+            const { isDisabled: fieldDisabled } = isFieldDisabled(
+              fieldSchema,
+              eventDetails,
+              entryAcl
+            );
+            const fieldType = getFieldType(fieldSchema);
+            generateCustomCursor({
+              fieldType,
+              customCursor: params2.customCursor,
+              fieldDisabled
+            });
+          });
+        }
+      );
+      handleCursorPosition(params2.event, params2.customCursor);
+      showCustomCursor(params2.customCursor);
     }
-  }
-  if (VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM === editableElement) {
-    return;
-  }
-  VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM = editableElement;
-}, 10);
-var handleMouseHover = async (params) => await throttledMouseHover(params);
+    if (!editableElement.classList.contains(VB_EmptyBlockParentClass) && !editableElement.classList.contains("visual-builder__empty-block")) {
+      addOutline(editableElement);
+      FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
+        (fieldSchema) => {
+          let entryAcl;
+          if (!fieldSchema) return;
+          getEntryPermissionsCached({
+            entryUid: fieldMetadata.entry_uid,
+            contentTypeUid: fieldMetadata.content_type_uid,
+            locale: fieldMetadata.locale
+          }).then((data) => {
+            entryAcl = data;
+          }).catch((error) => {
+            console.error(
+              "[Visual Builder] Error retrieving entry permissions:",
+              error
+            );
+          }).finally(() => {
+            const { isDisabled: fieldDisabled } = isFieldDisabled(
+              fieldSchema,
+              eventDetails,
+              entryAcl
+            );
+            addOutline(editableElement, fieldDisabled);
+          });
+        }
+      );
+    }
+    if (VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM === editableElement) {
+      return;
+    }
+    VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM = editableElement;
+  }, 10)(params);
+}
 var mouseHover_default = handleMouseHover;
 export {
   mouseHover_default as default,
   hideCustomCursor,
   hideHoverOutline,
-  showCustomCursor,
-  showHoverToolbar
+  showCustomCursor
 };
 //# sourceMappingURL=mouseHover.js.map

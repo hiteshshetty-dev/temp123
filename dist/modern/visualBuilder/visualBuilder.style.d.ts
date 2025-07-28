@@ -1,10 +1,6 @@
 declare function visualBuilderStyles(): {
     "visual-builder__container": string;
     "visual-builder__cursor": string;
-    "tooltip-container": string;
-    "tooltip-arrow": string;
-    "toolbar-tooltip-content": string;
-    "toolbar-tooltip-content-item": string;
     "visual-builder__overlay__wrapper": string;
     "visual-builder__overlay--outline": string;
     "visual-builder__overlay": string;
@@ -32,9 +28,6 @@ declare function visualBuilderStyles(): {
     "visual-builder__button-loader": string;
     "visual-builder__button--comment-loader": string;
     "visual-builder__field-icon": string;
-    "visual-builder__content-type-icon": string;
-    "visual-builder__caret-right-icon": string;
-    "visual-builder__reference-icon-container": string;
     "visual-builder__focused-toolbar__button-group": string;
     "visual-builder__focused-toolbar__text": string;
     "visual-builder__focused-toolbar__multiple-field-toolbar": string;

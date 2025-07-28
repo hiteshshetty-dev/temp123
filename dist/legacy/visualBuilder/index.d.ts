@@ -10,8 +10,6 @@ interface VisualBuilderGlobalStateImpl {
     locale: string;
     variant: string | null;
     focusElementObserver: MutationObserver | null;
-    referenceParentMap: Record<string, string>;
-    isFocussed: boolean;
 }
 declare class VisualBuilder {
     private customCursor;

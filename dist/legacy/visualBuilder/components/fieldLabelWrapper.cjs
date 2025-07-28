@@ -48,53 +48,25 @@ var import_CslpError = require("./CslpError.cjs");
 var import_errorHandling = require("../utils/errorHandling.cjs");
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
 var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
-var import_icons2 = require("./icons/index.cjs");
-var import_Tooltip = require("./Tooltip.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 async function getFieldDisplayNames(fieldMetadata) {
   var _a;
   const result = await ((_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.send(import_postMessage.VisualBuilderPostMessageEvents.GET_FIELD_DISPLAY_NAMES, fieldMetadata));
   return result;
 }
-async function getContentTypeName(contentTypeUid) {
-  var _a;
-  try {
-    const result = await ((_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.send(import_postMessage.VisualBuilderPostMessageEvents.GET_CONTENT_TYPE_NAME, {
-      content_type_uid: contentTypeUid
-    }));
-    return result == null ? void 0 : result.contentTypeName;
-  } catch (e) {
-    console.warn("[getFieldLabelWrapper] Error getting content type name", e);
-    return "";
-  }
-}
-async function getReferenceParentMap() {
-  var _a;
-  try {
-    const result = await ((_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.send(import_postMessage.VisualBuilderPostMessageEvents.REFERENCE_MAP, {})) ?? {};
-    return result;
-  } catch (e) {
-    console.warn("[getFieldLabelWrapper] Error getting reference parent map", e);
-    return {};
-  }
-}
 function FieldLabelWrapperComponent(props) {
   const { eventDetails } = props;
   const [currentField, setCurrentField] = (0, import_compat.useState)({
     text: "",
-    contentTypeName: "",
     icon: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretIcon, {}),
     prefixIcon: null,
     disabled: false,
-    isVariant: false,
-    isReference: false,
-    referenceFieldName: "",
-    parentContentTypeName: ""
+    isVariant: false
   });
   const [displayNames, setDisplayNames] = (0, import_compat.useState)(
     {}
   );
-  const [dataLoading, setDataLoading] = (0, import_compat.useState)(true);
+  const [displayNamesLoading, setDisplayNamesLoading] = (0, import_compat.useState)(true);
   const [error, setError] = (0, import_compat.useState)(false);
   const [isDropdownOpen, setIsDropdownOpen] = (0, import_compat.useState)(false);
   function calculateTopOffset(index) {
@@ -105,7 +77,7 @@ function FieldLabelWrapperComponent(props) {
   (0, import_compat.useEffect)(() => {
     const fetchData = async () => {
       var _a, _b;
-      setDataLoading(true);
+      setDisplayNamesLoading(true);
       const allPaths = (0, import_lodash_es.uniqBy)(
         [
           props.fieldMetadata,
@@ -115,37 +87,13 @@ function FieldLabelWrapperComponent(props) {
         ],
         "cslpValue"
       );
-      const [displayNames2, fieldSchema, contentTypeName, referenceParentMap] = await Promise.all([
-        getFieldDisplayNames(allPaths),
-        import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
-          props.fieldMetadata.content_type_uid,
-          props.fieldMetadata.fieldPath
-        ),
-        getContentTypeName(
-          props.fieldMetadata.content_type_uid
-        ),
-        getReferenceParentMap()
-      ]);
-      const entryUid = props.fieldMetadata.entry_uid;
-      const referenceData = referenceParentMap[entryUid];
-      const isReference = !!referenceData;
-      let referenceFieldName = referenceData ? referenceData[0].referenceFieldName : "";
-      let parentContentTypeName = referenceData ? referenceData[0].contentTypeTitle : "";
-      if (isReference) {
-        const domAncestor = eventDetails.editableElement.closest(`[data-cslp]:not([data-cslp^="${props.fieldMetadata.content_type_uid}"])`);
-        if (domAncestor) {
-          const domAncestorCslp = domAncestor.getAttribute("data-cslp");
-          const domAncestorDetails = (0, import_cslp.extractDetailsFromCslp)(domAncestorCslp);
-          const domAncestorContentTypeUid = domAncestorDetails.content_type_uid;
-          const domAncestorContentParent = referenceData == null ? void 0 : referenceData.find((data) => data.contentTypeUid === domAncestorContentTypeUid);
-          if (domAncestorContentParent) {
-            referenceFieldName = domAncestorContentParent.referenceFieldName;
-            parentContentTypeName = domAncestorContentParent.contentTypeTitle;
-          }
-        }
-      }
+      const displayNames2 = await getFieldDisplayNames(allPaths);
+      const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
+        props.fieldMetadata.content_type_uid,
+        props.fieldMetadata.fieldPath
+      );
       if ((0, import_errorHandling.hasPostMessageError)(displayNames2) || !fieldSchema) {
-        setDataLoading(false);
+        setDisplayNamesLoading(false);
         setError(true);
         return;
       }
@@ -164,7 +112,6 @@ function FieldLabelWrapperComponent(props) {
       const isVariant = props.fieldMetadata.variant ? true : false;
       setCurrentField({
         text: currentFieldDisplayName,
-        contentTypeName: contentTypeName ?? "",
         icon: fieldDisabled ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "div",
           {
@@ -175,25 +122,18 @@ function FieldLabelWrapperComponent(props) {
             children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.InfoIcon, {})
           }
         ) : hasParentPaths ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretIcon, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {}),
-        isReference,
         prefixIcon: (0, import_generateCustomCursor.getFieldIcon)(fieldSchema),
         disabled: fieldDisabled,
-        referenceFieldName,
-        parentContentTypeName,
         isVariant
       });
       if (displayNames2) {
         setDisplayNames(displayNames2);
       }
       if (((_b = Object.keys(displayNames2 || {})) == null ? void 0 : _b.length) === allPaths.length) {
-        setDataLoading(false);
+        setDisplayNamesLoading(false);
       }
     };
-    try {
-      fetchData();
-    } catch (e) {
-      console.warn("[getFieldLabelWrapper] Error fetching field label data", e);
-    }
+    fetchData();
   }, [props]);
   const onParentPathClick = (cslp) => {
     const parentElement = props.getParentEditableElement(cslp);
@@ -204,7 +144,7 @@ function FieldLabelWrapperComponent(props) {
   function getCurrentFieldIcon() {
     if (error) {
       return null;
-    } else if (dataLoading) {
+    } else if (displayNamesLoading) {
       return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_loading.LoadingIcon, {});
     } else {
       return currentField.icon;
@@ -217,7 +157,7 @@ function FieldLabelWrapperComponent(props) {
         "visual-builder__focused-toolbar__field-label-container",
         (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-container"]
       ),
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_Tooltip.ToolbarTooltip, { data: { contentTypeName: currentField.parentContentTypeName, referenceFieldName: currentField.referenceFieldName }, disabled: !currentField.isReference || isDropdownOpen, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
         "div",
         {
           className: (0, import_classnames.default)(
@@ -236,7 +176,6 @@ function FieldLabelWrapperComponent(props) {
           ),
           onClick: () => setIsDropdownOpen((prev) => !prev),
           "data-testid": "visual-builder__focused-toolbar__field-label-wrapper",
-          "data-hovered-cslp": props.fieldMetadata.cslpValue,
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
               "button",
@@ -249,47 +188,8 @@ function FieldLabelWrapperComponent(props) {
                   (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button-loader"],
                   error && (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button-error"]
                 ),
-                disabled: dataLoading,
+                disabled: displayNamesLoading,
                 children: [
-                  currentField.isReference && !dataLoading && !error ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-                    "div",
-                    {
-                      className: (0, import_classnames.default)(
-                        "visual-builder__reference-icon-container",
-                        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__reference-icon-container"]
-                      ),
-                      children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                          "div",
-                          {
-                            className: (0, import_classnames.default)(
-                              "visual-builder__field-icon",
-                              (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__field-icon"]
-                            ),
-                            dangerouslySetInnerHTML: {
-                              __html: import_generateCustomCursor.FieldTypeIconsMap.reference
-                            },
-                            "data-testid": "visual-builder__field-icon-caret"
-                          }
-                        ),
-                        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretRightIcon, {})
-                      ]
-                    }
-                  ) : null,
-                  currentField.contentTypeName && !dataLoading && !error ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.ContentTypeIcon, {}),
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                      "div",
-                      {
-                        className: (0, import_classnames.default)(
-                          "visual-builder__focused-toolbar__text",
-                          (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__text"]
-                        ),
-                        "data-testid": "visual-builder__focused-toolbar__ct-name",
-                        children: currentField.contentTypeName + " : "
-                      }
-                    )
-                  ] }) : null,
                   currentField.prefixIcon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                     "div",
                     {
@@ -338,7 +238,7 @@ function FieldLabelWrapperComponent(props) {
             ))
           ]
         }
-      ) })
+      )
     }
   );
 }

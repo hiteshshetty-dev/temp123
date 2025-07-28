@@ -1,18 +1,18 @@
 fileignoreconfig:
-- filename: dist/legacy/livePreview/eventManager/livePreviewEventManager.cjs.map
-  checksum: 3645ac01303504f9849a018ddd4547d18d74952e9cf876b278152f1b2cd224d1
-- filename: dist/modern/visualBuilder/utils/visualBuilderPostMessage.cjs.map
-  checksum: 6cc30c67e3b1020ab08ca1a7ae3934008bd347644cb3e0297aec8c6d2437fdb3
-- filename: dist/modern/livePreview/eventManager/livePreviewEventManager.cjs.map
-  checksum: 1d52c6f7e2d08aefc96a8ba3314412dc7aaf30e0a8dcb90174efae10e2368e00
-- filename: dist/legacy/chunk-AGJOB2TZ.js.map
-  checksum: 827918b5ecb724a507beaef325daaf5ea918c7cc87e664af5df884271cf6d4c4
-- filename: dist/modern/timeline/timelinePostMessage/timelinePostMessage.cjs.map
-  checksum: 62a0541d9f4a4ee79d7b68a15cb8408df173cfaa1218fc4733c04dd6b73967d8
-- filename: dist/legacy/timeline/timelinePostMessage/timelinePostMessage.cjs.map
-  checksum: 1c1bc3c8b80e00a2648abb15a0ac0884dfbdcc4c81eaca19825453831fa6c3d1
-- filename: dist/legacy/visualBuilder/utils/visualBuilderPostMessage.cjs.map
-  checksum: 411bfd2c3908265b987f757ef283a887651ae1a6c802b7fe19a3f2d6049561c1
 - filename: dist/modern/chunk-NLJZU4ST.js.map
   checksum: f043c51573f3d4d2f4c9d160e829aad5285f0d9b90c904efc26e7b6d5aa1de31
+- filename: dist/legacy/livePreview/eventManager/livePreviewEventManager.cjs.map
+  checksum: 3645ac01303504f9849a018ddd4547d18d74952e9cf876b278152f1b2cd224d1
+- filename: dist/modern/timeline/timelinePostMessage/timelinePostMessage.cjs.map
+  checksum: 62a0541d9f4a4ee79d7b68a15cb8408df173cfaa1218fc4733c04dd6b73967d8
+- filename: dist/modern/livePreview/eventManager/livePreviewEventManager.cjs.map
+  checksum: 1d52c6f7e2d08aefc96a8ba3314412dc7aaf30e0a8dcb90174efae10e2368e00
+- filename: dist/legacy/timeline/timelinePostMessage/timelinePostMessage.cjs.map
+  checksum: 1c1bc3c8b80e00a2648abb15a0ac0884dfbdcc4c81eaca19825453831fa6c3d1
+- filename: dist/legacy/chunk-AGJOB2TZ.js.map
+  checksum: 827918b5ecb724a507beaef325daaf5ea918c7cc87e664af5df884271cf6d4c4
+- filename: dist/legacy/visualBuilder/utils/visualBuilderPostMessage.cjs.map
+  checksum: 411bfd2c3908265b987f757ef283a887651ae1a6c802b7fe19a3f2d6049561c1
+- filename: dist/modern/visualBuilder/utils/visualBuilderPostMessage.cjs.map
+  checksum: 6cc30c67e3b1020ab08ca1a7ae3934008bd347644cb3e0297aec8c6d2437fdb3
 version: "1.0"
