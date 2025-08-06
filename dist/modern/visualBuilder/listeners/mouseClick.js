@@ -43,7 +43,8 @@ function addFocusedToolbar(params) {
     params.eventDetails,
     params.focusedToolbar,
     params.hideOverlay,
-    params.isVariant
+    params.isVariant,
+    params.options
   );
 }
 async function handleBuilderInteraction(params) {
@@ -158,6 +159,7 @@ function isSameSelectedElement(previousSelectedElement, editableElement, params)
   return !!(previousSelectedElement && previousSelectedElement === editableElement && !params.reEvaluate);
 }
 function addOverlayAndToolbar(params, eventDetails, editableElement, isVariant) {
+  VisualBuilder.VisualBuilderGlobalState.value.isFocussed = true;
   addOverlay({
     overlayWrapper: params.overlayWrapper,
     resizeObserver: params.resizeObserver,
@@ -237,6 +239,7 @@ function observeEditableElementChanges(params, editableElement) {
 var mouseClick_default = handleBuilderInteraction;
 export {
   addFocusedToolbar,
-  mouseClick_default as default
+  mouseClick_default as default,
+  handleBuilderInteraction
 };
 //# sourceMappingURL=mouseClick.js.map

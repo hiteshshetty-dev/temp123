@@ -1,7 +1,12 @@
 declare function visualBuilderStyles(): {
     "visual-builder__container": string;
     "visual-builder__cursor": string;
+    "tooltip-container": string;
+    "tooltip-arrow": string;
+    "toolbar-tooltip-content": string;
+    "toolbar-tooltip-content-item": string;
     "visual-builder__overlay__wrapper": string;
+    "visual-builder__empty-block-plus-icon": string;
     "visual-builder__overlay--outline": string;
     "visual-builder__overlay": string;
     "visual-builder__add-button": string;
@@ -28,6 +33,9 @@ declare function visualBuilderStyles(): {
     "visual-builder__button-loader": string;
     "visual-builder__button--comment-loader": string;
     "visual-builder__field-icon": string;
+    "visual-builder__content-type-icon": string;
+    "visual-builder__caret-right-icon": string;
+    "visual-builder__reference-icon-container": string;
     "visual-builder__focused-toolbar__button-group": string;
     "visual-builder__focused-toolbar__text": string;
     "visual-builder__focused-toolbar__multiple-field-toolbar": string;
@@ -39,6 +47,7 @@ declare function visualBuilderStyles(): {
     "visual-builder__tooltip--persistent": string;
     "visual-builder__empty-block": string;
     "visual-builder__empty-block-title": string;
+    "visual-builder__empty-block-field-name": string;
     "visual-builder__empty-block-add-button": string;
     "visual-builder__hover-outline": string;
     "visual-builder__hover-outline--hidden": string;
@@ -58,6 +67,22 @@ declare function visualBuilderStyles(): {
     "visual-builder__no-cursor-style": string;
     "visual-builder__field-toolbar-container": string;
     "visual-builder__variant-button": string;
+    "visual-builder__field-location-icons-container": string;
+    "visual-builder__field-location-icons-container__divider": string;
+    "visual-builder__field-location-icons-container__app-icon": string;
+    "visual-builder__field-location-app-list": string;
+    "visual-builder__field-location-app-list--left": string;
+    "visual-builder__field-location-app-list--right": string;
+    "visual-builder__field-location-app-list__search-container": string;
+    "visual-builder__field-location-app-list__search-input": string;
+    "visual-builder__field-location-app-list__search-icon": string;
+    "visual-builder__field-location-app-list__content": string;
+    "visual-builder__field-location-app-list__no-results": string;
+    "visual-builder__field-location-app-list__no-results-text": string;
+    "visual-builder__field-location-app-list__item": string;
+    "visual-builder__field-location-app-list__item-icon-container": string;
+    "visual-builder__field-location-app-list__item-icon": string;
+    "visual-builder__field-location-app-list__item-title": string;
 };
 declare const VisualBuilderGlobalStyles = "\n       @import url(\"https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap\");\n\n       [data-cslp] [contenteditable=\"true\"] {\n            outline: none;\n        }\n\n        @keyframes visual-builder__spinner {\n            0% {\n                transform: rotate(0deg);\n            }\n            100% {\n                transform: rotate(360deg);\n            }\n        }\n\n";
 

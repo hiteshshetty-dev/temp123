@@ -51,6 +51,8 @@ var VisualBuilderPostMessageEvents = /* @__PURE__ */ ((VisualBuilderPostMessageE
   VisualBuilderPostMessageEvents2["COLLAB_RESOLVE_THREAD"] = "collab-resolve-thread";
   VisualBuilderPostMessageEvents2["COLLAB_DELETE_THREAD"] = "collab-delete-thread";
   VisualBuilderPostMessageEvents2["COLLAB_MISSING_THREADS"] = "collab-missing-threads";
+  VisualBuilderPostMessageEvents2["FIELD_LOCATION_DATA"] = "field-location-data";
+  VisualBuilderPostMessageEvents2["FIELD_LOCATION_SELECTED_APP"] = "field-location-selected-app";
   VisualBuilderPostMessageEvents2["GET_ALL_ENTRIES_IN_CURRENT_PAGE"] = "get-entries-in-current-page";
   VisualBuilderPostMessageEvents2["HIDE_FOCUS_OVERLAY"] = "hide-focus-overlay";
   VisualBuilderPostMessageEvents2["SHOW_DRAFT_FIELDS"] = "show-draft-fields";
@@ -65,12 +67,15 @@ var VisualBuilderPostMessageEvents = /* @__PURE__ */ ((VisualBuilderPostMessageE
   VisualBuilderPostMessageEvents2["GET_VARIANT_ID"] = "get-variant-id";
   VisualBuilderPostMessageEvents2["GET_LOCALE"] = "get-locale";
   VisualBuilderPostMessageEvents2["SEND_VARIANT_AND_LOCALE"] = "send-variant-and-locale";
+  VisualBuilderPostMessageEvents2["GET_CONTENT_TYPE_NAME"] = "get-content-type-name";
+  VisualBuilderPostMessageEvents2["REFERENCE_MAP"] = "get-reference-map";
   VisualBuilderPostMessageEvents2["COLLAB_ENABLE"] = "collab-enable";
   VisualBuilderPostMessageEvents2["COLLAB_DATA_UPDATE"] = "collab-data-update";
   VisualBuilderPostMessageEvents2["COLLAB_DISABLE"] = "collab-disable";
   VisualBuilderPostMessageEvents2["COLLAB_THREADS_REMOVE"] = "collab-threads-remove";
   VisualBuilderPostMessageEvents2["COLLAB_THREAD_REOPEN"] = "collab-thread-reopen";
   VisualBuilderPostMessageEvents2["COLLAB_THREAD_HIGHLIGHT"] = "collab-thread-highlight";
+  VisualBuilderPostMessageEvents2["TOGGLE_SCROLL"] = "toggle-scroll";
   return VisualBuilderPostMessageEvents2;
 })(VisualBuilderPostMessageEvents || {});
 // Annotate the CommonJS export names for ESM import in node:

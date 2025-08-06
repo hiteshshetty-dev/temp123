@@ -25,7 +25,7 @@ import { fieldIcons } from "./icons/fields/index.js";
 import classNames from "classnames";
 import { visualBuilderStyles } from "../visualBuilder.style.js";
 import CommentIcon from "./CommentIcon.js";
-import { useEffect, useState } from "preact/compat";
+import { useEffect, useState, useRef } from "preact/compat";
 import { FieldSchemaMap } from "../utils/fieldSchemaMap.js";
 import { isFieldDisabled } from "../utils/isFieldDisabled.js";
 import { FormIcon } from "./icons/index.js";
@@ -37,6 +37,8 @@ import {
   VariantRevertDropdown
 } from "./FieldRevert/FieldRevertComponent.js";
 import { LoadingIcon } from "./icons/loading.js";
+import { FieldLocationAppList } from "./FieldLocationAppList.js";
+import { FieldLocationIcon } from "./FieldLocationIcon.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 var TOOLTIP_TOP_EDGE_BUFFER = 96;
 function handleReplaceAsset(fieldMetadata) {
@@ -91,6 +93,13 @@ function FieldToolbarComponent(props) {
   } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
   const [isFormLoading, setIsFormLoading] = useState(false);
+  const [fieldLocationData, setFieldLocationData] = useState(null);
+  const [displayAllApps, setDisplayAllApps] = useState(false);
+  const moreButtonRef = useRef(null);
+  const toolbarRef = useRef(null);
+  const [appListPosition, setAppListPosition] = useState(
+    "right"
+  );
   const parentPath = ((_b = (_a = fieldMetadata == null ? void 0 : fieldMetadata.multipleFieldMetadata) == null ? void 0 : _a.parentDetails) == null ? void 0 : _b.parentCslpValue) || "";
   const isVariant = !!(fieldMetadata == null ? void 0 : fieldMetadata.variant) || isVariantOrParentOfVariant;
   const direction = getChildrenDirection(targetElement, parentPath);
@@ -105,6 +114,7 @@ function FieldToolbarComponent(props) {
   let Icon = null;
   let fieldType = null;
   let isWholeMultipleField = false;
+  const APP_LIST_MIN_WIDTH = 230;
   let disableFieldActions = false;
   if (fieldSchema) {
     const { isDisabled } = isFieldDisabled(
@@ -117,15 +127,33 @@ function FieldToolbarComponent(props) {
     );
     disableFieldActions = isDisabled;
     fieldType = getFieldType(fieldSchema);
-    isModalEditable = ALLOWED_MODAL_EDITABLE_FIELD.includes(fieldType);
     Icon = fieldIcons[fieldType];
     isMultiple = fieldSchema.multiple || false;
     if (fieldType === FieldDataType.REFERENCE)
       isMultiple = fieldSchema.field_metadata.ref_multiple;
     isWholeMultipleField = isMultiple && (fieldMetadata.fieldPathWithIndex === fieldMetadata.instance.fieldPathWithIndex || ((_c = fieldMetadata.multipleFieldMetadata) == null ? void 0 : _c.index) === -1);
+    isModalEditable = ALLOWED_MODAL_EDITABLE_FIELD.includes(fieldType) && !isWholeMultipleField;
     isReplaceAllowed = ALLOWED_REPLACE_FIELDS.includes(fieldType) && !isWholeMultipleField;
   }
+  const domEditStack = getDOMEditStack(eventDetails.editableElement);
   const invertTooltipPosition = targetElement.getBoundingClientRect().top <= TOOLTIP_TOP_EDGE_BUFFER;
+  const handleMoreIconClick = () => {
+    if (toolbarRef.current) {
+      const rect = toolbarRef.current.getBoundingClientRect();
+      const spaceRight = window.innerWidth - rect.right;
+      const spaceLeft = rect.left;
+      let position = "";
+      if (spaceRight < APP_LIST_MIN_WIDTH) {
+        position = "left";
+      } else if (spaceRight > APP_LIST_MIN_WIDTH) {
+        position = "right";
+      } else {
+        position = spaceRight > spaceLeft ? "right" : "left";
+      }
+      setAppListPosition(position);
+    }
+    setDisplayAllApps(!displayAllApps);
+  };
   const editButton = Icon ? /* @__PURE__ */ jsx(
     "button",
     {
@@ -276,6 +304,20 @@ function FieldToolbarComponent(props) {
       event == null ? void 0 : event.unregister();
     };
   }, []);
+  useEffect(() => {
+    const fetchFieldLocationData = async () => {
+      var _a2;
+      try {
+        const event = await ((_a2 = visualBuilderPostMessage) == null ? void 0 : _a2.send(VisualBuilderPostMessageEvents.FIELD_LOCATION_DATA, {
+          domEditStack: getDOMEditStack(eventDetails.editableElement)
+        }));
+        setFieldLocationData(event);
+      } catch (error) {
+        console.error("Error fetching field location data:", error);
+      }
+    };
+    fetchFieldLocationData();
+  }, [eventDetails.editableElement]);
   const multipleFieldToolbarButtonClasses = classNames(
     "visual-builder__button visual-builder__button--secondary",
     visualBuilderStyles()["visual-builder__button"],
@@ -286,133 +328,157 @@ function FieldToolbarComponent(props) {
       [visualBuilderStyles()["visual-builder__tooltip--bottom"]]: invertTooltipPosition
     }
   );
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs(
     "div",
     {
       className: classNames(
         "visual-builder__field-toolbar-container",
         visualBuilderStyles()["visual-builder__field-toolbar-container"]
       ),
-      children: /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: classNames(
-            "visual-builder__focused-toolbar__multiple-field-toolbar",
-            visualBuilderStyles()["visual-builder__focused-toolbar__multiple-field-toolbar"]
-          ),
-          "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar",
-          children: /* @__PURE__ */ jsx(
-            "div",
-            {
-              className: classNames(
-                "visual-builder__focused-toolbar__button-group",
-                visualBuilderStyles()["visual-builder__focused-toolbar__button-group"]
-              ),
-              children: /* @__PURE__ */ jsxs(Fragment, { children: [
-                isVariant ? /* @__PURE__ */ jsx(
-                  VariantRevertDropdown,
-                  {
-                    fieldDataName: fieldMetadata.fieldPathWithIndex,
-                    fieldMetadata,
-                    variantStatus: fieldVariantStatus,
-                    isOpen: isOpenVariantRevert,
-                    closeDropdown: closeVariantDropdown,
-                    invertTooltipPosition,
-                    toggleVariantDropdown,
-                    disabled: disableFieldActions
-                  }
-                ) : null,
-                isMultiple && !isWholeMultipleField ? /* @__PURE__ */ jsxs(Fragment, { children: [
-                  /* @__PURE__ */ jsx(
-                    "button",
+      children: [
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: classNames(
+              "visual-builder__focused-toolbar__multiple-field-toolbar",
+              visualBuilderStyles()["visual-builder__focused-toolbar__multiple-field-toolbar"]
+            ),
+            "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar",
+            children: /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: classNames(
+                  "visual-builder__focused-toolbar__button-group",
+                  visualBuilderStyles()["visual-builder__focused-toolbar__button-group"]
+                ),
+                children: /* @__PURE__ */ jsxs(Fragment, { children: [
+                  isVariant ? /* @__PURE__ */ jsx(
+                    VariantRevertDropdown,
                     {
-                      "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-left-button",
-                      className: multipleFieldToolbarButtonClasses,
-                      "data-tooltip": direction === "vertical" ? "Move up" : "Move left",
-                      onClick: (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleMoveInstance(
-                          fieldMetadata,
-                          "previous"
-                        );
-                      },
-                      disabled: disableFieldActions || disableMoveLeft,
-                      children: /* @__PURE__ */ jsx(
-                        MoveLeftIcon,
-                        {
-                          className: classNames({
-                            "visual-builder__rotate--90": direction === "vertical",
-                            [visualBuilderStyles()["visual-builder__rotate--90"]]: direction === "vertical"
-                          }),
-                          disabled: disableFieldActions || disableMoveLeft
-                        }
-                      )
+                      fieldDataName: fieldMetadata.fieldPathWithIndex,
+                      fieldMetadata,
+                      variantStatus: fieldVariantStatus,
+                      isOpen: isOpenVariantRevert,
+                      closeDropdown: closeVariantDropdown,
+                      invertTooltipPosition,
+                      toggleVariantDropdown,
+                      disabled: disableFieldActions
                     }
-                  ),
+                  ) : null,
+                  isMultiple && !isWholeMultipleField ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-left-button",
+                        className: multipleFieldToolbarButtonClasses,
+                        "data-tooltip": direction === "vertical" ? "Move up" : "Move left",
+                        onClick: (e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleMoveInstance(
+                            fieldMetadata,
+                            "previous"
+                          );
+                        },
+                        disabled: disableFieldActions || disableMoveLeft,
+                        children: /* @__PURE__ */ jsx(
+                          MoveLeftIcon,
+                          {
+                            className: classNames({
+                              "visual-builder__rotate--90": direction === "vertical",
+                              [visualBuilderStyles()["visual-builder__rotate--90"]]: direction === "vertical"
+                            }),
+                            disabled: disableFieldActions || disableMoveLeft
+                          }
+                        )
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-right-button",
+                        className: multipleFieldToolbarButtonClasses,
+                        "data-tooltip": direction === "vertical" ? "Move down" : "Move right",
+                        onClick: (e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleMoveInstance(
+                            fieldMetadata,
+                            "next"
+                          );
+                        },
+                        disabled: disableFieldActions || disableMoveRight,
+                        children: /* @__PURE__ */ jsx(
+                          MoveRightIcon,
+                          {
+                            className: classNames({
+                              "visual-builder__rotate--90": direction === "vertical",
+                              [visualBuilderStyles()["visual-builder__rotate--90"]]: direction === "vertical"
+                            }),
+                            disabled: disableFieldActions || disableMoveRight
+                          }
+                        )
+                      }
+                    ),
+                    isModalEditable ? editButton : null,
+                    formButton,
+                    isReplaceAllowed ? replaceButton : null,
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__delete-button",
+                        className: multipleFieldToolbarButtonClasses,
+                        "data-tooltip": "Delete",
+                        onClick: (e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleDeleteInstance(fieldMetadata);
+                        },
+                        disabled: disableFieldActions,
+                        children: /* @__PURE__ */ jsx(DeleteIcon, {})
+                      }
+                    )
+                  ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
+                    isModalEditable ? editButton : null,
+                    isReplaceAllowed ? replaceButton : null,
+                    formButton,
+                    fieldSchema ? /* @__PURE__ */ jsx(
+                      CommentIcon,
+                      {
+                        fieldMetadata,
+                        fieldSchema,
+                        invertTooltipPosition
+                      }
+                    ) : null
+                  ] }),
                   /* @__PURE__ */ jsx(
-                    "button",
+                    FieldLocationIcon,
                     {
-                      "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__move-right-button",
-                      className: multipleFieldToolbarButtonClasses,
-                      "data-tooltip": direction === "vertical" ? "Move down" : "Move right",
-                      onClick: (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleMoveInstance(
-                          fieldMetadata,
-                          "next"
-                        );
-                      },
-                      disabled: disableFieldActions || disableMoveRight,
-                      children: /* @__PURE__ */ jsx(
-                        MoveRightIcon,
-                        {
-                          className: classNames({
-                            "visual-builder__rotate--90": direction === "vertical",
-                            [visualBuilderStyles()["visual-builder__rotate--90"]]: direction === "vertical"
-                          }),
-                          disabled: disableFieldActions || disableMoveRight
-                        }
-                      )
-                    }
-                  ),
-                  isModalEditable ? editButton : null,
-                  formButton,
-                  isReplaceAllowed ? replaceButton : null,
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      "data-testid": "visual-builder__focused-toolbar__multiple-field-toolbar__delete-button",
-                      className: multipleFieldToolbarButtonClasses,
-                      "data-tooltip": "Delete",
-                      onClick: (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleDeleteInstance(fieldMetadata);
-                      },
-                      disabled: disableFieldActions,
-                      children: /* @__PURE__ */ jsx(DeleteIcon, {})
+                      fieldLocationData,
+                      multipleFieldToolbarButtonClasses,
+                      handleMoreIconClick,
+                      moreButtonRef,
+                      toolbarRef,
+                      domEditStack
                     }
                   )
-                ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
-                  isModalEditable ? editButton : null,
-                  isReplaceAllowed ? replaceButton : null,
-                  formButton,
-                  fieldSchema ? /* @__PURE__ */ jsx(
-                    CommentIcon,
-                    {
-                      fieldMetadata,
-                      fieldSchema,
-                      invertTooltipPosition
-                    }
-                  ) : null
                 ] })
-              ] })
-            }
-          )
-        }
-      )
+              }
+            )
+          }
+        ),
+        displayAllApps && /* @__PURE__ */ jsx(
+          FieldLocationAppList,
+          {
+            toolbarRef,
+            apps: (fieldLocationData == null ? void 0 : fieldLocationData.apps) || [],
+            position: appListPosition,
+            domEditStack,
+            setDisplayAllApps,
+            displayAllApps
+          }
+        )
+      ]
     }
   );
 }

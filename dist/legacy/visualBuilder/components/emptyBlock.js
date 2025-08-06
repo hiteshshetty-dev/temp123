@@ -6,6 +6,7 @@ import { visualBuilderStyles } from "../visualBuilder.style.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { observeParentAndFocusNewInstance } from "../utils/multipleElementAddButton.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
+import { startCase, toLower } from "lodash-es";
 import { jsx, jsxs } from "preact/jsx-runtime";
 function EmptyBlock(props) {
   const { details } = props;
@@ -40,9 +41,20 @@ function EmptyBlock(props) {
               visualBuilderStyles()["visual-builder__empty-block-title"]
             ),
             children: [
-              "There are no ",
-              blockParentName.toLowerCase(),
-              " on this page yet. Click the button below to add one."
+              "This page doesn\u2019t have any",
+              " ",
+              /* @__PURE__ */ jsx(
+                "span",
+                {
+                  className: classNames(
+                    "visual-builder__empty-block-field-name",
+                    visualBuilderStyles()["visual-builder__empty-block-field-name"]
+                  ),
+                  children: startCase(toLower(blockParentName))
+                }
+              ),
+              " ",
+              "added. Click the button below to add one."
             ]
           }
         ),
@@ -57,8 +69,17 @@ function EmptyBlock(props) {
             type: "button",
             "data-testid": "visual-builder__empty-block-add-button",
             children: [
-              /* @__PURE__ */ jsx("i", { className: "fas fa-plus" }),
-              " \xA0",
+              /* @__PURE__ */ jsx(
+                "span",
+                {
+                  className: classNames(
+                    "visual-builder__empty-block-plus-icon",
+                    visualBuilderStyles()["visual-builder__empty-block-plus-icon"]
+                  ),
+                  children: "+"
+                }
+              ),
+              "\xA0 Add ",
               blockParentName
             ]
           }

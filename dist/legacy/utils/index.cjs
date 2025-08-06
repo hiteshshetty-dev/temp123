@@ -33,12 +33,16 @@ function hasWindow() {
 }
 function addParamsToUrl() {
   window.addEventListener("click", (event) => {
-    const target = event.target;
-    const targetHref = target.href;
+    const clickedElement = event.target;
+    const anchorElement = clickedElement.closest("a");
+    if (!anchorElement || !anchorElement.contains(clickedElement)) {
+      return;
+    }
+    const targetHref = anchorElement.href;
     const docOrigin = document.location.origin;
     if (targetHref && targetHref.includes(docOrigin) && !targetHref.includes("live_preview")) {
-      const newUrl = (0, import_addLivePreviewQueryTags.addLivePreviewQueryTags)(target.href);
-      event.target.href = newUrl || target.href;
+      const newUrl = (0, import_addLivePreviewQueryTags.addLivePreviewQueryTags)(targetHref);
+      anchorElement.href = newUrl || targetHref;
     }
   });
 }

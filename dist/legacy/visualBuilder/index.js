@@ -203,7 +203,9 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
-        focusElementObserver: null
+        focusElementObserver: null,
+        referenceParentMap: {},
+        isFocussed: false
       };
       if (this.visualBuilderContainer) {
         window.document.body.removeChild(this.visualBuilderContainer);
@@ -247,7 +249,7 @@ var _VisualBuilder = class _VisualBuilder {
       isSSR: config.ssr,
       href: window.location.href
     }).then((data) => {
-      var _a2, _b;
+      var _a2, _b, _c;
       const {
         windowType = ILivePreviewWindowType.BUILDER,
         stackDetails,
@@ -301,6 +303,16 @@ var _VisualBuilder = class _VisualBuilder {
         (_b = visualBuilderPostMessage) == null ? void 0 : _b.send(
           VisualBuilderPostMessageEvents.SEND_VARIANT_AND_LOCALE
         );
+        (_c = visualBuilderPostMessage) == null ? void 0 : _c.on(
+          VisualBuilderPostMessageEvents.TOGGLE_SCROLL,
+          (event) => {
+            if (!event.data.scroll) {
+              document.body.style.overflow = "hidden";
+            } else {
+              document.body.style.overflow = "auto";
+            }
+          }
+        );
         useHideFocusOverlayPostMessageEvent({
           overlayWrapper: this.overlayWrapper,
           visualBuilderContainer: this.visualBuilderContainer,
@@ -337,7 +349,9 @@ _VisualBuilder.VisualBuilderGlobalState = signal({
   audienceMode: false,
   locale: Config.get().stackDetails.masterLocale || "en-us",
   variant: null,
-  focusElementObserver: null
+  focusElementObserver: null,
+  referenceParentMap: {},
+  isFocussed: false
 });
 var VisualBuilder = _VisualBuilder;
 export {

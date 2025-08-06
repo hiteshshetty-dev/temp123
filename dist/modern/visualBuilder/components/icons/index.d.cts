@@ -17,5 +17,8 @@ declare function HighlightCommentIcon(): JSX.Element;
 declare function ReadCommentIcon(): JSX.Element;
 declare function AddCommentIcon(): JSX.Element;
 declare function WarningOctagonIcon(): JSX.Element;
+declare function MoreIcon(): JSX.Element;
+declare function ContentTypeIcon(): JSX.Element;
+declare function CaretRightIcon(): JSX.Element;
 
-export { AddCommentIcon, CaretIcon, DeleteIcon, EditIcon, FormIcon, HighlightCommentIcon, InfoIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, ReadCommentIcon, ReplaceAssetIcon, WarningOctagonIcon };
+export { AddCommentIcon, CaretIcon, CaretRightIcon, ContentTypeIcon, DeleteIcon, EditIcon, FormIcon, HighlightCommentIcon, InfoIcon, MoreIcon, MoveLeftIcon, MoveRightIcon, PlusIcon, ReadCommentIcon, ReplaceAssetIcon, WarningOctagonIcon };

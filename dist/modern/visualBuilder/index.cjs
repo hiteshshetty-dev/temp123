@@ -214,7 +214,9 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
-        focusElementObserver: null
+        focusElementObserver: null,
+        referenceParentMap: {},
+        isFocussed: false
       };
       if (this.visualBuilderContainer) {
         window.document.body.removeChild(this.visualBuilderContainer);
@@ -310,6 +312,16 @@ var _VisualBuilder = class _VisualBuilder {
         import_visualBuilderPostMessage.default?.send(
           import_postMessage.VisualBuilderPostMessageEvents.SEND_VARIANT_AND_LOCALE
         );
+        import_visualBuilderPostMessage.default?.on(
+          import_postMessage.VisualBuilderPostMessageEvents.TOGGLE_SCROLL,
+          (event) => {
+            if (!event.data.scroll) {
+              document.body.style.overflow = "hidden";
+            } else {
+              document.body.style.overflow = "auto";
+            }
+          }
+        );
         (0, import_useHideFocusOverlayPostMessageEvent.useHideFocusOverlayPostMessageEvent)({
           overlayWrapper: this.overlayWrapper,
           visualBuilderContainer: this.visualBuilderContainer,
@@ -346,7 +358,9 @@ _VisualBuilder.VisualBuilderGlobalState = (0, import_signals.signal)({
   audienceMode: false,
   locale: import_configManager.default.get().stackDetails.masterLocale || "en-us",
   variant: null,
-  focusElementObserver: null
+  focusElementObserver: null,
+  referenceParentMap: {},
+  isFocussed: false
 });
 var VisualBuilder = _VisualBuilder;
 // Annotate the CommonJS export names for ESM import in node:

@@ -38,6 +38,7 @@ var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
 var import_multipleElementAddButton = require("../utils/multipleElementAddButton.cjs");
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
+var import_lodash_es = require("lodash-es");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function EmptyBlock(props) {
   const { details } = props;
@@ -71,9 +72,20 @@ function EmptyBlock(props) {
               (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__empty-block-title"]
             ),
             children: [
-              "There are no ",
-              blockParentName.toLowerCase(),
-              " on this page yet. Click the button below to add one."
+              "This page doesn\u2019t have any",
+              " ",
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                "span",
+                {
+                  className: (0, import_classnames.default)(
+                    "visual-builder__empty-block-field-name",
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__empty-block-field-name"]
+                  ),
+                  children: (0, import_lodash_es.startCase)((0, import_lodash_es.toLower)(blockParentName))
+                }
+              ),
+              " ",
+              "added. Click the button below to add one."
             ]
           }
         ),
@@ -88,8 +100,17 @@ function EmptyBlock(props) {
             type: "button",
             "data-testid": "visual-builder__empty-block-add-button",
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("i", { className: "fas fa-plus" }),
-              " \xA0",
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                "span",
+                {
+                  className: (0, import_classnames.default)(
+                    "visual-builder__empty-block-plus-icon",
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__empty-block-plus-icon"]
+                  ),
+                  children: "+"
+                }
+              ),
+              "\xA0 Add ",
               blockParentName
             ]
           }

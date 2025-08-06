@@ -88,6 +88,48 @@ function visualBuilderStyles() {
                 cursor: none;
             }
         `,
+    "tooltip-container": import_goober.css`
+            position: absolute;
+            background-color: #767676;
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.4;
+            z-index: 1000;
+            pointer-events: none;
+            max-width: 250px;
+            text-align: center;
+        `,
+    "tooltip-arrow": import_goober.css`
+            position: absolute;
+            background: #767676;
+            width: 8px;
+            height: 8px;
+            transform: rotate(45deg);
+        `,
+    "toolbar-tooltip-content": import_goober.css`
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        `,
+    "toolbar-tooltip-content-item": import_goober.css`
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            p {
+                margin: 0;
+                color: #fff;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+        `,
     "visual-builder__overlay__wrapper": import_goober.css`
             position: absolute;
             top: 0;
@@ -102,6 +144,13 @@ function visualBuilderStyles() {
             &.visible {
                 visibility: visible;
             }
+        `,
+    "visual-builder__empty-block-plus-icon": import_goober.css`
+            font-size: 22px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         `,
     "visual-builder__overlay--outline": import_goober.css`
             position: absolute;
@@ -402,7 +451,30 @@ function visualBuilderStyles() {
             svg {
                 height: 16px;
                 width: 16px;
-                margin-right: 5px;
+                margin-right: 3px;
+            }
+        `,
+    "visual-builder__content-type-icon": import_goober.css`
+            svg {
+                height: 16px;
+                width: 16px;
+                margin-right: 3px;
+            }
+        `,
+    "visual-builder__caret-right-icon": import_goober.css`
+            svg {
+                height: 16px;
+                width: 16px;
+            }
+        `,
+    "visual-builder__reference-icon-container": import_goober.css`
+            display: flex;
+            align-items: center;
+
+            .visual-builder__field-icon {
+                svg {
+                    margin-right: 0px;
+                }            
             }
         `,
     "visual-builder__focused-toolbar__button-group": import_goober.css`
@@ -529,19 +601,24 @@ function visualBuilderStyles() {
             line-height: 100%;
             color: #647696;
         `,
+    "visual-builder__empty-block-field-name": import_goober.css`
+            font-weight: 700;
+        `,
     "visual-builder__empty-block-add-button": import_goober.css`
             height: 32px;
             border-radius: 4px;
             background: #f9f8ff;
             border-color: #6c5ce7;
             border-width: 1px;
-            padding: 8px 16px 8px 16px;
+            padding: 0 16px;
             font-size: 0.9rem;
             font-family: Inter;
             font-weight: 600;
             color: #6c5ce7;
-            padding-block: 0px;
             letter-spacing: 0.01rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         `,
     "visual-builder__hover-outline": import_goober.css`
             position: absolute;
@@ -685,6 +762,7 @@ function visualBuilderStyles() {
             display: flex;
             flex-direction: column-reverse;
             z-index: 2147483647 !important;
+            position: relative;
         `,
     "visual-builder__variant-button": import_goober.css`
             display: flex;
@@ -696,6 +774,108 @@ function visualBuilderStyles() {
             & svg path {
                 fill: #475161;
             }
+        `,
+    "visual-builder__field-location-icons-container": import_goober.css`
+            display: flex;
+            gap: 0.25rem;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.25rem;
+            
+        `,
+    "visual-builder__field-location-icons-container__divider": import_goober.css`
+            height: 32px !important;
+            width: 1px;
+            border-radius: 2px;
+            background-color: #8a8f99;
+        `,
+    "visual-builder__field-location-icons-container__app-icon": import_goober.css`
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+        `,
+    "visual-builder__field-location-app-list": import_goober.css`
+            position: absolute;
+            top: 0;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 230px;
+            max-height: 250px;
+            min-height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        `,
+    "visual-builder__field-location-app-list--left": import_goober.css`
+            right: 100%;
+            margin-right: 8px;
+        `,
+    "visual-builder__field-location-app-list--right": import_goober.css`
+            left: 100%;
+            margin-left: 8px;
+        `,
+    "visual-builder__field-location-app-list__search-container": import_goober.css`
+            display: flex;
+            align-items: center;
+            padding: 10px 16px 0px 16px;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+        `,
+    "visual-builder__field-location-app-list__search-input": import_goober.css`
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+            border: none;
+        `,
+    "visual-builder__field-location-app-list__search-icon": import_goober.css`
+            width: 14px;
+            height: 14px;
+        `,
+    "visual-builder__field-location-app-list__content": import_goober.css`
+            flex: 1;
+            overflow-y: auto;
+        `,
+    "visual-builder__field-location-app-list__no-results": import_goober.css`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+        `,
+    "visual-builder__field-location-app-list__no-results-text": import_goober.css`
+            color: #373b40;
+            font-weight: 400;
+        `,
+    "visual-builder__field-location-app-list__item": import_goober.css`
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        `,
+    "visual-builder__field-location-app-list__item-icon-container": import_goober.css`
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        `,
+    "visual-builder__field-location-app-list__item-icon": import_goober.css`
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        `,
+    "visual-builder__field-location-app-list__item-title": import_goober.css`
+            color: #373b40;
+            font-weight: 400;
         `
   };
 }

@@ -1,6 +1,8 @@
 import "../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/icons/index.tsx
+import { visualBuilderStyles } from "../../visualBuilder.style.js";
+import classNames from "classnames";
 import { jsx, jsxs } from "preact/jsx-runtime";
 var generateIconStyles = ({ disabled = false }) => ({
   opacity: disabled ? 0.5 : 1,
@@ -353,14 +355,62 @@ function WarningOctagonIcon() {
     }
   );
 }
+function MoreIcon() {
+  return /* @__PURE__ */ jsxs(
+    "svg",
+    {
+      width: "32",
+      height: "32",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      children: [
+        /* @__PURE__ */ jsx("circle", { cx: "12", cy: "6", r: "2", fill: "#475161" }),
+        /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "2", fill: "#475161" }),
+        /* @__PURE__ */ jsx("circle", { cx: "12", cy: "18", r: "2", fill: "#475161" })
+      ]
+    }
+  );
+}
+function ContentTypeIcon() {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: classNames(
+        "visual-builder__content-type-icon",
+        visualBuilderStyles()["visual-builder__content-type-icon"]
+      ),
+      children: /* @__PURE__ */ jsxs("svg", { width: "32", height: "32", viewBox: "0 0 32 32", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [
+        /* @__PURE__ */ jsx("path", { d: "M4 22L16 29L28 22", stroke: "#fff", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }),
+        /* @__PURE__ */ jsx("path", { d: "M4 16L16 23L28 16", stroke: "#fff", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" }),
+        /* @__PURE__ */ jsx("path", { d: "M4 10L16 17L28 10L16 3L4 10Z", stroke: "#fff", "stroke-width": "1.5", "stroke-linecap": "round", "stroke-linejoin": "round" })
+      ] })
+    }
+  );
+}
+function CaretRightIcon() {
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: classNames(
+        "visual-builder__caret-right-icon",
+        visualBuilderStyles()["visual-builder__caret-right-icon"]
+      ),
+      children: /* @__PURE__ */ jsx("svg", { width: "32", height: "32", viewBox: "0 0 32 32", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsx("path", { "fill-rule": "evenodd", "clip-rule": "evenodd", d: "M11.4697 5.46967C11.7626 5.17678 12.2374 5.17678 12.5303 5.46967L22.5303 15.4697C22.8232 15.7626 22.8232 16.2374 22.5303 16.5303L12.5303 26.5303C12.2374 26.8232 11.7626 26.8232 11.4697 26.5303C11.1768 26.2374 11.1768 25.7626 11.4697 25.4697L20.9393 16L11.4697 6.53033C11.1768 6.23744 11.1768 5.76256 11.4697 5.46967Z", fill: "#fff" }) })
+    }
+  );
+}
 export {
   AddCommentIcon,
   CaretIcon,
+  CaretRightIcon,
+  ContentTypeIcon,
   DeleteIcon,
   EditIcon,
   FormIcon,
   HighlightCommentIcon,
   InfoIcon,
+  MoreIcon,
   MoveLeftIcon,
   MoveRightIcon,
   PlusIcon,

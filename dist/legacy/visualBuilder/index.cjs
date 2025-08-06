@@ -214,7 +214,9 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
-        focusElementObserver: null
+        focusElementObserver: null,
+        referenceParentMap: {},
+        isFocussed: false
       };
       if (this.visualBuilderContainer) {
         window.document.body.removeChild(this.visualBuilderContainer);
@@ -258,7 +260,7 @@ var _VisualBuilder = class _VisualBuilder {
       isSSR: config.ssr,
       href: window.location.href
     }).then((data) => {
-      var _a2, _b;
+      var _a2, _b, _c;
       const {
         windowType = import_types.ILivePreviewWindowType.BUILDER,
         stackDetails,
@@ -312,6 +314,16 @@ var _VisualBuilder = class _VisualBuilder {
         (_b = import_visualBuilderPostMessage.default) == null ? void 0 : _b.send(
           import_postMessage.VisualBuilderPostMessageEvents.SEND_VARIANT_AND_LOCALE
         );
+        (_c = import_visualBuilderPostMessage.default) == null ? void 0 : _c.on(
+          import_postMessage.VisualBuilderPostMessageEvents.TOGGLE_SCROLL,
+          (event) => {
+            if (!event.data.scroll) {
+              document.body.style.overflow = "hidden";
+            } else {
+              document.body.style.overflow = "auto";
+            }
+          }
+        );
         (0, import_useHideFocusOverlayPostMessageEvent.useHideFocusOverlayPostMessageEvent)({
           overlayWrapper: this.overlayWrapper,
           visualBuilderContainer: this.visualBuilderContainer,
@@ -348,7 +360,9 @@ _VisualBuilder.VisualBuilderGlobalState = (0, import_signals.signal)({
   audienceMode: false,
   locale: import_configManager.default.get().stackDetails.masterLocale || "en-us",
   variant: null,
-  focusElementObserver: null
+  focusElementObserver: null,
+  referenceParentMap: {},
+  isFocussed: false
 });
 var VisualBuilder = _VisualBuilder;
 // Annotate the CommonJS export names for ESM import in node:

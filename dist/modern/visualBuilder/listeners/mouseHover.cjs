@@ -33,7 +33,8 @@ __export(mouseHover_exports, {
   default: () => mouseHover_default,
   hideCustomCursor: () => hideCustomCursor,
   hideHoverOutline: () => hideHoverOutline,
-  showCustomCursor: () => showCustomCursor
+  showCustomCursor: () => showCustomCursor,
+  showHoverToolbar: () => showHoverToolbar
 });
 module.exports = __toCommonJS(mouseHover_exports);
 var import_lodash_es = require("lodash-es");
@@ -50,6 +51,7 @@ var import__2 = require("../../index.cjs");
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 var import_generateThread = require("../generators/generateThread.cjs");
 var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
+var import_generateToolbar = require("../generators/generateToolbar.cjs");
 var config = import_configManager.default.get();
 function resetCustomCursor(customCursor) {
   if (customCursor) {
@@ -74,10 +76,41 @@ function handleCursorPosition(event, customCursor) {
     customCursor.style.top = `${mouseY}px`;
   }
 }
-function addOutline(editableElement, isFieldDisabled2) {
+function addOutline(params) {
+  if (!params) {
+    return;
+  }
+  const { editableElement, eventDetails, content_type_uid, fieldPath, fieldMetadata, fieldDisabled } = params;
   if (!editableElement) return;
-  (0, import_generateHoverOutline.addHoverOutline)(editableElement, isFieldDisabled2);
+  (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled);
+  import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
+    (fieldSchema) => {
+      let entryAcl;
+      if (!fieldSchema) return;
+      (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+        entryUid: fieldMetadata.entry_uid,
+        contentTypeUid: fieldMetadata.content_type_uid,
+        locale: fieldMetadata.locale
+      }).then((data) => {
+        entryAcl = data;
+      }).catch((error) => {
+        console.error(
+          "[Visual Builder] Error retrieving entry permissions:",
+          error
+        );
+      }).finally(() => {
+        const { isDisabled: fieldDisabled2 } = (0, import_isFieldDisabled.isFieldDisabled)(
+          fieldSchema,
+          eventDetails,
+          entryAcl
+        );
+        (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled2);
+      });
+    }
+  );
 }
+var debouncedAddOutline = (0, import_lodash_es.debounce)(addOutline, 50, { trailing: true });
+var showOutline = (params) => debouncedAddOutline(params);
 function hideDefaultCursor() {
   if (document?.body && !document.body.classList.contains(
     (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__default-cursor--disabled"]
@@ -118,6 +151,16 @@ function showCustomCursor(customCursor) {
     return;
   customCursor?.classList.add("visible");
 }
+var debouncedRenderHoverToolbar = (0, import_lodash_es.debounce)(async (params) => {
+  const eventDetails = (0, import_getCsDataOfElement.getCsDataOfElement)(params.event);
+  if (!eventDetails || !params.overlayWrapper || !params.visualBuilderContainer || !params.focusedToolbar) {
+    return;
+  }
+  (0, import_generateToolbar.appendFieldPathDropdown)(eventDetails, params.focusedToolbar, {
+    isHover: true
+  });
+}, 50, { trailing: true });
+var showHoverToolbar = async (params) => await debouncedRenderHoverToolbar(params);
 function isOverlay(target) {
   return target.classList.contains("visual-builder__overlay");
 }
@@ -126,151 +169,161 @@ function isContentEditable(target) {
     return target.getAttribute("contenteditable") === "true";
   return false;
 }
-async function handleMouseHover(params) {
-  (0, import_lodash_es.throttle)(async (params2) => {
-    const eventDetails = (0, import_getCsDataOfElement.getCsDataOfElement)(params2.event);
-    const eventTarget = params2.event.target;
-    if (config?.collab.enable && config?.collab.pauseFeedback) {
-      hideCustomCursor(params2.customCursor);
-      return;
-    }
-    if (!eventDetails) {
-      if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget) || (0, import_generateThread.isCollabThread)(eventTarget))) {
-        handleCursorPosition(params2.event, params2.customCursor);
-        hideCustomCursor(params2.customCursor);
-        return;
-      }
-      if (!config?.collab.enable) {
-        resetCustomCursor(params2.customCursor);
-      }
-      (0, import_multipleElementAddButton.removeAddInstanceButtons)({
-        eventTarget: params2.event.target,
-        visualBuilderContainer: params2.visualBuilderContainer,
-        overlayWrapper: params2.overlayWrapper
-      });
-      handleCursorPosition(params2.event, params2.customCursor);
-      if (config?.collab.enable && config?.collab.isFeedbackMode) {
-        showCustomCursor(params2.customCursor);
-        collabCustomCursor(params2.customCursor);
-      }
-      return;
-    }
-    const { editableElement, fieldMetadata } = eventDetails;
-    const { content_type_uid, fieldPath } = fieldMetadata;
-    if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM && import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM.isSameNode(
-      editableElement
-    )) {
-      hideCustomCursor(params2.customCursor);
-      return;
-    }
-    if (params2.customCursor) {
-      const elementUnderCursor = document.elementFromPoint(
-        params2.event.clientX,
-        params2.event.clientY
-      );
-      if (elementUnderCursor) {
-        if (elementUnderCursor.nodeName === "A" || elementUnderCursor.nodeName === "BUTTON") {
-          elementUnderCursor.classList.add(
-            (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__no-cursor-style"]
-          );
-        }
-      }
-      if (config?.collab.enable && config?.collab.isFeedbackMode) {
-        collabCustomCursor(params2.customCursor);
-        handleCursorPosition(params2.event, params2.customCursor);
-        showCustomCursor(params2.customCursor);
-        return;
-      } else if (config?.collab.enable && !config?.collab.isFeedbackMode) {
-        hideCustomCursor(params2.customCursor);
-        return;
-      }
-      if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM !== editableElement) {
-        resetCustomCursor(params2.customCursor);
-        (0, import_multipleElementAddButton.removeAddInstanceButtons)({
-          eventTarget: params2.event.target,
-          visualBuilderContainer: params2.visualBuilderContainer,
-          overlayWrapper: params2.overlayWrapper
-        });
-      }
-      if (!import_fieldSchemaMap.FieldSchemaMap.hasFieldSchema(content_type_uid, fieldPath)) {
-        (0, import_generateCustomCursor.generateCustomCursor)({
-          fieldType: "loading",
-          customCursor: params2.customCursor
-        });
-      }
-      import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
-        (fieldSchema) => {
-          if (!fieldSchema) return;
-          let entryAcl;
-          (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
-            entryUid: fieldMetadata.entry_uid,
-            contentTypeUid: fieldMetadata.content_type_uid,
-            locale: fieldMetadata.locale
-          }).then((data) => {
-            entryAcl = data;
-          }).catch((error) => {
-            console.error(
-              "[Visual Builder] Error retrieving entry permissions:",
-              error
-            );
-          }).finally(() => {
-            if (!params2.customCursor) return;
-            const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
-              fieldSchema,
-              eventDetails,
-              entryAcl
-            );
-            const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
-            (0, import_generateCustomCursor.generateCustomCursor)({
-              fieldType,
-              customCursor: params2.customCursor,
-              fieldDisabled
-            });
-          });
-        }
-      );
-      handleCursorPosition(params2.event, params2.customCursor);
-      showCustomCursor(params2.customCursor);
-    }
-    if (!editableElement.classList.contains(import__2.VB_EmptyBlockParentClass) && !editableElement.classList.contains("visual-builder__empty-block")) {
-      addOutline(editableElement);
-      import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
-        (fieldSchema) => {
-          let entryAcl;
-          if (!fieldSchema) return;
-          (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
-            entryUid: fieldMetadata.entry_uid,
-            contentTypeUid: fieldMetadata.content_type_uid,
-            locale: fieldMetadata.locale
-          }).then((data) => {
-            entryAcl = data;
-          }).catch((error) => {
-            console.error(
-              "[Visual Builder] Error retrieving entry permissions:",
-              error
-            );
-          }).finally(() => {
-            const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
-              fieldSchema,
-              eventDetails,
-              entryAcl
-            );
-            addOutline(editableElement, fieldDisabled);
-          });
-        }
-      );
-    }
-    if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM === editableElement) {
-      return;
-    }
-    import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM = editableElement;
-  }, 10)(params);
+function isFieldPathDropdown(target) {
+  return target.classList.contains("visual-builder__focused-toolbar__field-label-wrapper") || target.classList.contains("visual-builder__focused-toolbar__field-label-wrapper__current-field");
 }
+function isFieldPathParent(target) {
+  return target.classList.contains("visual-builder__focused-toolbar__field-label-wrapper__parent-field");
+}
+var throttledMouseHover = (0, import_lodash_es.throttle)(async (params) => {
+  const eventDetails = (0, import_getCsDataOfElement.getCsDataOfElement)(params.event);
+  const eventTarget = params.event.target;
+  if (config?.collab.enable && config?.collab.pauseFeedback) {
+    hideCustomCursor(params.customCursor);
+    return;
+  }
+  if (!eventDetails) {
+    if (eventTarget && (isOverlay(eventTarget) || isContentEditable(eventTarget) || (0, import_generateThread.isCollabThread)(eventTarget))) {
+      handleCursorPosition(params.event, params.customCursor);
+      hideCustomCursor(params.customCursor);
+      return;
+    }
+    if (eventTarget && (isFieldPathDropdown(eventTarget) || isFieldPathParent(eventTarget))) {
+      params.customCursor && hideCustomCursor(params.customCursor);
+      showOutline();
+      showHoverToolbar({
+        event: params.event,
+        overlayWrapper: params.overlayWrapper,
+        visualBuilderContainer: params.visualBuilderContainer,
+        previousSelectedEditableDOM: import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
+        focusedToolbar: params.focusedToolbar,
+        resizeObserver: params.resizeObserver
+      });
+    }
+    if (!config?.collab.enable) {
+      resetCustomCursor(params.customCursor);
+    }
+    (0, import_multipleElementAddButton.removeAddInstanceButtons)({
+      eventTarget: params.event.target,
+      visualBuilderContainer: params.visualBuilderContainer,
+      overlayWrapper: params.overlayWrapper
+    });
+    handleCursorPosition(params.event, params.customCursor);
+    if (config?.collab.enable && config?.collab.isFeedbackMode) {
+      showCustomCursor(params.customCursor);
+      collabCustomCursor(params.customCursor);
+    }
+    return;
+  }
+  const { editableElement, fieldMetadata } = eventDetails;
+  const { content_type_uid, fieldPath } = fieldMetadata;
+  if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM && import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM.isSameNode(
+    editableElement
+  )) {
+    hideCustomCursor(params.customCursor);
+    return;
+  }
+  if (params.customCursor) {
+    const elementUnderCursor = document.elementFromPoint(
+      params.event.clientX,
+      params.event.clientY
+    );
+    if (elementUnderCursor) {
+      if (elementUnderCursor.nodeName === "A" || elementUnderCursor.nodeName === "BUTTON") {
+        elementUnderCursor.classList.add(
+          (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__no-cursor-style"]
+        );
+      }
+    }
+    if (config?.collab.enable && config?.collab.isFeedbackMode) {
+      collabCustomCursor(params.customCursor);
+      handleCursorPosition(params.event, params.customCursor);
+      showCustomCursor(params.customCursor);
+      return;
+    } else if (config?.collab.enable && !config?.collab.isFeedbackMode) {
+      hideCustomCursor(params.customCursor);
+      return;
+    }
+    if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM !== editableElement) {
+      resetCustomCursor(params.customCursor);
+      (0, import_multipleElementAddButton.removeAddInstanceButtons)({
+        eventTarget: params.event.target,
+        visualBuilderContainer: params.visualBuilderContainer,
+        overlayWrapper: params.overlayWrapper
+      });
+    }
+    if (!import_fieldSchemaMap.FieldSchemaMap.hasFieldSchema(content_type_uid, fieldPath)) {
+      (0, import_generateCustomCursor.generateCustomCursor)({
+        fieldType: "loading",
+        customCursor: params.customCursor
+      });
+    }
+    import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
+      (fieldSchema) => {
+        if (!fieldSchema) return;
+        let entryAcl;
+        (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+          entryUid: fieldMetadata.entry_uid,
+          contentTypeUid: fieldMetadata.content_type_uid,
+          locale: fieldMetadata.locale
+        }).then((data) => {
+          entryAcl = data;
+        }).catch((error) => {
+          console.error(
+            "[Visual Builder] Error retrieving entry permissions:",
+            error
+          );
+        }).finally(() => {
+          if (!params.customCursor) return;
+          const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
+            fieldSchema,
+            eventDetails,
+            entryAcl
+          );
+          const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
+          (0, import_generateCustomCursor.generateCustomCursor)({
+            fieldType,
+            customCursor: params.customCursor,
+            fieldDisabled
+          });
+        });
+      }
+    );
+    handleCursorPosition(params.event, params.customCursor);
+    showCustomCursor(params.customCursor);
+  }
+  if (!editableElement.classList.contains(import__2.VB_EmptyBlockParentClass) && !editableElement.classList.contains("visual-builder__empty-block")) {
+    showOutline({
+      editableElement,
+      eventDetails,
+      content_type_uid,
+      fieldPath,
+      fieldMetadata
+    });
+    const isFocussed = import__.VisualBuilder.VisualBuilderGlobalState.value.isFocussed;
+    if (!isFocussed) {
+      showHoverToolbar({
+        event: params.event,
+        overlayWrapper: params.overlayWrapper,
+        visualBuilderContainer: params.visualBuilderContainer,
+        previousSelectedEditableDOM: import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
+        focusedToolbar: params.focusedToolbar,
+        resizeObserver: params.resizeObserver
+      });
+    }
+  }
+  if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM === editableElement) {
+    return;
+  }
+  import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM = editableElement;
+}, 10);
+var handleMouseHover = async (params) => await throttledMouseHover(params);
 var mouseHover_default = handleMouseHover;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   hideCustomCursor,
   hideHoverOutline,
-  showCustomCursor
+  showCustomCursor,
+  showHoverToolbar
 });
 //# sourceMappingURL=mouseHover.cjs.map

@@ -1,9 +1,7 @@
 "use strict";
-var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -17,14 +15,6 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/visualBuilder/utils/handleIndividualFields.ts
@@ -42,12 +32,11 @@ var import_getFieldType = require("./getFieldType.cjs");
 var import_handleFieldMouseDown = require("./handleFieldMouseDown.cjs");
 var import_isFieldDisabled = require("./isFieldDisabled.cjs");
 var import_multipleElementAddButton = require("./multipleElementAddButton.cjs");
-var import_postMessage = require("./types/postMessage.types.cjs");
-var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
 var import_isFieldMultiple = require("./isFieldMultiple.cjs");
 var import_handleInlineEditableField = require("./handleInlineEditableField.cjs");
 var import_pasteAsPlainText = require("./pasteAsPlainText.cjs");
 var import_getEntryPermissionsCached = require("./getEntryPermissionsCached.cjs");
+var import_generateToolbar = require("../generators/generateToolbar.cjs");
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -158,17 +147,7 @@ function cleanIndividualFieldResidual(elements) {
     }
   }
   if (focusedToolbar) {
-    focusedToolbar.innerHTML = "";
-    const toolbarEvents = [
-      import_postMessage.VisualBuilderPostMessageEvents.DELETE_INSTANCE,
-      import_postMessage.VisualBuilderPostMessageEvents.UPDATE_DISCUSSION_ID
-    ];
-    toolbarEvents.forEach((event) => {
-      var _a, _b, _c, _d;
-      if ((_b = (_a = import_visualBuilderPostMessage.default) == null ? void 0 : _a.requestMessageHandlers) == null ? void 0 : _b.has(event)) {
-        (_d = (_c = import_visualBuilderPostMessage.default) == null ? void 0 : _c.unregisterEvent) == null ? void 0 : _d.call(_c, event);
-      }
-    });
+    (0, import_generateToolbar.removeFieldToolbar)(focusedToolbar);
   }
 }
 // Annotate the CommonJS export names for ESM import in node:
