@@ -50,8 +50,8 @@ var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import__2 = require("../../index.cjs");
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 var import_generateThread = require("../generators/generateThread.cjs");
-var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
 var import_generateToolbar = require("../generators/generateToolbar.cjs");
+var import_fetchEntryPermissionsAndStageDetails = require("../utils/fetchEntryPermissionsAndStageDetails.cjs");
 var config = import_configManager.default.get();
 function resetCustomCursor(customCursor) {
   if (customCursor) {
@@ -76,38 +76,38 @@ function handleCursorPosition(event, customCursor) {
     customCursor.style.top = `${mouseY}px`;
   }
 }
-function addOutline(params) {
+async function addOutline(params) {
   if (!params) {
     return;
   }
-  const { editableElement, eventDetails, content_type_uid, fieldPath, fieldMetadata, fieldDisabled } = params;
+  const {
+    editableElement,
+    eventDetails,
+    content_type_uid,
+    fieldPath,
+    fieldMetadata,
+    fieldDisabled
+  } = params;
   if (!editableElement) return;
   (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled);
-  import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
-    (fieldSchema) => {
-      let entryAcl;
-      if (!fieldSchema) return;
-      (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
-        entryUid: fieldMetadata.entry_uid,
-        contentTypeUid: fieldMetadata.content_type_uid,
-        locale: fieldMetadata.locale
-      }).then((data) => {
-        entryAcl = data;
-      }).catch((error) => {
-        console.error(
-          "[Visual Builder] Error retrieving entry permissions:",
-          error
-        );
-      }).finally(() => {
-        const { isDisabled: fieldDisabled2 } = (0, import_isFieldDisabled.isFieldDisabled)(
-          fieldSchema,
-          eventDetails,
-          entryAcl
-        );
-        (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled2);
-      });
-    }
+  const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
+    content_type_uid,
+    fieldPath
   );
+  if (!fieldSchema) return;
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+    entryUid: fieldMetadata.entry_uid,
+    contentTypeUid: fieldMetadata.content_type_uid,
+    locale: fieldMetadata.locale,
+    variantUid: fieldMetadata.variant
+  });
+  const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
+    fieldSchema,
+    eventDetails,
+    entryAcl,
+    entryWorkflowStageDetails
+  );
+  (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled || isDisabled);
 }
 var debouncedAddOutline = (0, import_lodash_es.debounce)(addOutline, 50, { trailing: true });
 var showOutline = (params) => debouncedAddOutline(params);
@@ -258,37 +258,10 @@ var throttledMouseHover = (0, import_lodash_es.throttle)(async (params) => {
         customCursor: params.customCursor
       });
     }
-    import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
-      (fieldSchema) => {
-        if (!fieldSchema) return;
-        let entryAcl;
-        (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
-          entryUid: fieldMetadata.entry_uid,
-          contentTypeUid: fieldMetadata.content_type_uid,
-          locale: fieldMetadata.locale
-        }).then((data) => {
-          entryAcl = data;
-        }).catch((error) => {
-          console.error(
-            "[Visual Builder] Error retrieving entry permissions:",
-            error
-          );
-        }).finally(() => {
-          if (!params.customCursor) return;
-          const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
-            fieldSchema,
-            eventDetails,
-            entryAcl
-          );
-          const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
-          (0, import_generateCustomCursor.generateCustomCursor)({
-            fieldType,
-            customCursor: params.customCursor,
-            fieldDisabled
-          });
-        });
-      }
-    );
+    generateCursor({
+      eventDetails,
+      customCursor: params.customCursor
+    });
     handleCursorPosition(params.event, params.customCursor);
     showCustomCursor(params.customCursor);
   }
@@ -317,6 +290,38 @@ var throttledMouseHover = (0, import_lodash_es.throttle)(async (params) => {
   }
   import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM = editableElement;
 }, 10);
+async function generateCursor({
+  eventDetails,
+  customCursor
+}) {
+  if (!customCursor) return;
+  const { fieldMetadata } = eventDetails;
+  const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
+    fieldMetadata.content_type_uid,
+    fieldMetadata.fieldPath
+  );
+  if (!fieldSchema) {
+    return;
+  }
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+    entryUid: fieldMetadata.entry_uid,
+    contentTypeUid: fieldMetadata.content_type_uid,
+    locale: fieldMetadata.locale,
+    variantUid: fieldMetadata.variant
+  });
+  const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
+    fieldSchema,
+    eventDetails,
+    entryAcl,
+    entryWorkflowStageDetails
+  );
+  const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
+  (0, import_generateCustomCursor.generateCustomCursor)({
+    fieldType,
+    customCursor,
+    fieldDisabled
+  });
+}
 var handleMouseHover = async (params) => await throttledMouseHover(params);
 var mouseHover_default = handleMouseHover;
 // Annotate the CommonJS export names for ESM import in node:

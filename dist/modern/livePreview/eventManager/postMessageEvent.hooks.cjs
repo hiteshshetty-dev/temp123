@@ -35,11 +35,14 @@ __export(postMessageEvent_hooks_exports, {
   useOnEntryUpdatePostMessageEvent: () => useOnEntryUpdatePostMessageEvent
 });
 module.exports = __toCommonJS(postMessageEvent_hooks_exports);
+var import_inIframe = require("../../common/inIframe.cjs");
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
+var import_logger = require("../../logger/logger.cjs");
 var import_types = require("../../types/types.cjs");
 var import_utils = require("../../utils/index.cjs");
 var import_livePreviewEventManager = __toESM(require("./livePreviewEventManager.cjs"), 1);
 var import_livePreviewEventManager2 = require("./livePreviewEventManager.constant.cjs");
+var import_livePreviewPostMessageEvent = require("./types/livePreviewPostMessageEvent.type.cjs");
 function useHistoryPostMessageEvent() {
   import_livePreviewEventManager.default?.on(
     import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.HISTORY,
@@ -69,12 +72,44 @@ function useOnEntryUpdatePostMessageEvent() {
   import_livePreviewEventManager.default?.on(
     import_livePreviewEventManager2.LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_CHANGE,
     (event) => {
-      (0, import_configManager.setConfigFromParams)({
-        live_preview: event.data.hash
-      });
-      const { ssr, onChange } = import_configManager.default.get();
-      if (!ssr) {
-        onChange();
+      try {
+        const { ssr, onChange } = import_configManager.default.get();
+        const event_type = event.data._metadata?.event_type;
+        (0, import_configManager.setConfigFromParams)({
+          live_preview: event.data.hash
+        });
+        if (!ssr && !event_type) {
+          onChange();
+        }
+        if ((0, import_inIframe.isOpeningInNewTab)()) {
+          if (!window) {
+            import_logger.PublicLogger.error("window is not defined");
+            return;
+          }
+          ;
+          if (ssr && !event_type) {
+            if (window.location.href.includes("live_preview")) {
+              window.location.reload();
+            } else {
+              const url = new URL(window.location.href);
+              url.searchParams.set("live_preview", event.data.hash);
+              url.searchParams.set("content_type_uid", import_configManager.default.get().stackDetails.contentTypeUid || "");
+              url.searchParams.set("entry_uid", import_configManager.default.get().stackDetails.entryUid || "");
+              window.location.href = url.toString();
+            }
+          }
+          if (event_type === import_livePreviewPostMessageEvent.OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.set("live_preview", event.data.hash);
+            window.history.pushState({}, "", newUrl.toString());
+          }
+          if (event_type === import_livePreviewPostMessageEvent.OnChangeLivePreviewPostMessageEventTypes.URL_CHANGE && event.data.url) {
+            window.location.href = event.data.url;
+          }
+        }
+      } catch (error) {
+        import_logger.PublicLogger.error("Error handling live preview update:", error);
+        return;
       }
     }
   );
@@ -86,7 +121,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: import_configManager.default.get().ssr,
         href: window.location.href,
-        sdkVersion: "3.4.0",
+        sdkVersion: "4.0.0",
         mode: import_configManager.default.get().mode
       }
     }
@@ -106,7 +141,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       });
     } else {
     }
-    if (import_configManager.default.get().ssr || (0, import_utils.isOpeningInTimeline)()) {
+    if (import_configManager.default.get().ssr || (0, import_utils.isOpeningInTimeline)() || (0, import_inIframe.isOpeningInNewTab)()) {
       (0, import_utils.addParamsToUrl)();
     }
     import_configManager.default.set("windowType", windowType);

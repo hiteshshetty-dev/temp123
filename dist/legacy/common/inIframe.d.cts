@@ -1,3 +1,4 @@
 declare function inIframe(): boolean;
+declare function isOpeningInNewTab(): boolean;
 
-export { inIframe };
+export { inIframe, isOpeningInNewTab };

@@ -8,13 +8,18 @@ import {
 // src/livePreview/eventManager/livePreviewEventManager.ts
 var import_advanced_post_message = __toESM(require_dist(), 1);
 import { LIVE_PREVIEW_CHANNEL_ID } from "./livePreviewEventManager.constant.js";
+import { isOpeningInNewTab } from "../../common/inIframe.js";
 var livePreviewPostMessage;
 if (typeof window !== "undefined") {
-  livePreviewPostMessage = new import_advanced_post_message.EventManager(LIVE_PREVIEW_CHANNEL_ID, {
+  const eventOptions = {
     target: window.parent,
     debug: false,
     suppressErrors: true
-  });
+  };
+  if (isOpeningInNewTab()) {
+    eventOptions.target = window.opener;
+  }
+  livePreviewPostMessage = new import_advanced_post_message.EventManager(LIVE_PREVIEW_CHANNEL_ID, eventOptions);
 }
 var livePreviewEventManager_default = livePreviewPostMessage;
 export {

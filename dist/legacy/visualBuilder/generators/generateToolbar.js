@@ -11,9 +11,9 @@ import {
 import FieldToolbarComponent from "../components/FieldToolbar.js";
 import { render } from "preact";
 import FieldLabelWrapperComponent from "../components/fieldLabelWrapper.js";
-import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
+import { fetchEntryPermissionsAndStageDetails } from "../utils/fetchEntryPermissionsAndStageDetails.js";
 import { jsx } from "preact/jsx-runtime";
 function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false, options) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement, options);
@@ -33,10 +33,11 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ) && !isHover)
     return;
-  const entryPermissions = await getEntryPermissionsCached({
+  const { acl: entryPermissions, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
     entryUid: eventDetails.fieldMetadata.entry_uid,
     contentTypeUid: eventDetails.fieldMetadata.content_type_uid,
-    locale: eventDetails.fieldMetadata.locale
+    locale: eventDetails.fieldMetadata.locale,
+    variantUid: eventDetails.fieldMetadata.variant
   });
   const wrapper = document.createDocumentFragment();
   render(
@@ -46,7 +47,8 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
         eventDetails,
         hideOverlay,
         isVariant,
-        entryPermissions
+        entryPermissions,
+        entryWorkflowStageDetails
       }
     ),
     wrapper

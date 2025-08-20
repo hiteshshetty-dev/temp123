@@ -54,7 +54,7 @@ var import_generateThread2 = require("../generators/generateThread.cjs");
 var import_generateThread3 = require("../generators/generateThread.cjs");
 var import_collabUtils = require("../utils/collabUtils.cjs");
 var import_uuid = require("uuid");
-var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
+var import_fetchEntryPermissionsAndStageDetails = require("../utils/fetchEntryPermissionsAndStageDetails.cjs");
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   (0, import_generateOverlay.addFocusOverlay)(
@@ -210,30 +210,29 @@ function addOverlayAndToolbar(params, eventDetails, editableElement, isVariant) 
 }
 async function handleFieldSchemaAndIndividualFields(params, eventDetails, fieldMetadata, editableElement, previousSelectedElement) {
   var _a;
-  const { content_type_uid, entry_uid, fieldPath, locale } = fieldMetadata;
+  const {
+    content_type_uid,
+    entry_uid,
+    fieldPath,
+    locale,
+    variant: variantUid
+  } = fieldMetadata;
   const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
     content_type_uid,
     fieldPath
   );
-  let entryAcl;
-  try {
-    entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
-      entryUid: entry_uid,
-      contentTypeUid: content_type_uid,
-      locale
-    });
-  } catch (error) {
-    console.error(
-      "[Visual Builder] Error retrieving entry permissions:",
-      error
-    );
-    return;
-  }
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+    entryUid: entry_uid,
+    contentTypeUid: content_type_uid,
+    locale,
+    variantUid
+  });
   if (fieldSchema) {
     const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
       fieldSchema,
       eventDetails,
-      entryAcl
+      entryAcl,
+      entryWorkflowStageDetails
     );
     if (isDisabled) {
       addOverlay({

@@ -354,7 +354,7 @@ var LivePreviewEditButton = class {
         variant,
         fieldPathWithIndex
       } = (0, import_cslp.extractDetailsFromCslp)(cslpTag);
-      if ((0, import_inIframe.inIframe)()) {
+      if ((0, import_inIframe.inIframe)() || (0, import_inIframe.isOpeningInNewTab)()) {
         (_a = import_livePreviewEventManager.default) == null ? void 0 : _a.send("scroll", {
           field: fieldPathWithIndex,
           content_type_uid,

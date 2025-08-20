@@ -915,13 +915,18 @@ __export(livePreviewEventManager_exports, {
 module.exports = __toCommonJS(livePreviewEventManager_exports);
 var import_advanced_post_message = __toESM(require_dist(), 1);
 var import_livePreviewEventManager = require("./livePreviewEventManager.constant.cjs");
+var import_inIframe = require("../../common/inIframe.cjs");
 var livePreviewPostMessage;
 if (typeof window !== "undefined") {
-  livePreviewPostMessage = new import_advanced_post_message.EventManager(import_livePreviewEventManager.LIVE_PREVIEW_CHANNEL_ID, {
+  const eventOptions = {
     target: window.parent,
     debug: false,
     suppressErrors: true
-  });
+  };
+  if ((0, import_inIframe.isOpeningInNewTab)()) {
+    eventOptions.target = window.opener;
+  }
+  livePreviewPostMessage = new import_advanced_post_message.EventManager(import_livePreviewEventManager.LIVE_PREVIEW_CHANNEL_ID, eventOptions);
 }
 var livePreviewEventManager_default = livePreviewPostMessage;
 //# sourceMappingURL=livePreviewEventManager.cjs.map

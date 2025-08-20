@@ -2,7 +2,7 @@ import "../../chunk-5WRI5ZAA.js";
 
 // src/livePreview/editButton/editButton.ts
 import { effect } from "@preact/signals";
-import { inIframe } from "../../common/inIframe.js";
+import { inIframe, isOpeningInNewTab } from "../../common/inIframe.js";
 import Config from "../../configManager/configManager.js";
 import { addCslpOutline, extractDetailsFromCslp } from "../../cslp/index.js";
 import { cslpTagStyles } from "./editButton.style.js";
@@ -317,7 +317,7 @@ var LivePreviewEditButton = class {
         variant,
         fieldPathWithIndex
       } = extractDetailsFromCslp(cslpTag);
-      if (inIframe()) {
+      if (inIframe() || isOpeningInNewTab()) {
         (_a = livePreviewPostMessage) == null ? void 0 : _a.send("scroll", {
           field: fieldPathWithIndex,
           content_type_uid,

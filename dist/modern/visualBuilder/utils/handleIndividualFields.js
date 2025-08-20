@@ -15,8 +15,8 @@ import {
 import { isFieldMultiple } from "./isFieldMultiple.js";
 import { handleInlineEditableField } from "./handleInlineEditableField.js";
 import { pasteAsPlainText } from "./pasteAsPlainText.js";
-import { getEntryPermissionsCached } from "./getEntryPermissionsCached.js";
 import { removeFieldToolbar } from "../generators/generateToolbar.js";
+import { fetchEntryPermissionsAndStageDetails } from "./fetchEntryPermissionsAndStageDetails.js";
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -35,7 +35,7 @@ async function handleIndividualFields(eventDetails, elements) {
     )
   ]);
   const fieldType = getFieldType(fieldSchema);
-  const entryAcl = await getEntryPermissionsCached({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
     entryUid: entry_uid,
     contentTypeUid: content_type_uid,
     locale
@@ -43,7 +43,8 @@ async function handleIndividualFields(eventDetails, elements) {
   const { isDisabled: disabled } = isFieldDisabled(
     fieldSchema,
     eventDetails,
-    entryAcl
+    entryAcl,
+    entryWorkflowStageDetails
   );
   editableElement.setAttribute(
     VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,

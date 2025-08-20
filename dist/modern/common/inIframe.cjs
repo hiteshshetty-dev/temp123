@@ -20,9 +20,11 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/common/inIframe.ts
 var inIframe_exports = {};
 __export(inIframe_exports, {
-  inIframe: () => inIframe
+  inIframe: () => inIframe,
+  isOpeningInNewTab: () => isOpeningInNewTab
 });
 module.exports = __toCommonJS(inIframe_exports);
+var import_utils = require("../utils/index.cjs");
 function inIframe() {
   try {
     return window.self !== window.top;
@@ -30,8 +32,19 @@ function inIframe() {
     return true;
   }
 }
+function isOpeningInNewTab() {
+  try {
+    if ((0, import_utils.hasWindow)()) {
+      return !!window.opener;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  inIframe
+  inIframe,
+  isOpeningInNewTab
 });
 //# sourceMappingURL=inIframe.cjs.map
