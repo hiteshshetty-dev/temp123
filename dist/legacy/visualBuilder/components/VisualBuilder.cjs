@@ -39,7 +39,9 @@ var import_visualBuilder = require("../visualBuilder.style.cjs");
 var import_utils = require("../../utils/index.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function VisualBuilderComponent(props) {
-  if (!(0, import_utils.isOpenInBuilder)()) {
+  const isInBuilder = (0, import_utils.isOpenInBuilder)();
+  const isInPreviewShare = (0, import_utils.isOpenInPreviewShare)();
+  if (!isInBuilder && !isInPreviewShare) {
     return null;
   }
   return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [

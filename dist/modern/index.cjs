@@ -36,7 +36,6 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 var import_contentstack_live_preview_HOC = __toESM(require("./preview/contentstack-live-preview-HOC.cjs"), 1);
 var import_light_sdk = __toESM(require("./light-sdk.cjs"), 1);
-console.log("initialised");
 var ContentstackLivePreview = typeof process !== "undefined" && (process.env.PURGE_PREVIEW_SDK === "true" || process.env.REACT_APP_PURGE_PREVIEW_SDK === "true") ? import_light_sdk.default : import_contentstack_live_preview_HOC.default;
 var VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
 var index_default = ContentstackLivePreview;
