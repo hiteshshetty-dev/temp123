@@ -42,14 +42,15 @@ function useOnEntryUpdatePostMessageEvent() {
   (_a = livePreviewPostMessage) == null ? void 0 : _a.on(
     LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_CHANGE,
     (event) => {
-      var _a2;
+      var _a2, _b, _c, _d, _e;
       try {
-        const { ssr, onChange } = Config.get();
+        const { ssr, onChange, stackDetails } = Config.get();
         const event_type = (_a2 = event.data._metadata) == null ? void 0 : _a2.event_type;
         console.log("event", event.data);
         setConfigFromParams({
           live_preview: event.data.hash
         });
+        console.log("config", (_b = stackDetails.$contentTypeUid) == null ? void 0 : _b.toString(), (_c = stackDetails.$entryUid) == null ? void 0 : _c.toString());
         if (!ssr && !event_type) {
           onChange();
         }
@@ -66,8 +67,8 @@ function useOnEntryUpdatePostMessageEvent() {
             } else {
               const url = new URL(window.location.href);
               url.searchParams.set("live_preview", event.data.hash);
-              url.searchParams.set("content_type_uid", Config.get().stackDetails.contentTypeUid || event.data.content_type_uid || "");
-              url.searchParams.set("entry_uid", Config.get().stackDetails.entryUid || event.data.entry_uid || "");
+              url.searchParams.set("content_type_uid", event.data.content_type_uid || ((_d = stackDetails.$contentTypeUid) == null ? void 0 : _d.toString()) || "");
+              url.searchParams.set("entry_uid", event.data.entry_uid || ((_e = stackDetails.$entryUid) == null ? void 0 : _e.toString()) || "");
               console.log(" new url", url.toString());
               window.location.href = url.toString();
             }
@@ -111,10 +112,8 @@ function sendInitializeLivePreviewPostMessageEvent() {
       return;
     }
     if (contentTypeUid && entryUid) {
-      setConfigFromParams({
-        content_type_uid: contentTypeUid,
-        entry_uid: entryUid
-      });
+      console.log("setConfigFromParams", contentTypeUid, entryUid);
+      setConfigFromParams(`?content_type_uid=${contentTypeUid}&entry_uid=${entryUid}`);
     } else {
     }
     if (Config.get().ssr || isOpeningInTimeline() || isOpeningInNewTab()) {

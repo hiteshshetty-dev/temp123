@@ -41,12 +41,13 @@ function useOnEntryUpdatePostMessageEvent() {
     LIVE_PREVIEW_POST_MESSAGE_EVENTS.ON_CHANGE,
     (event) => {
       try {
-        const { ssr, onChange } = Config.get();
+        const { ssr, onChange, stackDetails } = Config.get();
         const event_type = event.data._metadata?.event_type;
         console.log("event", event.data);
         setConfigFromParams({
           live_preview: event.data.hash
         });
+        console.log("config", stackDetails.$contentTypeUid?.toString(), stackDetails.$entryUid?.toString());
         if (!ssr && !event_type) {
           onChange();
         }
@@ -63,8 +64,8 @@ function useOnEntryUpdatePostMessageEvent() {
             } else {
               const url = new URL(window.location.href);
               url.searchParams.set("live_preview", event.data.hash);
-              url.searchParams.set("content_type_uid", Config.get().stackDetails.contentTypeUid || event.data.content_type_uid || "");
-              url.searchParams.set("entry_uid", Config.get().stackDetails.entryUid || event.data.entry_uid || "");
+              url.searchParams.set("content_type_uid", event.data.content_type_uid || stackDetails.$contentTypeUid?.toString() || "");
+              url.searchParams.set("entry_uid", event.data.entry_uid || stackDetails.$entryUid?.toString() || "");
               console.log(" new url", url.toString());
               window.location.href = url.toString();
             }
@@ -106,10 +107,8 @@ function sendInitializeLivePreviewPostMessageEvent() {
       return;
     }
     if (contentTypeUid && entryUid) {
-      setConfigFromParams({
-        content_type_uid: contentTypeUid,
-        entry_uid: entryUid
-      });
+      console.log("setConfigFromParams", contentTypeUid, entryUid);
+      setConfigFromParams(`?content_type_uid=${contentTypeUid}&entry_uid=${entryUid}`);
     } else {
     }
     if (Config.get().ssr || isOpeningInTimeline() || isOpeningInNewTab()) {
