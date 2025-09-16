@@ -474,7 +474,7 @@ function visualBuilderStyles() {
             .visual-builder__field-icon {
                 svg {
                     margin-right: 0px;
-                }
+                }            
             }
         `,
     "visual-builder__focused-toolbar__button-group": import_goober.css`
@@ -643,7 +643,6 @@ function visualBuilderStyles() {
         `,
     "visual-builder__variant-field": import_goober.css`
             outline: 2px solid #bd59fa;
-            outline-offset: -2px;
         `,
     "visual-builder__pseudo-editable-element": import_goober.css`
             z-index: 99999 !important;
@@ -782,6 +781,7 @@ function visualBuilderStyles() {
             align-items: center;
             justify-content: center;
             margin-left: 0.25rem;
+            
         `,
     "visual-builder__field-location-icons-container__divider": import_goober.css`
             height: 32px !important;
@@ -800,7 +800,7 @@ function visualBuilderStyles() {
             background: #fff;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             z-index: 1000;
             min-width: 230px;
             max-height: 250px;

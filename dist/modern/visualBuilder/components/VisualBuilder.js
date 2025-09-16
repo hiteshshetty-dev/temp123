@@ -7,12 +7,10 @@ import {
   visualBuilderStyles,
   VisualBuilderGlobalStyles
 } from "../visualBuilder.style.js";
-import { isOpenInBuilder, isOpenInPreviewShare } from "../../utils/index.js";
+import { isOpenInBuilder } from "../../utils/index.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 function VisualBuilderComponent(props) {
-  const isInBuilder = isOpenInBuilder();
-  const isInPreviewShare = isOpenInPreviewShare();
-  if (!isInBuilder && !isInPreviewShare) {
+  if (!isOpenInBuilder()) {
     return null;
   }
   return /* @__PURE__ */ jsxs(Fragment, { children: [

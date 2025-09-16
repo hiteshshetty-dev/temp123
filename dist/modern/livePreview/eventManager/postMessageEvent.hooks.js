@@ -43,6 +43,7 @@ function useOnEntryUpdatePostMessageEvent() {
       try {
         const { ssr, onChange } = Config.get();
         const event_type = event.data._metadata?.event_type;
+        console.log("event", event.data);
         setConfigFromParams({
           live_preview: event.data.hash
         });
@@ -56,13 +57,15 @@ function useOnEntryUpdatePostMessageEvent() {
           }
           ;
           if (ssr && !event_type) {
-            if (window.location.href.includes("live_preview")) {
+            if (window.location.href.includes("live_preview") && window.location.href.includes("content_type_uid") && window.location.href.includes("entry_uid")) {
+              console.log(" reload the page only");
               window.location.reload();
             } else {
               const url = new URL(window.location.href);
               url.searchParams.set("live_preview", event.data.hash);
-              url.searchParams.set("content_type_uid", Config.get().stackDetails.contentTypeUid || "");
-              url.searchParams.set("entry_uid", Config.get().stackDetails.entryUid || "");
+              url.searchParams.set("content_type_uid", Config.get().stackDetails.contentTypeUid || event.data.content_type_uid || "");
+              url.searchParams.set("entry_uid", Config.get().stackDetails.entryUid || event.data.entry_uid || "");
+              console.log(" new url", url.toString());
               window.location.href = url.toString();
             }
           }
@@ -89,7 +92,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "4.0.1",
+        sdkVersion: "4.0.0",
         mode: Config.get().mode
       }
     }

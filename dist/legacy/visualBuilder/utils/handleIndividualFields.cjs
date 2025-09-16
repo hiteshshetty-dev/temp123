@@ -35,8 +35,8 @@ var import_multipleElementAddButton = require("./multipleElementAddButton.cjs");
 var import_isFieldMultiple = require("./isFieldMultiple.cjs");
 var import_handleInlineEditableField = require("./handleInlineEditableField.cjs");
 var import_pasteAsPlainText = require("./pasteAsPlainText.cjs");
+var import_getEntryPermissionsCached = require("./getEntryPermissionsCached.cjs");
 var import_generateToolbar = require("../generators/generateToolbar.cjs");
-var import_fetchEntryPermissionsAndStageDetails = require("./fetchEntryPermissionsAndStageDetails.cjs");
 async function handleIndividualFields(eventDetails, elements) {
   const { fieldMetadata, editableElement } = eventDetails;
   const { visualBuilderContainer, lastEditedField, resizeObserver } = elements;
@@ -55,7 +55,7 @@ async function handleIndividualFields(eventDetails, elements) {
     )
   ]);
   const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
     entryUid: entry_uid,
     contentTypeUid: content_type_uid,
     locale
@@ -63,8 +63,7 @@ async function handleIndividualFields(eventDetails, elements) {
   const { isDisabled: disabled } = (0, import_isFieldDisabled.isFieldDisabled)(
     fieldSchema,
     eventDetails,
-    entryAcl,
-    entryWorkflowStageDetails
+    entryAcl
   );
   editableElement.setAttribute(
     import_constants.VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,

@@ -9,6 +9,7 @@ import {
   hideFocusOverlay
 } from "../generators/generateOverlay.js";
 import { hideHoverOutline } from "../listeners/mouseHover.js";
+import { getEntryPermissionsCached } from "./getEntryPermissionsCached.js";
 import {
   LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX,
   RIGHT_EDGE_BUFFER,
@@ -19,7 +20,6 @@ import { FieldSchemaMap } from "./fieldSchemaMap.js";
 import getChildrenDirection from "./getChildrenDirection.js";
 import { getPsuedoEditableElementStyles } from "./getPsuedoEditableStylesElement.js";
 import { isFieldDisabled } from "./isFieldDisabled.js";
-import { fetchEntryPermissionsAndStageDetails } from "./fetchEntryPermissionsAndStageDetails.js";
 function positionToolbar({
   focusedToolbar,
   selectedElementDimension
@@ -83,17 +83,15 @@ async function updateFocussedState({
     fieldMetadata.content_type_uid,
     fieldMetadata.fieldPath
   );
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
+  const entryAcl = await getEntryPermissionsCached({
     entryUid: fieldMetadata.entry_uid,
     contentTypeUid: fieldMetadata.content_type_uid,
-    locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
+    locale: fieldMetadata.locale
   });
   const { isDisabled } = isFieldDisabled(
     fieldSchema,
     { editableElement, fieldMetadata },
-    entryAcl,
-    entryWorkflowStageDetails
+    entryAcl
   );
   addFocusOverlay(previousSelectedEditableDOM, overlayWrapper, isDisabled);
   const psuedoEditableElement = visualBuilderContainer.querySelector(

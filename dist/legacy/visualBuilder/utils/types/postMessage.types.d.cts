@@ -28,8 +28,6 @@ declare enum VisualBuilderPostMessageEvents {
     COLLAB_MISSING_THREADS = "collab-missing-threads",
     FIELD_LOCATION_DATA = "field-location-data",
     FIELD_LOCATION_SELECTED_APP = "field-location-selected-app",
-    GET_PERMISSIONS = "get-permissions",
-    GET_WORKFLOW_STAGE_DETAILS = "get-workflow-stage-details",
     GET_ALL_ENTRIES_IN_CURRENT_PAGE = "get-entries-in-current-page",
     HIDE_FOCUS_OVERLAY = "hide-focus-overlay",
     SHOW_DRAFT_FIELDS = "show-draft-fields",

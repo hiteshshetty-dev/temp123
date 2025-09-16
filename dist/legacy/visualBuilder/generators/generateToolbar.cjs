@@ -40,9 +40,9 @@ var import_constants = require("../utils/constants.cjs");
 var import_FieldToolbar = __toESM(require("../components/FieldToolbar.cjs"), 1);
 var import_preact = require("preact");
 var import_fieldLabelWrapper = __toESM(require("../components/fieldLabelWrapper.cjs"), 1);
+var import_getEntryPermissionsCached = require("../utils/getEntryPermissionsCached.cjs");
 var import_postMessage = require("../utils/types/postMessage.types.cjs");
 var import_visualBuilderPostMessage = __toESM(require("../utils/visualBuilderPostMessage.cjs"), 1);
-var import_fetchEntryPermissionsAndStageDetails = require("../utils/fetchEntryPermissionsAndStageDetails.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 function appendFocusedToolbar(eventDetails, focusedToolbarElement, hideOverlay, isVariant = false, options) {
   appendFieldPathDropdown(eventDetails, focusedToolbarElement, options);
@@ -62,11 +62,10 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ) && !isHover)
     return;
-  const { acl: entryPermissions, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const entryPermissions = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
     entryUid: eventDetails.fieldMetadata.entry_uid,
     contentTypeUid: eventDetails.fieldMetadata.content_type_uid,
-    locale: eventDetails.fieldMetadata.locale,
-    variantUid: eventDetails.fieldMetadata.variant
+    locale: eventDetails.fieldMetadata.locale
   });
   const wrapper = document.createDocumentFragment();
   (0, import_preact.render)(
@@ -76,8 +75,7 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
         eventDetails,
         hideOverlay,
         isVariant,
-        entryPermissions,
-        entryWorkflowStageDetails
+        entryPermissions
       }
     ),
     wrapper

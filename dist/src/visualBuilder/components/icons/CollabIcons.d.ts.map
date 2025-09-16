@@ -1,0 +1,1 @@
+{"version":3,"file":"CollabIcons.d.ts","sourceRoot":"","sources":["../../../../../src/visualBuilder/components/icons/CollabIcons.tsx"],"names":[],"mappings":"AAAA,8BAA8B;AAC9B,OAAO,KAAK,MAAM,eAAe,CAAC;AAClC,eAAO,MAAM,cAAc;oBACP,GAAG;oBAgBH,GAAG;kBA8CL,GAAG;6BAkBQ,GAAG;4BAkBJ;QAAE,MAAM,CAAC,EAAE,OAAO,CAAC;QAAC,SAAS,CAAC,EAAE,MAAM,CAAA;KAAE;CAgDnE,CAAC"}

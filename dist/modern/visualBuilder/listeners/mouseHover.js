@@ -14,8 +14,8 @@ import { visualBuilderStyles } from "../visualBuilder.style.js";
 import { VB_EmptyBlockParentClass } from "../../index.js";
 import Config from "../../configManager/configManager.js";
 import { isCollabThread } from "../generators/generateThread.js";
+import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
 import { appendFieldPathDropdown } from "../generators/generateToolbar.js";
-import { fetchEntryPermissionsAndStageDetails } from "../utils/fetchEntryPermissionsAndStageDetails.js";
 var config = Config.get();
 function resetCustomCursor(customCursor) {
   if (customCursor) {
@@ -40,38 +40,38 @@ function handleCursorPosition(event, customCursor) {
     customCursor.style.top = `${mouseY}px`;
   }
 }
-async function addOutline(params) {
+function addOutline(params) {
   if (!params) {
     return;
   }
-  const {
-    editableElement,
-    eventDetails,
-    content_type_uid,
-    fieldPath,
-    fieldMetadata,
-    fieldDisabled
-  } = params;
+  const { editableElement, eventDetails, content_type_uid, fieldPath, fieldMetadata, fieldDisabled } = params;
   if (!editableElement) return;
   addHoverOutline(editableElement, fieldDisabled);
-  const fieldSchema = await FieldSchemaMap.getFieldSchema(
-    content_type_uid,
-    fieldPath
+  FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
+    (fieldSchema) => {
+      let entryAcl;
+      if (!fieldSchema) return;
+      getEntryPermissionsCached({
+        entryUid: fieldMetadata.entry_uid,
+        contentTypeUid: fieldMetadata.content_type_uid,
+        locale: fieldMetadata.locale
+      }).then((data) => {
+        entryAcl = data;
+      }).catch((error) => {
+        console.error(
+          "[Visual Builder] Error retrieving entry permissions:",
+          error
+        );
+      }).finally(() => {
+        const { isDisabled: fieldDisabled2 } = isFieldDisabled(
+          fieldSchema,
+          eventDetails,
+          entryAcl
+        );
+        addHoverOutline(editableElement, fieldDisabled2);
+      });
+    }
   );
-  if (!fieldSchema) return;
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
-    entryUid: fieldMetadata.entry_uid,
-    contentTypeUid: fieldMetadata.content_type_uid,
-    locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
-  });
-  const { isDisabled } = isFieldDisabled(
-    fieldSchema,
-    eventDetails,
-    entryAcl,
-    entryWorkflowStageDetails
-  );
-  addHoverOutline(editableElement, fieldDisabled || isDisabled);
 }
 var debouncedAddOutline = debounce(addOutline, 50, { trailing: true });
 var showOutline = (params) => debouncedAddOutline(params);
@@ -222,10 +222,37 @@ var throttledMouseHover = throttle(async (params) => {
         customCursor: params.customCursor
       });
     }
-    generateCursor({
-      eventDetails,
-      customCursor: params.customCursor
-    });
+    FieldSchemaMap.getFieldSchema(content_type_uid, fieldPath).then(
+      (fieldSchema) => {
+        if (!fieldSchema) return;
+        let entryAcl;
+        getEntryPermissionsCached({
+          entryUid: fieldMetadata.entry_uid,
+          contentTypeUid: fieldMetadata.content_type_uid,
+          locale: fieldMetadata.locale
+        }).then((data) => {
+          entryAcl = data;
+        }).catch((error) => {
+          console.error(
+            "[Visual Builder] Error retrieving entry permissions:",
+            error
+          );
+        }).finally(() => {
+          if (!params.customCursor) return;
+          const { isDisabled: fieldDisabled } = isFieldDisabled(
+            fieldSchema,
+            eventDetails,
+            entryAcl
+          );
+          const fieldType = getFieldType(fieldSchema);
+          generateCustomCursor({
+            fieldType,
+            customCursor: params.customCursor,
+            fieldDisabled
+          });
+        });
+      }
+    );
     handleCursorPosition(params.event, params.customCursor);
     showCustomCursor(params.customCursor);
   }
@@ -254,38 +281,6 @@ var throttledMouseHover = throttle(async (params) => {
   }
   VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM = editableElement;
 }, 10);
-async function generateCursor({
-  eventDetails,
-  customCursor
-}) {
-  if (!customCursor) return;
-  const { fieldMetadata } = eventDetails;
-  const fieldSchema = await FieldSchemaMap.getFieldSchema(
-    fieldMetadata.content_type_uid,
-    fieldMetadata.fieldPath
-  );
-  if (!fieldSchema) {
-    return;
-  }
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
-    entryUid: fieldMetadata.entry_uid,
-    contentTypeUid: fieldMetadata.content_type_uid,
-    locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
-  });
-  const { isDisabled: fieldDisabled } = isFieldDisabled(
-    fieldSchema,
-    eventDetails,
-    entryAcl,
-    entryWorkflowStageDetails
-  );
-  const fieldType = getFieldType(fieldSchema);
-  generateCustomCursor({
-    fieldType,
-    customCursor,
-    fieldDisabled
-  });
-}
 var handleMouseHover = async (params) => await throttledMouseHover(params);
 var mouseHover_default = handleMouseHover;
 export {

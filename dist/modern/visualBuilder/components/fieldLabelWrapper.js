@@ -15,9 +15,9 @@ import { visualBuilderStyles } from "../visualBuilder.style.js";
 import { CslpError } from "./CslpError.js";
 import { hasPostMessageError } from "../utils/errorHandling.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
+import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
 import { ContentTypeIcon } from "./icons/index.js";
 import { ToolbarTooltip } from "./Tooltip.js";
-import { fetchEntryPermissionsAndStageDetails } from "../utils/fetchEntryPermissionsAndStageDetails.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 async function getFieldDisplayNames(fieldMetadata) {
   const result = await visualBuilderPostMessage?.send(VisualBuilderPostMessageEvents.GET_FIELD_DISPLAY_NAMES, fieldMetadata);
@@ -113,17 +113,15 @@ function FieldLabelWrapperComponent(props) {
         setError(true);
         return;
       }
-      const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
+      const entryPermissions = await getEntryPermissionsCached({
         entryUid: props.fieldMetadata.entry_uid,
         contentTypeUid: props.fieldMetadata.content_type_uid,
-        locale: props.fieldMetadata.locale,
-        variantUid: props.fieldMetadata.variant
+        locale: props.fieldMetadata.locale
       });
       const { isDisabled: fieldDisabled, reason } = isFieldDisabled(
         fieldSchema,
         eventDetails,
-        entryAcl,
-        entryWorkflowStageDetails
+        entryPermissions
       );
       const currentFieldDisplayName = displayNames2?.[props.fieldMetadata.cslpValue] ?? fieldSchema.display_name;
       const hasParentPaths = !!props?.parentPaths?.length;

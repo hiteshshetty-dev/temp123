@@ -1,7 +1,6 @@
 import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/utils/getEntryPermissions.ts
-import { VisualBuilderPostMessageEvents } from "./types/postMessage.types.js";
 import visualBuilderPostMessage from "./visualBuilderPostMessage.js";
 async function getEntryPermissions({
   entryUid,
@@ -10,7 +9,7 @@ async function getEntryPermissions({
 }) {
   try {
     const permissions = await visualBuilderPostMessage?.send(
-      VisualBuilderPostMessageEvents.GET_PERMISSIONS,
+      "get-permissions",
       {
         type: "entry",
         entryUid,
