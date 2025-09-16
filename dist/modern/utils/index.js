@@ -36,11 +36,20 @@ function isOpenInBuilder() {
   }
   return false;
 }
+function isOpenInPreviewShare() {
+  if (hasWindow()) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const previewShare = urlParams.get("preview_share");
+    return !!previewShare;
+  }
+  return false;
+}
 export {
   addLivePreviewQueryTags,
   addParamsToUrl,
   hasWindow,
   isOpenInBuilder,
+  isOpenInPreviewShare,
   isOpeningInTimeline
 };
 //# sourceMappingURL=index.js.map

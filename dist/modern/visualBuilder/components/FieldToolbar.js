@@ -84,7 +84,8 @@ function FieldToolbarComponent(props) {
   const {
     eventDetails,
     isVariant: isVariantOrParentOfVariant,
-    entryPermissions
+    entryPermissions,
+    entryWorkflowStageDetails
   } = props;
   const { fieldMetadata, editableElement: targetElement } = eventDetails;
   const [isFormLoading, setIsFormLoading] = useState(false);
@@ -118,7 +119,8 @@ function FieldToolbarComponent(props) {
         editableElement: targetElement,
         fieldMetadata
       },
-      entryPermissions
+      entryPermissions,
+      entryWorkflowStageDetails
     );
     disableFieldActions = isDisabled;
     fieldType = getFieldType(fieldSchema);

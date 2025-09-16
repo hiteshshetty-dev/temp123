@@ -43,7 +43,8 @@ function initUI(props) {
     `.visual-builder__container`
   );
   const isInBuilder = (0, import_utils.isOpenInBuilder)();
-  if (!visualBuilderDOM && isInBuilder) {
+  const isInPreviewShare = (0, import_utils.isOpenInPreviewShare)();
+  if (!visualBuilderDOM && (isInBuilder || isInPreviewShare)) {
     const visualBuilderContainer = document.createElement("div");
     visualBuilderContainer.classList.add(
       (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__container"],

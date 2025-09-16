@@ -26,7 +26,7 @@ import { isCollabThread } from "../generators/generateThread.js";
 import { toggleCollabPopup } from "../generators/generateThread.js";
 import { fixSvgXPath } from "../utils/collabUtils.js";
 import { v4 as uuidV4 } from "uuid";
-import { getEntryPermissionsCached } from "../utils/getEntryPermissionsCached.js";
+import { fetchEntryPermissionsAndStageDetails } from "../utils/fetchEntryPermissionsAndStageDetails.js";
 function addOverlay(params) {
   if (!params.overlayWrapper || !params.editableElement) return;
   addFocusOverlay(
@@ -182,30 +182,29 @@ function addOverlayAndToolbar(params, eventDetails, editableElement, isVariant) 
 }
 async function handleFieldSchemaAndIndividualFields(params, eventDetails, fieldMetadata, editableElement, previousSelectedElement) {
   var _a;
-  const { content_type_uid, entry_uid, fieldPath, locale } = fieldMetadata;
+  const {
+    content_type_uid,
+    entry_uid,
+    fieldPath,
+    locale,
+    variant: variantUid
+  } = fieldMetadata;
   const fieldSchema = await FieldSchemaMap.getFieldSchema(
     content_type_uid,
     fieldPath
   );
-  let entryAcl;
-  try {
-    entryAcl = await getEntryPermissionsCached({
-      entryUid: entry_uid,
-      contentTypeUid: content_type_uid,
-      locale
-    });
-  } catch (error) {
-    console.error(
-      "[Visual Builder] Error retrieving entry permissions:",
-      error
-    );
-    return;
-  }
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
+    entryUid: entry_uid,
+    contentTypeUid: content_type_uid,
+    locale,
+    variantUid
+  });
   if (fieldSchema) {
     const { isDisabled } = isFieldDisabled(
       fieldSchema,
       eventDetails,
-      entryAcl
+      entryAcl,
+      entryWorkflowStageDetails
     );
     if (isDisabled) {
       addOverlay({

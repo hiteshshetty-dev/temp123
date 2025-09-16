@@ -39,12 +39,12 @@ var import_cslp = require("../../cslp/index.cjs");
 var import_generateAddInstanceButtons = require("../generators/generateAddInstanceButtons.cjs");
 var import_generateOverlay = require("../generators/generateOverlay.cjs");
 var import_mouseHover = require("../listeners/mouseHover.cjs");
-var import_getEntryPermissionsCached = require("./getEntryPermissionsCached.cjs");
 var import_constants = require("./constants.cjs");
 var import_fieldSchemaMap = require("./fieldSchemaMap.cjs");
 var import_getChildrenDirection = __toESM(require("./getChildrenDirection.cjs"), 1);
 var import_getPsuedoEditableStylesElement = require("./getPsuedoEditableStylesElement.cjs");
 var import_isFieldDisabled = require("./isFieldDisabled.cjs");
+var import_fetchEntryPermissionsAndStageDetails = require("./fetchEntryPermissionsAndStageDetails.cjs");
 function positionToolbar({
   focusedToolbar,
   selectedElementDimension
@@ -108,15 +108,17 @@ async function updateFocussedState({
     fieldMetadata.content_type_uid,
     fieldMetadata.fieldPath
   );
-  const entryAcl = await (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
     entryUid: fieldMetadata.entry_uid,
     contentTypeUid: fieldMetadata.content_type_uid,
-    locale: fieldMetadata.locale
+    locale: fieldMetadata.locale,
+    variantUid: fieldMetadata.variant
   });
   const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
     fieldSchema,
     { editableElement, fieldMetadata },
-    entryAcl
+    entryAcl,
+    entryWorkflowStageDetails
   );
   (0, import_generateOverlay.addFocusOverlay)(previousSelectedEditableDOM, overlayWrapper, isDisabled);
   const psuedoEditableElement = visualBuilderContainer.querySelector(

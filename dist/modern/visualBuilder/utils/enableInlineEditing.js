@@ -29,7 +29,8 @@ function enableInlineEditing({
     actualEditableField.addEventListener("paste", pasteAsPlainText);
   }
   const expectedTextContent = expectedFieldData;
-  if (expectedTextContent && textContent !== expectedTextContent || isEllipsisActive(editableElement)) {
+  const isFieldLastEdited = document.querySelector("[data-cs-last-edited]") === editableElement;
+  if (expectedTextContent && textContent !== expectedTextContent || isEllipsisActive(editableElement) || isFieldLastEdited) {
     const pseudoEditableField = generatePseudoEditableElement(
       { editableElement },
       { textContent: expectedFieldData }
@@ -65,6 +66,7 @@ function enableInlineEditing({
   actualEditableField.setAttribute("contenteditable", "true");
   actualEditableField.addEventListener("input", handleFieldInput);
   actualEditableField.addEventListener("keydown", handleFieldKeyDown);
+  editableElement.setAttribute("data-cs-last-edited", "true");
   actualEditableField.focus();
   return;
 }
