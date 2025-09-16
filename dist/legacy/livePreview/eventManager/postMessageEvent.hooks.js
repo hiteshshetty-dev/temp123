@@ -69,12 +69,17 @@ function useOnEntryUpdatePostMessageEvent() {
               console.log(" reload the page only");
               window.location.reload();
             } else {
-              const url2 = new URL(window.location.href);
-              url2.searchParams.set("live_preview", event.data.hash);
-              url2.searchParams.set("content_type_uid", event.data.content_type_uid || ((_d = stackDetails.$contentTypeUid) == null ? void 0 : _d.toString()) || "");
-              url2.searchParams.set("entry_uid", event.data.entry_uid || ((_e = stackDetails.$entryUid) == null ? void 0 : _e.toString()) || "");
-              console.log(" new url", url2.toString());
-              window.location.href = url2.toString();
+              url.searchParams.set("live_preview", event.data.hash);
+              url.searchParams.set(
+                "content_type_uid",
+                event.data.content_type_uid || ((_d = stackDetails.$contentTypeUid) == null ? void 0 : _d.toString()) || ""
+              );
+              url.searchParams.set(
+                "entry_uid",
+                event.data.entry_uid || ((_e = stackDetails.$entryUid) == null ? void 0 : _e.toString()) || ""
+              );
+              console.log(" new url", url.toString());
+              window.location.href = url.toString();
             }
           }
           if (event_type === OnChangeLivePreviewPostMessageEventTypes.HASH_CHANGE) {
