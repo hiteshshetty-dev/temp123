@@ -1,1 +1,0 @@
-{"version":3,"file":"visualBuilder.types.d.ts","sourceRoot":"","sources":["../../../../src/visualBuilder/types/visualBuilder.types.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,QAAQ,EAAE,MAAM,6BAA6B,CAAC;AAEvD,MAAM,WAAW,6BAA6B;IAC1C,eAAe,EAAE,OAAO,CAAC;IACzB,QAAQ,EAAE,MAAM,CAAC;IACjB,aAAa,EAAE,QAAQ,CAAC;CAC3B"}

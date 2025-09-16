@@ -1,1 +1,0 @@
-{"version":3,"file":"getEntryIdentifiersInCurrentPage.d.ts","sourceRoot":"","sources":["../../../../src/visualBuilder/utils/getEntryIdentifiersInCurrentPage.ts"],"names":[],"mappings":"AAEA,KAAK,gBAAgB,GAAG;IACpB,oBAAoB,EAAE;QACpB,QAAQ,EAAE,MAAM,CAAC;QACjB,cAAc,EAAE,MAAM,CAAC;QACvB,MAAM,EAAE,MAAM,CAAC;KAChB,EAAE,CAAC;CACP,CAAA;AAED,wBAAgB,gCAAgC,IAAI,gBAAgB,CAuBnE"}

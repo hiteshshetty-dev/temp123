@@ -1,1 +1,0 @@
-{"version":3,"file":"fieldSchemaMap.d.ts","sourceRoot":"","sources":["../../../../src/__test__/data/fieldSchemaMap.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,yBAAyB,EAAE,MAAM,6CAA6C,CAAC;AAExF,wBAAgB,iBAAiB,IAAI;IACjC,UAAU,EAAE,yBAAyB,CAAC;IACtC,CAAC,cAAc,EAAE,MAAM,GAAG,yBAAyB,CAAC;CACvD,CA+zBA"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"getCamelCaseStyles.d.ts","sourceRoot":"","sources":["../../../../src/visualBuilder/utils/getCamelCaseStyles.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,OAAO,UAAU,kBAAkB,CAAC,MAAM,EAAE;IAAE,CAAC,GAAG,EAAE,MAAM,GAAG,MAAM,CAAA;CAAE,GAAG;IAC3E,CAAC,GAAG,EAAE,MAAM,GAAG,MAAM,CAAC;CACzB,CAKA"}
