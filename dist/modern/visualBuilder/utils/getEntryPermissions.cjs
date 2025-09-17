@@ -33,6 +33,7 @@ __export(getEntryPermissions_exports, {
   getEntryPermissions: () => getEntryPermissions
 });
 module.exports = __toCommonJS(getEntryPermissions_exports);
+var import_postMessage = require("./types/postMessage.types.cjs");
 var import_visualBuilderPostMessage = __toESM(require("./visualBuilderPostMessage.cjs"), 1);
 async function getEntryPermissions({
   entryUid,
@@ -41,7 +42,7 @@ async function getEntryPermissions({
 }) {
   try {
     const permissions = await import_visualBuilderPostMessage.default?.send(
-      "get-permissions",
+      import_postMessage.VisualBuilderPostMessageEvents.GET_PERMISSIONS,
       {
         type: "entry",
         entryUid,

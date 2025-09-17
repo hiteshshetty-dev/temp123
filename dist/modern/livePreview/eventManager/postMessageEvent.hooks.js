@@ -43,11 +43,9 @@ function useOnEntryUpdatePostMessageEvent() {
       try {
         const { ssr, onChange, stackDetails } = Config.get();
         const event_type = event.data._metadata?.event_type;
-        console.log("event", event.data);
         setConfigFromParams({
           live_preview: event.data.hash
         });
-        console.log("config", stackDetails.$contentTypeUid?.toString(), stackDetails.$entryUid?.toString());
         if (!ssr && !event_type) {
           onChange();
         }
@@ -59,23 +57,29 @@ function useOnEntryUpdatePostMessageEvent() {
           ;
           if (ssr && !event_type) {
             const url = new URL(window.location.href);
-            const live_preview = url.searchParams.get("live_preview");
-            const content_type_uid = url.searchParams.get("content_type_uid");
-            const entry_uid = url.searchParams.get("entry_uid");
+            let live_preview = url.searchParams.get("live_preview");
+            let content_type_uid = url.searchParams.get("content_type_uid");
+            let entry_uid = url.searchParams.get("entry_uid");
+            console.log("\u{1F680} ~ useOnEntryUpdatePostMessageEvent ~ entry_uid:", entry_uid);
             if (live_preview && content_type_uid && entry_uid) {
-              console.log(" reload the page only");
               window.location.reload();
             } else {
-              url.searchParams.set("live_preview", event.data.hash);
-              url.searchParams.set(
-                "content_type_uid",
-                event.data.content_type_uid || stackDetails.$contentTypeUid?.toString() || ""
-              );
-              url.searchParams.set(
-                "entry_uid",
-                event.data.entry_uid || stackDetails.$entryUid?.toString() || ""
-              );
-              console.log(" new url", url.toString());
+              live_preview = event.data.hash;
+              content_type_uid = event.data.content_type_uid || stackDetails.$contentTypeUid?.toString() || "";
+              entry_uid = event.data.entry_uid || stackDetails.$entryUid?.toString() || "";
+              url.searchParams.set("live_preview", live_preview);
+              if (content_type_uid) {
+                url.searchParams.set(
+                  "content_type_uid",
+                  content_type_uid
+                );
+              }
+              if (entry_uid) {
+                url.searchParams.set(
+                  "entry_uid",
+                  entry_uid
+                );
+              }
               window.location.href = url.toString();
             }
           }
@@ -102,7 +106,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "4.0.0",
+        sdkVersion: "4.0.1",
         mode: Config.get().mode
       }
     }
@@ -116,7 +120,6 @@ function sendInitializeLivePreviewPostMessageEvent() {
       return;
     }
     if (contentTypeUid && entryUid) {
-      console.log("setConfigFromParams", contentTypeUid, entryUid);
       setConfigFromParams({
         content_type_uid: contentTypeUid,
         entry_uid: entryUid

@@ -35,24 +35,48 @@ __export(isFieldDisabled_exports, {
 module.exports = __toCommonJS(isFieldDisabled_exports);
 var import_configManager = __toESM(require("../../configManager/configManager.cjs"), 1);
 var import__ = require("../index.cjs");
-var getDisableReason = (flags) => {
-  if (flags.updateRestrictDueToEntryUpdateRestriction) {
-    return "You do not have permission to edit this entry" /* EntryUpdateRestricted */;
-  }
-  if (flags.updateRestrictDueToRole) return "You have only read access to this field" /* ReadOnly */;
-  if (flags.updateRestrictDueToNonLocalizableFields)
-    return "Editing this field is restricted in localized entries" /* LocalizedEntry */;
-  if (flags.updateRestrictDueToUnlocalizedVariant)
-    return "This field is not editable as it is not localized" /* UnlocalizedVariant */;
-  if (flags.updateRestrictDueToUnlinkVariant)
-    return "This field is not editable as it is not linked to the selected variant" /* UnlinkedVariant */;
-  if (flags.updateRestrictDueToAudienceMode)
-    return "Open an Experience from Audience widget to start editing" /* AudienceMode */;
-  if (flags.updateRestrictDueToDisabledVariant)
-    return "This field is not editable as it doesn't match the selected variant" /* DisabledVariant */;
-  return "" /* None */;
+var DisableReason = {
+  ReadOnly: "You have only read access to this field",
+  LocalizedEntry: "Editing this field is restricted in localized entries",
+  UnlinkedVariant: "This field is not editable as it is not linked to the selected variant",
+  AudienceMode: "Open an Experience from Audience widget to start editing",
+  DisabledVariant: "This field is not editable as it doesn't match the selected variant",
+  UnlocalizedVariant: "This field is not editable as it is not localized",
+  None: "",
+  EntryUpdateRestricted: "You do not have permission to edit this entry",
+  WorkflowStagePermission: ({ stageName }) => `You do not have Edit access to this entry on the '${stageName}' workflow stage`,
+  EntryUpdateRestrictedRoleAndWorkflowStage: ({
+    stageName
+  }) => `Editing is restricted for your role or by the rules for the '${stageName}' stage. Contact your admin for edit access.`
 };
-var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions) => {
+var getDisableReason = (flags, params) => {
+  if (flags.updateRestrictDueToRole) return DisableReason.ReadOnly;
+  if (flags.updateRestrictDueToNonLocalizableFields)
+    return DisableReason.LocalizedEntry;
+  if (flags.updateRestrictDueToUnlocalizedVariant)
+    return DisableReason.UnlocalizedVariant;
+  if (flags.updateRestrictDueToUnlinkVariant)
+    return DisableReason.UnlinkedVariant;
+  if (flags.updateRestrictDueToAudienceMode)
+    return DisableReason.AudienceMode;
+  if (flags.updateRestrictDueToDisabledVariant)
+    return DisableReason.DisabledVariant;
+  if (flags.updateRestrictDueToEntryUpdateRestriction && flags.updateRestrictDueToWorkflowStagePermission) {
+    return DisableReason.EntryUpdateRestrictedRoleAndWorkflowStage({
+      stageName: params?.stageName ? params.stageName : "Unknown"
+    });
+  }
+  if (flags.updateRestrictDueToEntryUpdateRestriction) {
+    return DisableReason.EntryUpdateRestricted;
+  }
+  if (flags.updateRestrictDueToWorkflowStagePermission) {
+    return DisableReason.WorkflowStagePermission({
+      stageName: params?.stageName ? params.stageName : "Unknown"
+    });
+  }
+  return DisableReason.None;
+};
+var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions, entryWorkflowStageDetails) => {
   const { editableElement, fieldMetadata } = eventFieldDetails;
   const masterLocale = import_configManager.default.get().stackDetails.masterLocale || "en-us";
   const { locale: cmsLocale, variant } = import__.VisualBuilder.VisualBuilderGlobalState.value;
@@ -75,6 +99,9 @@ var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions) => {
   if (entryPermissions && !entryPermissions.update) {
     flags.updateRestrictDueToEntryUpdateRestriction = true;
   }
+  if (entryWorkflowStageDetails && !entryWorkflowStageDetails.permissions.entry.update) {
+    flags.updateRestrictDueToWorkflowStagePermission = true;
+  }
   if (import__.VisualBuilder.VisualBuilderGlobalState.value.audienceMode && !editableElement.classList.contains("visual-builder__variant-field") && !editableElement.classList.contains("visual-builder__base-field")) {
     if (editableElement.classList.contains(
       "visual-builder__disabled-variant-field"
@@ -85,7 +112,9 @@ var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions) => {
     }
   }
   const isDisabled = Object.values(flags).some(Boolean);
-  const reason = getDisableReason(flags);
+  const reason = getDisableReason(flags, {
+    stageName: entryWorkflowStageDetails?.stage?.name
+  });
   return { isDisabled, reason };
 };
 // Annotate the CommonJS export names for ESM import in node:

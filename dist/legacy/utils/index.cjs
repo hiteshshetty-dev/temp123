@@ -24,6 +24,7 @@ __export(utils_exports, {
   addParamsToUrl: () => addParamsToUrl,
   hasWindow: () => hasWindow,
   isOpenInBuilder: () => isOpenInBuilder,
+  isOpenInPreviewShare: () => isOpenInPreviewShare,
   isOpeningInTimeline: () => isOpeningInTimeline
 });
 module.exports = __toCommonJS(utils_exports);
@@ -62,12 +63,21 @@ function isOpenInBuilder() {
   }
   return false;
 }
+function isOpenInPreviewShare() {
+  if (hasWindow()) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const previewShare = urlParams.get("preview_share");
+    return !!previewShare;
+  }
+  return false;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   addLivePreviewQueryTags,
   addParamsToUrl,
   hasWindow,
   isOpenInBuilder,
+  isOpenInPreviewShare,
   isOpeningInTimeline
 });
 //# sourceMappingURL=index.cjs.map
