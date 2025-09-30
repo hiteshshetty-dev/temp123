@@ -18,6 +18,11 @@ function handleFieldInput(e) {
   const fieldType = targetElement.getAttribute(
     VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY
   );
+  const previousLastEditedElement = document.querySelector("[data-cs-last-edited]");
+  if (previousLastEditedElement !== targetElement) {
+    previousLastEditedElement?.removeAttribute("data-cs-last-edited");
+    targetElement.setAttribute("data-cs-last-edited", "true");
+  }
   if (event.type === "input" && ALLOWED_INLINE_EDITABLE_FIELD.includes(fieldType)) {
     if (!VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput) {
       VisualBuilder.VisualBuilderGlobalState.value.focusFieldReceivedInput = true;

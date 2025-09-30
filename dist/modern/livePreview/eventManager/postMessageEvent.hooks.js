@@ -60,7 +60,6 @@ function useOnEntryUpdatePostMessageEvent() {
             let live_preview = url.searchParams.get("live_preview");
             let content_type_uid = url.searchParams.get("content_type_uid");
             let entry_uid = url.searchParams.get("entry_uid");
-            console.log("\u{1F680} ~ useOnEntryUpdatePostMessageEvent ~ entry_uid:", entry_uid);
             if (live_preview && content_type_uid && entry_uid) {
               window.location.reload();
             } else {
@@ -106,7 +105,7 @@ function sendInitializeLivePreviewPostMessageEvent() {
       config: {
         shouldReload: Config.get().ssr,
         href: window.location.href,
-        sdkVersion: "4.0.1",
+        sdkVersion: "4.1.0",
         mode: Config.get().mode
       }
     }

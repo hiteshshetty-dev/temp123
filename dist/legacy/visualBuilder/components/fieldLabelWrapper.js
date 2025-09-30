@@ -18,6 +18,7 @@ import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types
 import { ContentTypeIcon } from "./icons/index.js";
 import { ToolbarTooltip } from "./Tooltip.js";
 import { fetchEntryPermissionsAndStageDetails } from "../utils/fetchEntryPermissionsAndStageDetails.js";
+import { VariantIndicator } from "./VariantIndicator.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 async function getFieldDisplayNames(fieldMetadata) {
   var _a;
@@ -180,135 +181,144 @@ function FieldLabelWrapperComponent(props) {
       return currentField.icon;
     }
   }
-  return /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs(
     "div",
     {
       className: classNames(
         "visual-builder__focused-toolbar__field-label-container",
         visualBuilderStyles()["visual-builder__focused-toolbar__field-label-container"]
       ),
-      children: /* @__PURE__ */ jsx(ToolbarTooltip, { data: { contentTypeName: currentField.parentContentTypeName, referenceFieldName: currentField.referenceFieldName }, disabled: !currentField.isReference || isDropdownOpen, children: /* @__PURE__ */ jsxs(
-        "div",
-        {
-          className: classNames(
-            "visual-builder__focused-toolbar__field-label-wrapper",
-            visualBuilderStyles()["visual-builder__focused-toolbar__field-label-wrapper"],
-            {
-              "visual-builder__focused-toolbar--field-disabled": currentField.disabled
-            },
-            {
-              [visualBuilderStyles()["visual-builder__focused-toolbar--field-disabled"]]: currentField.disabled
-            },
-            {
-              "field-label-dropdown-open": isDropdownOpen,
-              [visualBuilderStyles()["field-label-dropdown-open"]]: isDropdownOpen
-            }
-          ),
-          onClick: () => setIsDropdownOpen((prev) => !prev),
-          "data-testid": "visual-builder__focused-toolbar__field-label-wrapper",
-          "data-hovered-cslp": props.fieldMetadata.cslpValue,
-          children: [
-            /* @__PURE__ */ jsxs(
-              "button",
+      children: [
+        currentField.isVariant ? /* @__PURE__ */ jsx(VariantIndicator, {}) : null,
+        /* @__PURE__ */ jsx(ToolbarTooltip, { data: { contentTypeName: currentField.parentContentTypeName, referenceFieldName: currentField.referenceFieldName }, disabled: !currentField.isReference || isDropdownOpen, children: /* @__PURE__ */ jsxs(
+          "div",
+          {
+            className: classNames(
+              "visual-builder__focused-toolbar__field-label-wrapper",
+              visualBuilderStyles()["visual-builder__focused-toolbar__field-label-wrapper"],
               {
-                className: classNames(
-                  "visual-builder__focused-toolbar__field-label-wrapper__current-field visual-builder__button visual-builder__button--primary visual-builder__button-loader",
-                  visualBuilderStyles()["visual-builder__focused-toolbar__field-label-wrapper__current-field"],
-                  visualBuilderStyles()["visual-builder__button"],
-                  visualBuilderStyles()["visual-builder__button--primary"],
-                  visualBuilderStyles()["visual-builder__button-loader"],
-                  error && visualBuilderStyles()["visual-builder__button-error"]
-                ),
-                disabled: dataLoading,
-                children: [
-                  currentField.isReference && !dataLoading && !error ? /* @__PURE__ */ jsxs(
-                    "div",
-                    {
-                      className: classNames(
-                        "visual-builder__reference-icon-container",
-                        visualBuilderStyles()["visual-builder__reference-icon-container"]
-                      ),
-                      children: [
-                        /* @__PURE__ */ jsx(
-                          "div",
-                          {
-                            className: classNames(
-                              "visual-builder__field-icon",
-                              visualBuilderStyles()["visual-builder__field-icon"]
-                            ),
-                            dangerouslySetInnerHTML: {
-                              __html: FieldTypeIconsMap.reference
-                            },
-                            "data-testid": "visual-builder__field-icon-caret"
-                          }
+                "visual-builder__focused-toolbar--field-disabled": currentField.disabled
+              },
+              {
+                [visualBuilderStyles()["visual-builder__focused-toolbar--field-disabled"]]: currentField.disabled
+              },
+              {
+                "field-label-dropdown-open": isDropdownOpen,
+                [visualBuilderStyles()["field-label-dropdown-open"]]: isDropdownOpen
+              },
+              {
+                "visual-builder__focused-toolbar--variant": currentField.isVariant
+              },
+              {
+                [visualBuilderStyles()["visual-builder__focused-toolbar--variant"]]: currentField.isVariant
+              }
+            ),
+            onClick: () => setIsDropdownOpen((prev) => !prev),
+            "data-testid": "visual-builder__focused-toolbar__field-label-wrapper",
+            "data-hovered-cslp": props.fieldMetadata.cslpValue,
+            children: [
+              /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  className: classNames(
+                    "visual-builder__focused-toolbar__field-label-wrapper__current-field visual-builder__button visual-builder__button--primary visual-builder__button-loader",
+                    visualBuilderStyles()["visual-builder__focused-toolbar__field-label-wrapper__current-field"],
+                    visualBuilderStyles()["visual-builder__button"],
+                    visualBuilderStyles()["visual-builder__button--primary"],
+                    visualBuilderStyles()["visual-builder__button-loader"],
+                    error && visualBuilderStyles()["visual-builder__button-error"]
+                  ),
+                  disabled: dataLoading,
+                  children: [
+                    currentField.isReference && !dataLoading && !error ? /* @__PURE__ */ jsxs(
+                      "div",
+                      {
+                        className: classNames(
+                          "visual-builder__reference-icon-container",
+                          visualBuilderStyles()["visual-builder__reference-icon-container"]
                         ),
-                        /* @__PURE__ */ jsx(CaretRightIcon, {})
-                      ]
-                    }
-                  ) : null,
-                  currentField.contentTypeName && !dataLoading && !error ? /* @__PURE__ */ jsxs(Fragment, { children: [
-                    /* @__PURE__ */ jsx(ContentTypeIcon, {}),
-                    /* @__PURE__ */ jsx(
+                        children: [
+                          /* @__PURE__ */ jsx(
+                            "div",
+                            {
+                              className: classNames(
+                                "visual-builder__field-icon",
+                                visualBuilderStyles()["visual-builder__field-icon"]
+                              ),
+                              dangerouslySetInnerHTML: {
+                                __html: FieldTypeIconsMap.reference
+                              },
+                              "data-testid": "visual-builder__field-icon-caret"
+                            }
+                          ),
+                          /* @__PURE__ */ jsx(CaretRightIcon, {})
+                        ]
+                      }
+                    ) : null,
+                    currentField.contentTypeName && !dataLoading && !error ? /* @__PURE__ */ jsxs(Fragment, { children: [
+                      /* @__PURE__ */ jsx(ContentTypeIcon, {}),
+                      /* @__PURE__ */ jsx(
+                        "div",
+                        {
+                          className: classNames(
+                            "visual-builder__focused-toolbar__text",
+                            visualBuilderStyles()["visual-builder__focused-toolbar__text"]
+                          ),
+                          "data-testid": "visual-builder__focused-toolbar__ct-name",
+                          children: currentField.contentTypeName + " : "
+                        }
+                      )
+                    ] }) : null,
+                    currentField.prefixIcon ? /* @__PURE__ */ jsx(
+                      "div",
+                      {
+                        className: classNames(
+                          "visual-builder__field-icon",
+                          visualBuilderStyles()["visual-builder__field-icon"]
+                        ),
+                        dangerouslySetInnerHTML: {
+                          __html: currentField.prefixIcon
+                        },
+                        "data-testid": "visual-builder__field-icon"
+                      }
+                    ) : null,
+                    currentField.text ? /* @__PURE__ */ jsx(
                       "div",
                       {
                         className: classNames(
                           "visual-builder__focused-toolbar__text",
                           visualBuilderStyles()["visual-builder__focused-toolbar__text"]
                         ),
-                        "data-testid": "visual-builder__focused-toolbar__ct-name",
-                        children: currentField.contentTypeName + " : "
+                        "data-testid": "visual-builder__focused-toolbar__text",
+                        children: currentField.text
                       }
-                    )
-                  ] }) : null,
-                  currentField.prefixIcon ? /* @__PURE__ */ jsx(
-                    "div",
-                    {
-                      className: classNames(
-                        "visual-builder__field-icon",
-                        visualBuilderStyles()["visual-builder__field-icon"]
-                      ),
-                      dangerouslySetInnerHTML: {
-                        __html: currentField.prefixIcon
-                      },
-                      "data-testid": "visual-builder__field-icon"
-                    }
-                  ) : null,
-                  currentField.text ? /* @__PURE__ */ jsx(
-                    "div",
-                    {
-                      className: classNames(
-                        "visual-builder__focused-toolbar__text",
-                        visualBuilderStyles()["visual-builder__focused-toolbar__text"]
-                      ),
-                      "data-testid": "visual-builder__focused-toolbar__text",
-                      children: currentField.text
-                    }
-                  ) : null,
-                  getCurrentFieldIcon(),
-                  error ? /* @__PURE__ */ jsx(CslpError, {}) : null
-                ]
-              }
-            ),
-            props.parentPaths.map((path, index) => /* @__PURE__ */ jsx(
-              "button",
-              {
-                className: classNames(
-                  "visual-builder__focused-toolbar__field-label-wrapper__parent-field visual-builder__button visual-builder__button--secondary visual-builder__focused-toolbar__text",
-                  visualBuilderStyles()["visual-builder__focused-toolbar__field-label-wrapper__parent-field"],
-                  visualBuilderStyles()["visual-builder__button"],
-                  visualBuilderStyles()["visual-builder__button--secondary"],
-                  visualBuilderStyles()["visual-builder__focused-toolbar__text"]
-                ),
-                "data-target-cslp": path,
-                style: { top: calculateTopOffset(index) },
-                onClick: () => onParentPathClick(path),
-                children: displayNames[path]
-              },
-              path
-            ))
-          ]
-        }
-      ) })
+                    ) : null,
+                    getCurrentFieldIcon(),
+                    error ? /* @__PURE__ */ jsx(CslpError, {}) : null
+                  ]
+                }
+              ),
+              props.parentPaths.map((path, index) => /* @__PURE__ */ jsx(
+                "button",
+                {
+                  className: classNames(
+                    "visual-builder__focused-toolbar__field-label-wrapper__parent-field visual-builder__button visual-builder__button--secondary visual-builder__focused-toolbar__text",
+                    visualBuilderStyles()["visual-builder__focused-toolbar__field-label-wrapper__parent-field"],
+                    visualBuilderStyles()["visual-builder__button"],
+                    visualBuilderStyles()["visual-builder__button--secondary"],
+                    visualBuilderStyles()["visual-builder__focused-toolbar__text"]
+                  ),
+                  "data-target-cslp": path,
+                  style: { top: calculateTopOffset(index) },
+                  onClick: () => onParentPathClick(path),
+                  children: displayNames[path]
+                },
+                path
+              ))
+            ]
+          }
+        ) })
+      ]
     }
   );
 }

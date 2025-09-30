@@ -24,7 +24,7 @@ __export(variant_exports, {
 });
 module.exports = __toCommonJS(variant_exports);
 var import_jsx_runtime = require("preact/jsx-runtime");
-function VariantIcon() {
+function VariantIcon(props) {
   return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
     "svg",
     {
@@ -33,6 +33,10 @@ function VariantIcon() {
       viewBox: "0 0 12 12",
       fill: "none",
       xmlns: "http://www.w3.org/2000/svg",
+      style: {
+        width: props.size,
+        height: props.size
+      },
       children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "path",
         {

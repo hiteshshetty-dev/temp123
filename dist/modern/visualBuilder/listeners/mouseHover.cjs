@@ -89,7 +89,8 @@ async function addOutline(params) {
     fieldDisabled
   } = params;
   if (!editableElement) return;
-  (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled);
+  const isVariant = !!fieldMetadata.variant;
+  (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled, isVariant);
   const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
     content_type_uid,
     fieldPath
@@ -107,7 +108,7 @@ async function addOutline(params) {
     entryAcl,
     entryWorkflowStageDetails
   );
-  (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled || isDisabled);
+  (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled || isDisabled, isVariant);
 }
 var debouncedAddOutline = (0, import_lodash_es.debounce)(addOutline, 50, { trailing: true });
 var showOutline = (params) => debouncedAddOutline(params);
@@ -275,14 +276,16 @@ var throttledMouseHover = (0, import_lodash_es.throttle)(async (params) => {
     });
     const isFocussed = import__.VisualBuilder.VisualBuilderGlobalState.value.isFocussed;
     if (!isFocussed) {
-      showHoverToolbar({
-        event: params.event,
-        overlayWrapper: params.overlayWrapper,
-        visualBuilderContainer: params.visualBuilderContainer,
-        previousSelectedEditableDOM: import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
-        focusedToolbar: params.focusedToolbar,
-        resizeObserver: params.resizeObserver
-      });
+      showHoverToolbar(
+        {
+          event: params.event,
+          overlayWrapper: params.overlayWrapper,
+          visualBuilderContainer: params.visualBuilderContainer,
+          previousSelectedEditableDOM: import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
+          focusedToolbar: params.focusedToolbar,
+          resizeObserver: params.resizeObserver
+        }
+      );
     }
   }
   if (import__.VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM === editableElement) {

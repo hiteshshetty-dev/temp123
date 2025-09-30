@@ -4,6 +4,6 @@
  * @param isAnchorElement - Boolean to check for anchor elements.
  * @returns void
  */
-declare function addHoverOutline(targetElement: Element, disabled?: boolean): void;
+declare function addHoverOutline(targetElement: Element, disabled?: boolean, isVariant?: boolean): void;
 
 export { addHoverOutline };

@@ -39,7 +39,7 @@ var DisableReason = {
   ReadOnly: "You have only read access to this field",
   LocalizedEntry: "Editing this field is restricted in localized entries",
   UnlinkedVariant: "This field is not editable as it is not linked to the selected variant",
-  AudienceMode: "Open an Experience from Audience widget to start editing",
+  AudienceMode: "To edit an experience, open the Audience widget and click the Edit icon.",
   DisabledVariant: "This field is not editable as it doesn't match the selected variant",
   UnlocalizedVariant: "This field is not editable as it is not localized",
   None: "",

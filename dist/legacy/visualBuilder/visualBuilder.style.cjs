@@ -315,6 +315,21 @@ function visualBuilderStyles() {
     "visual-builder__cursor-icon--loader": import_goober.css`
             animation: visual-builder__spinner 1s linear infinite;
         `,
+    "visual-builder__variant-indicator": import_goober.css`
+            height: calc(100% - 1px);
+            aspect-ratio: 1;
+            background: white;
+            border-radius: 2px;
+            border-width: 2px;
+            border-style: solid;
+            align-content: center;
+            text-align: center;
+            border-color: #BD59FA;
+
+            svg {
+                color: #BD59FA;
+            }
+        `,
     "visual-builder__focused-toolbar": import_goober.css`
             position: absolute;
             transform: translateY(-100%);
@@ -371,10 +386,11 @@ function visualBuilderStyles() {
             display: flex;
             flex-direction: column-reverse;
             position: relative;
+            margin-right: 0.5rem;
         `,
     "visual-builder__focused-toolbar__field-label-container": import_goober.css`
             display: flex;
-            column-gap: 0.5rem;
+            height: 1.75rem;
             align-items: center;
         `,
     "visual-builder__button": import_goober.css`
@@ -538,6 +554,12 @@ function visualBuilderStyles() {
                 background: #909090;
             }
         `,
+    "visual-builder__focused-toolbar--variant": import_goober.css`
+            .visual-builder__focused-toolbar__field-label-wrapper__current-field {
+                background: #BD59FA;
+            }
+
+        `,
     "visual-builder__cursor-disabled": import_goober.css`
             .visual-builder__cursor-icon {
                 background: #909090;
@@ -634,6 +656,9 @@ function visualBuilderStyles() {
         `,
     "visual-builder__hover-outline--disabled": import_goober.css`
             outline: 2px dashed #909090;
+        `,
+    "visual-builder__hover-outline--variant": import_goober.css`
+            outline: 2px dashed #BD59FA;
         `,
     "visual-builder__default-cursor--disabled": import_goober.css`
             cursor: none;

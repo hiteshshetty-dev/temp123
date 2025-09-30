@@ -95,4 +95,40 @@ fileignoreconfig:
   checksum: 4f07d0bb03c0de4af43fcd54a50b703e3ca47203cb1c665ce980a35f4e0c2c19
 - filename: dist/modern/visualBuilder/listeners/mouseClick.cjs.map
   checksum: c64ecdccc13b47ee0a38027151b84dd46395637ca291371b684f336aa0a5ae5a
+- filename: dist/legacy/visualBuilder/components/VariantIndicator.cjs
+  checksum: 58fde48f9d8976ceb9af87ca2cfc456f30e9b7a509801651644838fdbbfdf260
+- filename: dist/modern/visualBuilder/components/VariantIndicator.cjs
+  checksum: 954fc3ca25e096efddf12a33bb6e53efa21a3792d789b2c6c777f29b3802736c
+- filename: dist/legacy/visualBuilder/utils/enableInlineEditing.cjs.map
+  checksum: d9c8f09010e83c5b82ab331a8781837d7b4ba796ba4ebb9897c7a2e17ff173ef
+- filename: dist/modern/visualBuilder/utils/handleFieldMouseDown.cjs.map
+  checksum: fe186ce7dcfbb2fdbcc837931677bdf566177ec3fdf4f86f5109f70554962d53
+- filename: dist/modern/visualBuilder/utils/enableInlineEditing.cjs.map
+  checksum: a63da11cda523b6d3cda3ed34f3bbd29cf56b6903ab74968dac40fc4eac0c5f9
+- filename: dist/modern/visualBuilder/utils/handleFieldMouseDown.js.map
+  checksum: 815b3bbe8da5c5b91d15a8456167e931a6881d71494a89c1c378f6b3e8f63e7c
+- filename: dist/modern/visualBuilder/utils/enableInlineEditing.js.map
+  checksum: b9f1d0898440908a55af5feaa78a40e35407c854c93dac1697fcf434a032c70e
+- filename: dist/legacy/visualBuilder/utils/handleFieldMouseDown.cjs.map
+  checksum: b79f507b475974fc59d96f62be3f3bce016fc7a4717c23872b5991d9a0b9e6fe
+- filename: dist/legacy/visualBuilder/utils/handleFieldMouseDown.js.map
+  checksum: 4dfcec2b3d5b7fae4954fa9363bacaea648b87c813b5eaff6c084fe84cb21b95
+- filename: dist/legacy/visualBuilder/utils/enableInlineEditing.js.map
+  checksum: 2a6df95053a3037b561d869e9d06b977ff1c65522bdef70aa73017bf7e9d687e
+- filename: dist/modern/visualBuilder/components/fieldLabelWrapper.cjs.map
+  checksum: 21357c0f99535ce3d154b36d9318c1db084d59a4040521d244403772e9478bd4
+- filename: dist/legacy/visualBuilder/components/fieldLabelWrapper.cjs.map
+  checksum: 49c4ceb8505c8d7c035df72a3190fdbcf76b252f83f98d90d8a13d07642f2371
+- filename: dist/legacy/visualBuilder/components/fieldLabelWrapper.js.map
+  checksum: b130907ca6814910a9831f7da30b2ff7e9e93421220d11ad945edf2067584c74
+- filename: dist/legacy/visualBuilder/visualBuilder.style.cjs.map
+  checksum: 441c9b110ecc6dec4c7bfc9e7edecb30f39151a48b40c148c0328686cbc8977c
+- filename: dist/legacy/visualBuilder/visualBuilder.style.js.map
+  checksum: b7e7a9f6d01c92ec5481a75c755ba981470d03af815f49338a9ef86d4113ddc1
+- filename: dist/modern/visualBuilder/visualBuilder.style.js.map
+  checksum: 1a4d25e8dc596932d40f46256831fee1c324aa8e00dbd2d4a7185f4184465779
+- filename: dist/modern/visualBuilder/components/fieldLabelWrapper.js.map
+  checksum: d6439cf37a906939198bb8c13252b4c19c8476c6c2eebc19b83f6e16397b3274
+- filename: dist/modern/visualBuilder/visualBuilder.style.cjs.map
+  checksum: e67e2261ce89b8f8eb0e54dd7eb5e025e53fdc29df8d04b629cb32345e3e7ab4
 version: "1.0"

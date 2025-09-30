@@ -53,7 +53,8 @@ async function addOutline(params) {
     fieldDisabled
   } = params;
   if (!editableElement) return;
-  addHoverOutline(editableElement, fieldDisabled);
+  const isVariant = !!fieldMetadata.variant;
+  addHoverOutline(editableElement, fieldDisabled, isVariant);
   const fieldSchema = await FieldSchemaMap.getFieldSchema(
     content_type_uid,
     fieldPath
@@ -71,7 +72,7 @@ async function addOutline(params) {
     entryAcl,
     entryWorkflowStageDetails
   );
-  addHoverOutline(editableElement, fieldDisabled || isDisabled);
+  addHoverOutline(editableElement, fieldDisabled || isDisabled, isVariant);
 }
 var debouncedAddOutline = debounce(addOutline, 50, { trailing: true });
 var showOutline = (params) => debouncedAddOutline(params);
@@ -239,14 +240,16 @@ var throttledMouseHover = throttle(async (params) => {
     });
     const isFocussed = VisualBuilder.VisualBuilderGlobalState.value.isFocussed;
     if (!isFocussed) {
-      showHoverToolbar({
-        event: params.event,
-        overlayWrapper: params.overlayWrapper,
-        visualBuilderContainer: params.visualBuilderContainer,
-        previousSelectedEditableDOM: VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
-        focusedToolbar: params.focusedToolbar,
-        resizeObserver: params.resizeObserver
-      });
+      showHoverToolbar(
+        {
+          event: params.event,
+          overlayWrapper: params.overlayWrapper,
+          visualBuilderContainer: params.visualBuilderContainer,
+          previousSelectedEditableDOM: VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM,
+          focusedToolbar: params.focusedToolbar,
+          resizeObserver: params.resizeObserver
+        }
+      );
     }
   }
   if (VisualBuilder.VisualBuilderGlobalState.value.previousHoveredTargetDOM === editableElement) {

@@ -50,6 +50,7 @@ var import_postMessage = require("../utils/types/postMessage.types.cjs");
 var import_icons2 = require("./icons/index.cjs");
 var import_Tooltip = require("./Tooltip.cjs");
 var import_fetchEntryPermissionsAndStageDetails = require("../utils/fetchEntryPermissionsAndStageDetails.cjs");
+var import_VariantIndicator = require("./VariantIndicator.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 async function getFieldDisplayNames(fieldMetadata) {
   var _a;
@@ -212,135 +213,144 @@ function FieldLabelWrapperComponent(props) {
       return currentField.icon;
     }
   }
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
     "div",
     {
       className: (0, import_classnames.default)(
         "visual-builder__focused-toolbar__field-label-container",
         (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-container"]
       ),
-      children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_Tooltip.ToolbarTooltip, { data: { contentTypeName: currentField.parentContentTypeName, referenceFieldName: currentField.referenceFieldName }, disabled: !currentField.isReference || isDropdownOpen, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-        "div",
-        {
-          className: (0, import_classnames.default)(
-            "visual-builder__focused-toolbar__field-label-wrapper",
-            (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-wrapper"],
-            {
-              "visual-builder__focused-toolbar--field-disabled": currentField.disabled
-            },
-            {
-              [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar--field-disabled"]]: currentField.disabled
-            },
-            {
-              "field-label-dropdown-open": isDropdownOpen,
-              [(0, import_visualBuilder.visualBuilderStyles)()["field-label-dropdown-open"]]: isDropdownOpen
-            }
-          ),
-          onClick: () => setIsDropdownOpen((prev) => !prev),
-          "data-testid": "visual-builder__focused-toolbar__field-label-wrapper",
-          "data-hovered-cslp": props.fieldMetadata.cslpValue,
-          children: [
-            /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-              "button",
+      children: [
+        currentField.isVariant ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_VariantIndicator.VariantIndicator, {}) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_Tooltip.ToolbarTooltip, { data: { contentTypeName: currentField.parentContentTypeName, referenceFieldName: currentField.referenceFieldName }, disabled: !currentField.isReference || isDropdownOpen, children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+          "div",
+          {
+            className: (0, import_classnames.default)(
+              "visual-builder__focused-toolbar__field-label-wrapper",
+              (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-wrapper"],
               {
-                className: (0, import_classnames.default)(
-                  "visual-builder__focused-toolbar__field-label-wrapper__current-field visual-builder__button visual-builder__button--primary visual-builder__button-loader",
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-wrapper__current-field"],
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--primary"],
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button-loader"],
-                  error && (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button-error"]
-                ),
-                disabled: dataLoading,
-                children: [
-                  currentField.isReference && !dataLoading && !error ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
-                    "div",
-                    {
-                      className: (0, import_classnames.default)(
-                        "visual-builder__reference-icon-container",
-                        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__reference-icon-container"]
-                      ),
-                      children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                          "div",
-                          {
-                            className: (0, import_classnames.default)(
-                              "visual-builder__field-icon",
-                              (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__field-icon"]
-                            ),
-                            dangerouslySetInnerHTML: {
-                              __html: import_generateCustomCursor.FieldTypeIconsMap.reference
-                            },
-                            "data-testid": "visual-builder__field-icon-caret"
-                          }
+                "visual-builder__focused-toolbar--field-disabled": currentField.disabled
+              },
+              {
+                [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar--field-disabled"]]: currentField.disabled
+              },
+              {
+                "field-label-dropdown-open": isDropdownOpen,
+                [(0, import_visualBuilder.visualBuilderStyles)()["field-label-dropdown-open"]]: isDropdownOpen
+              },
+              {
+                "visual-builder__focused-toolbar--variant": currentField.isVariant
+              },
+              {
+                [(0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar--variant"]]: currentField.isVariant
+              }
+            ),
+            onClick: () => setIsDropdownOpen((prev) => !prev),
+            "data-testid": "visual-builder__focused-toolbar__field-label-wrapper",
+            "data-hovered-cslp": props.fieldMetadata.cslpValue,
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+                "button",
+                {
+                  className: (0, import_classnames.default)(
+                    "visual-builder__focused-toolbar__field-label-wrapper__current-field visual-builder__button visual-builder__button--primary visual-builder__button-loader",
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-wrapper__current-field"],
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--primary"],
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button-loader"],
+                    error && (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button-error"]
+                  ),
+                  disabled: dataLoading,
+                  children: [
+                    currentField.isReference && !dataLoading && !error ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+                      "div",
+                      {
+                        className: (0, import_classnames.default)(
+                          "visual-builder__reference-icon-container",
+                          (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__reference-icon-container"]
                         ),
-                        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretRightIcon, {})
-                      ]
-                    }
-                  ) : null,
-                  currentField.contentTypeName && !dataLoading && !error ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.ContentTypeIcon, {}),
-                    /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                        children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                            "div",
+                            {
+                              className: (0, import_classnames.default)(
+                                "visual-builder__field-icon",
+                                (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__field-icon"]
+                              ),
+                              dangerouslySetInnerHTML: {
+                                __html: import_generateCustomCursor.FieldTypeIconsMap.reference
+                              },
+                              "data-testid": "visual-builder__field-icon-caret"
+                            }
+                          ),
+                          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretRightIcon, {})
+                        ]
+                      }
+                    ) : null,
+                    currentField.contentTypeName && !dataLoading && !error ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons2.ContentTypeIcon, {}),
+                      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                        "div",
+                        {
+                          className: (0, import_classnames.default)(
+                            "visual-builder__focused-toolbar__text",
+                            (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__text"]
+                          ),
+                          "data-testid": "visual-builder__focused-toolbar__ct-name",
+                          children: currentField.contentTypeName + " : "
+                        }
+                      )
+                    ] }) : null,
+                    currentField.prefixIcon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                      "div",
+                      {
+                        className: (0, import_classnames.default)(
+                          "visual-builder__field-icon",
+                          (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__field-icon"]
+                        ),
+                        dangerouslySetInnerHTML: {
+                          __html: currentField.prefixIcon
+                        },
+                        "data-testid": "visual-builder__field-icon"
+                      }
+                    ) : null,
+                    currentField.text ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
                       "div",
                       {
                         className: (0, import_classnames.default)(
                           "visual-builder__focused-toolbar__text",
                           (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__text"]
                         ),
-                        "data-testid": "visual-builder__focused-toolbar__ct-name",
-                        children: currentField.contentTypeName + " : "
+                        "data-testid": "visual-builder__focused-toolbar__text",
+                        children: currentField.text
                       }
-                    )
-                  ] }) : null,
-                  currentField.prefixIcon ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                    "div",
-                    {
-                      className: (0, import_classnames.default)(
-                        "visual-builder__field-icon",
-                        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__field-icon"]
-                      ),
-                      dangerouslySetInnerHTML: {
-                        __html: currentField.prefixIcon
-                      },
-                      "data-testid": "visual-builder__field-icon"
-                    }
-                  ) : null,
-                  currentField.text ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-                    "div",
-                    {
-                      className: (0, import_classnames.default)(
-                        "visual-builder__focused-toolbar__text",
-                        (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__text"]
-                      ),
-                      "data-testid": "visual-builder__focused-toolbar__text",
-                      children: currentField.text
-                    }
-                  ) : null,
-                  getCurrentFieldIcon(),
-                  error ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_CslpError.CslpError, {}) : null
-                ]
-              }
-            ),
-            props.parentPaths.map((path, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-              "button",
-              {
-                className: (0, import_classnames.default)(
-                  "visual-builder__focused-toolbar__field-label-wrapper__parent-field visual-builder__button visual-builder__button--secondary visual-builder__focused-toolbar__text",
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-wrapper__parent-field"],
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--secondary"],
-                  (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__text"]
-                ),
-                "data-target-cslp": path,
-                style: { top: calculateTopOffset(index) },
-                onClick: () => onParentPathClick(path),
-                children: displayNames[path]
-              },
-              path
-            ))
-          ]
-        }
-      ) })
+                    ) : null,
+                    getCurrentFieldIcon(),
+                    error ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_CslpError.CslpError, {}) : null
+                  ]
+                }
+              ),
+              props.parentPaths.map((path, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                "button",
+                {
+                  className: (0, import_classnames.default)(
+                    "visual-builder__focused-toolbar__field-label-wrapper__parent-field visual-builder__button visual-builder__button--secondary visual-builder__focused-toolbar__text",
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__field-label-wrapper__parent-field"],
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button"],
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__button--secondary"],
+                    (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__focused-toolbar__text"]
+                  ),
+                  "data-target-cslp": path,
+                  style: { top: calculateTopOffset(index) },
+                  onClick: () => onParentPathClick(path),
+                  children: displayNames[path]
+                },
+                path
+              ))
+            ]
+          }
+        ) })
+      ]
     }
   );
 }

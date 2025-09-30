@@ -2,7 +2,7 @@ import "../../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/components/icons/variant.tsx
 import { jsx } from "preact/jsx-runtime";
-function VariantIcon() {
+function VariantIcon(props) {
   return /* @__PURE__ */ jsx(
     "svg",
     {
@@ -11,6 +11,10 @@ function VariantIcon() {
       viewBox: "0 0 12 12",
       fill: "none",
       xmlns: "http://www.w3.org/2000/svg",
+      style: {
+        width: props.size,
+        height: props.size
+      },
       children: /* @__PURE__ */ jsx(
         "path",
         {

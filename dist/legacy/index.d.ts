@@ -5,7 +5,7 @@ import './livePreview/types/onEntryChangeCallback.type.js';
 import './visualBuilder/types/collab.types.js';
 
 type IStackSdk = IStackSdk$1;
-declare const ContentstackLivePreview: typeof ContentstackLivePreview$1 | typeof LightLivePreviewHoC;
+declare const ContentstackLivePreview: typeof LightLivePreviewHoC | typeof ContentstackLivePreview$1;
 declare const VB_EmptyBlockParentClass = "visual-builder__empty-block-parent";
 
 export { type IStackSdk, VB_EmptyBlockParentClass, ContentstackLivePreview as default };

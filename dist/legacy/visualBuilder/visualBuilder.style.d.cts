@@ -20,6 +20,7 @@ declare function visualBuilderStyles(): {
     "visual-builder__cursor-icon": string;
     "visual-builder__cursor-pointer": string;
     "visual-builder__cursor-icon--loader": string;
+    "visual-builder__variant-indicator": string;
     "visual-builder__focused-toolbar": string;
     "visual-builder__focused-toolbar__field-label-wrapper__current-field": string;
     "visual-builder__focused-toolbar__field-label-wrapper__parent-field": string;
@@ -41,6 +42,7 @@ declare function visualBuilderStyles(): {
     "visual-builder__focused-toolbar__multiple-field-toolbar": string;
     "visual-builder__rotate--90": string;
     "visual-builder__focused-toolbar--field-disabled": string;
+    "visual-builder__focused-toolbar--variant": string;
     "visual-builder__cursor-disabled": string;
     "visual-builder__tooltip": string;
     "visual-builder__tooltip--bottom": string;
@@ -53,6 +55,7 @@ declare function visualBuilderStyles(): {
     "visual-builder__hover-outline--hidden": string;
     "visual-builder__hover-outline--unclickable": string;
     "visual-builder__hover-outline--disabled": string;
+    "visual-builder__hover-outline--variant": string;
     "visual-builder__default-cursor--disabled": string;
     "visual-builder__draft-field": string;
     "visual-builder__variant-field": string;
