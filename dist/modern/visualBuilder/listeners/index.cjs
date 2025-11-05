@@ -35,6 +35,7 @@ __export(listeners_exports, {
 });
 module.exports = __toCommonJS(listeners_exports);
 var import__ = require("../index.cjs");
+var import_generateToolbar = require("../generators/generateToolbar.cjs");
 var import_mouseClick = __toESM(require("./mouseClick.cjs"), 1);
 var import_mouseHover = __toESM(require("./mouseHover.cjs"), 1);
 var eventHandlers = {
@@ -59,8 +60,14 @@ var eventHandlers = {
     });
   },
   mouseleave: (params) => () => {
+    (0, import_mouseHover.cancelPendingMouseHover)();
+    (0, import_mouseHover.cancelPendingHoverToolbar)();
+    (0, import_mouseHover.cancelPendingAddOutline)();
     (0, import_mouseHover.hideCustomCursor)(params.customCursor);
     (0, import_mouseHover.hideHoverOutline)(params.visualBuilderContainer);
+    if (!import__.VisualBuilder?.VisualBuilderGlobalState?.value?.isFocussed && params?.focusedToolbar) {
+      (0, import_generateToolbar.removeFieldToolbar)(params.focusedToolbar);
+    }
   },
   mouseenter: (params) => () => {
     (0, import_mouseHover.showCustomCursor)(params.customCursor);

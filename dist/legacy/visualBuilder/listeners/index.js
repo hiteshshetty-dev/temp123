@@ -2,8 +2,12 @@ import "../../chunk-5WRI5ZAA.js";
 
 // src/visualBuilder/listeners/index.ts
 import { VisualBuilder } from "../index.js";
+import { removeFieldToolbar } from "../generators/generateToolbar.js";
 import handleBuilderInteraction from "./mouseClick.js";
 import handleMouseHover, {
+  cancelPendingAddOutline,
+  cancelPendingHoverToolbar,
+  cancelPendingMouseHover,
   hideCustomCursor,
   hideHoverOutline,
   showCustomCursor
@@ -30,8 +34,15 @@ var eventHandlers = {
     });
   },
   mouseleave: (params) => () => {
+    var _a, _b, _c;
+    cancelPendingMouseHover();
+    cancelPendingHoverToolbar();
+    cancelPendingAddOutline();
     hideCustomCursor(params.customCursor);
     hideHoverOutline(params.visualBuilderContainer);
+    if (!((_c = (_b = (_a = VisualBuilder) == null ? void 0 : _a.VisualBuilderGlobalState) == null ? void 0 : _b.value) == null ? void 0 : _c.isFocussed) && (params == null ? void 0 : params.focusedToolbar)) {
+      removeFieldToolbar(params.focusedToolbar);
+    }
   },
   mouseenter: (params) => () => {
     showCustomCursor(params.customCursor);

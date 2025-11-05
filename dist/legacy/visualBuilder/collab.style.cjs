@@ -77,7 +77,7 @@ function collabStyles() {
             background-color: #edf1f7;
             border: 1.5px solid #ffffff;
             border-radius: 50%;
-            font-family: Inter;
+            font-family: Inter, sans-serif;
             font-weight: 600;
             justify-content: center;
             position: relative;
@@ -407,7 +407,7 @@ function collabStyles() {
             cursor: default;
             position: relative;
             padding: 0 !important;
-            font-family: Inter;
+            font-family: Inter, sans-serif;
             color: #475161;
             width: 20.75rem;
         `,

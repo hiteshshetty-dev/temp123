@@ -40,7 +40,7 @@ var tooltipBaseStyle = `
         width: max-content;
         max-width: 200px;
         color: #fff;
-        font-family: Inter;
+        font-family: Inter, sans-serif;
         font-size: 0.75rem;
         font-style: normal;
         font-weight: 400;
@@ -262,7 +262,7 @@ function visualBuilderStyles() {
                 color: #fff;
                 /* Body/P1 Bold */
                 font-size: 1rem;
-                font-family: Inter;
+                font-family: Inter, sans-serif;
                 font-weight: 600;
                 line-height: 150%;
                 letter-spacing: 0.01rem;
@@ -272,7 +272,7 @@ function visualBuilderStyles() {
             & > svg {
                 color: #fff;
                 font-size: 1rem;
-                font-family: Inter;
+                font-family: Inter, sans-serif;
                 font-weight: 600;
                 line-height: 150%;
                 letter-spacing: 0.01rem;
@@ -618,7 +618,7 @@ function visualBuilderStyles() {
         `,
     "visual-builder__empty-block-title": import_goober.css`
             font-size: 0.95rem;
-            font-family: Inter;
+            font-family: Inter, sans-serif;
             font-weight: 400;
             line-height: 100%;
             color: #647696;
@@ -634,7 +634,7 @@ function visualBuilderStyles() {
             border-width: 1px;
             padding: 0 16px;
             font-size: 0.9rem;
-            font-family: Inter;
+            font-family: Inter, sans-serif;
             font-weight: 600;
             color: #6c5ce7;
             letter-spacing: 0.01rem;

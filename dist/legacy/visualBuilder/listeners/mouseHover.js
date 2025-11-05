@@ -75,6 +75,7 @@ async function addOutline(params) {
   addHoverOutline(editableElement, fieldDisabled || isDisabled, isVariant);
 }
 var debouncedAddOutline = debounce(addOutline, 50, { trailing: true });
+var cancelPendingAddOutline = () => debouncedAddOutline.cancel();
 var showOutline = (params) => debouncedAddOutline(params);
 function hideDefaultCursor() {
   if ((document == null ? void 0 : document.body) && !document.body.classList.contains(
@@ -126,6 +127,7 @@ var debouncedRenderHoverToolbar = debounce(async (params) => {
   });
 }, 50, { trailing: true });
 var showHoverToolbar = async (params) => await debouncedRenderHoverToolbar(params);
+var cancelPendingHoverToolbar = () => debouncedRenderHoverToolbar.cancel();
 function isOverlay(target) {
   return target.classList.contains("visual-builder__overlay");
 }
@@ -154,7 +156,9 @@ var throttledMouseHover = throttle(async (params) => {
       return;
     }
     if (eventTarget && (isFieldPathDropdown(eventTarget) || isFieldPathParent(eventTarget))) {
-      params.customCursor && hideCustomCursor(params.customCursor);
+      if (params.customCursor) {
+        hideCustomCursor(params.customCursor);
+      }
       showOutline();
       showHoverToolbar({
         event: params.event,
@@ -290,8 +294,12 @@ async function generateCursor({
   });
 }
 var handleMouseHover = async (params) => await throttledMouseHover(params);
+var cancelPendingMouseHover = () => throttledMouseHover.cancel();
 var mouseHover_default = handleMouseHover;
 export {
+  cancelPendingAddOutline,
+  cancelPendingHoverToolbar,
+  cancelPendingMouseHover,
   mouseHover_default as default,
   hideCustomCursor,
   hideHoverOutline,

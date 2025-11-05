@@ -70,7 +70,9 @@ var MentionSuggestionsList = ({
             collabStyles()["collab-thread-body--input--textarea--suggestionsList--item"],
             index === selectedIndex ? collabStyles()["collab-thread-body--input--textarea--suggestionsList--item-selected"] : ""
           ),
-          ref: (el) => itemRefs.current[index] = el,
+          ref: (el) => {
+            itemRefs.current[index] = el;
+          },
           onKeyDown: (e) => e.key === "Enter" ? insertMention(user) : handleKeyDown(e),
           tabIndex: -1,
           "aria-selected": index === selectedIndex,

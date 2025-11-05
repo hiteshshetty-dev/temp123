@@ -30,6 +30,9 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/visualBuilder/listeners/mouseHover.ts
 var mouseHover_exports = {};
 __export(mouseHover_exports, {
+  cancelPendingAddOutline: () => cancelPendingAddOutline,
+  cancelPendingHoverToolbar: () => cancelPendingHoverToolbar,
+  cancelPendingMouseHover: () => cancelPendingMouseHover,
   default: () => mouseHover_default,
   hideCustomCursor: () => hideCustomCursor,
   hideHoverOutline: () => hideHoverOutline,
@@ -111,6 +114,7 @@ async function addOutline(params) {
   (0, import_generateHoverOutline.addHoverOutline)(editableElement, fieldDisabled || isDisabled, isVariant);
 }
 var debouncedAddOutline = (0, import_lodash_es.debounce)(addOutline, 50, { trailing: true });
+var cancelPendingAddOutline = () => debouncedAddOutline.cancel();
 var showOutline = (params) => debouncedAddOutline(params);
 function hideDefaultCursor() {
   if ((document == null ? void 0 : document.body) && !document.body.classList.contains(
@@ -162,6 +166,7 @@ var debouncedRenderHoverToolbar = (0, import_lodash_es.debounce)(async (params) 
   });
 }, 50, { trailing: true });
 var showHoverToolbar = async (params) => await debouncedRenderHoverToolbar(params);
+var cancelPendingHoverToolbar = () => debouncedRenderHoverToolbar.cancel();
 function isOverlay(target) {
   return target.classList.contains("visual-builder__overlay");
 }
@@ -190,7 +195,9 @@ var throttledMouseHover = (0, import_lodash_es.throttle)(async (params) => {
       return;
     }
     if (eventTarget && (isFieldPathDropdown(eventTarget) || isFieldPathParent(eventTarget))) {
-      params.customCursor && hideCustomCursor(params.customCursor);
+      if (params.customCursor) {
+        hideCustomCursor(params.customCursor);
+      }
       showOutline();
       showHoverToolbar({
         event: params.event,
@@ -326,9 +333,13 @@ async function generateCursor({
   });
 }
 var handleMouseHover = async (params) => await throttledMouseHover(params);
+var cancelPendingMouseHover = () => throttledMouseHover.cancel();
 var mouseHover_default = handleMouseHover;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  cancelPendingAddOutline,
+  cancelPendingHoverToolbar,
+  cancelPendingMouseHover,
   hideCustomCursor,
   hideHoverOutline,
   showCustomCursor,

@@ -8,12 +8,12 @@ interface UseCollabPopupProps {
     thread?: IActiveThread;
 }
 declare const useCollabIndicator: ({ newThread, thread, }: UseCollabPopupProps) => {
-    buttonRef: React.Ref<HTMLButtonElement>;
-    popupRef: React.Ref<HTMLDivElement>;
+    buttonRef: React.RefObject<HTMLButtonElement>;
+    popupRef: React.RefObject<HTMLDivElement>;
     showPopup: boolean;
-    setShowPopup: React.SetStateAction<boolean>;
+    setShowPopup: React.Dispatch<React.SetStateAction<boolean>>;
     activeThread: IActiveThread;
-    setActiveThread: React.SetStateAction<IActiveThread>;
+    setActiveThread: React.Dispatch<React.SetStateAction<IActiveThread>>;
     togglePopup: () => void;
 };
 
