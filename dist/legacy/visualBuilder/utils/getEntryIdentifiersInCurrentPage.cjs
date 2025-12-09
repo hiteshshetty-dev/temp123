@@ -30,9 +30,9 @@ function getEntryIdentifiersInCurrentPage() {
   );
   const uniqueEntriesMap = /* @__PURE__ */ new Map();
   elementsWithCslp.forEach((element) => {
-    const cslpData = (0, import_cslpdata.extractDetailsFromCslp)(
-      element.getAttribute("data-cslp")
-    );
+    const cslpValue = element.getAttribute("data-cslp");
+    if (!cslpValue) return;
+    const cslpData = (0, import_cslpdata.extractDetailsFromCslp)(cslpValue);
     uniqueEntriesMap.set(
       cslpData.entry_uid,
       {

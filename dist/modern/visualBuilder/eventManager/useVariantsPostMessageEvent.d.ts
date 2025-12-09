@@ -1,4 +1,4 @@
-declare function addVariantFieldClass(variant_uid: string, highlightVariantFields: boolean): void;
+declare function addVariantFieldClass(variant_uid: string, highlightVariantFields: boolean, variantOrder: string[]): void;
 declare function removeVariantFieldClass(onlyHighlighted?: boolean): void;
 declare function setAudienceMode(mode: boolean): void;
 declare function setVariant(uid: string | null): void;

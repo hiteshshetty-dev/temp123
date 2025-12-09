@@ -60,11 +60,15 @@ function getPrefix(cslp) {
   return prefix.split(".").slice(0, 3).join(".");
 }
 function getDOMEditStack(ele) {
-  var _a;
+  var _a, _b;
   const cslpSet = [];
   let curr = ele.closest(`[${import_constants.DATA_CSLP_ATTR_SELECTOR}]`);
   while (curr) {
     const cslp = curr.getAttribute(import_constants.DATA_CSLP_ATTR_SELECTOR);
+    if (!cslp) {
+      curr = (_a = curr.parentElement) == null ? void 0 : _a.closest(`[${import_constants.DATA_CSLP_ATTR_SELECTOR}]`);
+      continue;
+    }
     const entryPrefix = getPrefix(cslp);
     const hasSamePrevPrefix = getPrefix(cslpSet.at(0) || "").startsWith(
       entryPrefix
@@ -72,9 +76,9 @@ function getDOMEditStack(ele) {
     if (!hasSamePrevPrefix) {
       cslpSet.unshift(cslp);
     }
-    curr = (_a = curr.parentElement) == null ? void 0 : _a.closest(`[${import_constants.DATA_CSLP_ATTR_SELECTOR}]`);
+    curr = (_b = curr.parentElement) == null ? void 0 : _b.closest(`[${import_constants.DATA_CSLP_ATTR_SELECTOR}]`);
   }
-  return cslpSet.map((cslp) => (0, import_cslpdata.extractDetailsFromCslp)(cslp));
+  return cslpSet.filter((cslp) => cslp).map((cslp) => (0, import_cslpdata.extractDetailsFromCslp)(cslp));
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

@@ -32,6 +32,11 @@ declare class FieldSchemaMap {
      */
     static setFieldSchema(contentTypeUid: string, fieldSchemaMap: ISchemaIndividualFieldMap): void;
     /**
+     * Clears the field schemas for a specific content type.
+     * @param contentTypeUid The unique identifier of the content type.
+     */
+    static clearContentTypeSchema(contentTypeUid: string): void;
+    /**
      * Clears the field schema cache.
      */
     static clear(): void;

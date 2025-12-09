@@ -62,11 +62,12 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
     ".visual-builder__focused-toolbar__multiple-field-toolbar"
   ) && !isHover)
     return;
-  const { acl: entryPermissions, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const { acl: entryPermissions, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
     entryUid: eventDetails.fieldMetadata.entry_uid,
     contentTypeUid: eventDetails.fieldMetadata.content_type_uid,
     locale: eventDetails.fieldMetadata.locale,
-    variantUid: eventDetails.fieldMetadata.variant
+    variantUid: eventDetails.fieldMetadata.variant,
+    fieldPathWithIndex: eventDetails.fieldMetadata.fieldPathWithIndex
   });
   const wrapper = document.createDocumentFragment();
   (0, import_preact.render)(
@@ -77,7 +78,8 @@ async function appendFieldToolbar(eventDetails, focusedToolbarElement, hideOverl
         hideOverlay,
         isVariant,
         entryPermissions,
-        entryWorkflowStageDetails
+        entryWorkflowStageDetails,
+        resolvedVariantPermissions
       }
     ),
     wrapper

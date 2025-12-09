@@ -6,7 +6,7 @@ import { extractDetailsFromCslp } from "../../cslp/index.js";
 import { getAddInstanceButtons } from "../generators/generateAddInstanceButtons.js";
 import {
   addFocusOverlay,
-  hideFocusOverlay
+  hideOverlay
 } from "../generators/generateOverlay.js";
 import { hideHoverOutline } from "../listeners/mouseHover.js";
 import {
@@ -63,7 +63,7 @@ async function updateFocussedState({
     `[data-cslp-unique-id="${previousSelectedElementCslpUniqueId}"]`
   ) || document.querySelector(`[data-cslp="${previousSelectedElementCslp}"]`);
   if (!newPreviousSelectedElement && resizeObserver) {
-    hideFocusOverlay({
+    hideOverlay({
       visualBuilderOverlayWrapper: overlayWrapper,
       focusedToolbar,
       visualBuilderContainer,
@@ -77,21 +77,26 @@ async function updateFocussedState({
     VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = previousSelectedEditableDOM;
   }
   const cslp = (editableElement == null ? void 0 : editableElement.getAttribute("data-cslp")) || "";
+  if (!cslp) {
+    return;
+  }
   const fieldMetadata = extractDetailsFromCslp(cslp);
   hideHoverOutline(visualBuilderContainer);
   const fieldSchema = await FieldSchemaMap.getFieldSchema(
     fieldMetadata.content_type_uid,
     fieldMetadata.fieldPath
   );
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await fetchEntryPermissionsAndStageDetails({
     entryUid: fieldMetadata.entry_uid,
     contentTypeUid: fieldMetadata.content_type_uid,
     locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
+    variantUid: fieldMetadata.variant,
+    fieldPathWithIndex: fieldMetadata.fieldPathWithIndex
   });
   const { isDisabled } = isFieldDisabled(
     fieldSchema,
     { editableElement, fieldMetadata },
+    resolvedVariantPermissions,
     entryAcl,
     entryWorkflowStageDetails
   );
@@ -155,7 +160,7 @@ function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visu
     `[data-cslp-unique-id="${selectedElementCslpUniqueId}"]`
   ) || document.querySelector(`[data-cslp="${selectedElementCslp}"]`);
   if (!newSelectedElement && resizeObserver) {
-    hideFocusOverlay({
+    hideOverlay({
       visualBuilderOverlayWrapper: focusOverlayWrapper,
       focusedToolbar,
       visualBuilderContainer,

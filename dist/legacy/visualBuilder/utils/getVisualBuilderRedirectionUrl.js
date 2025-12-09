@@ -16,14 +16,16 @@ function getVisualBuilderRedirectionUrl() {
   }
   searchParams.set("target-url", window.location.href);
   const elementWithDataCslp = document.querySelector(`[data-cslp]`);
+  let localeToUse = locale;
   if (elementWithDataCslp) {
-    const cslpData = elementWithDataCslp.getAttribute(
-      "data-cslp"
-    );
-    const { locale: locale2 } = extractDetailsFromCslp(cslpData);
-    searchParams.set("locale", locale2);
-  } else if (locale) {
-    searchParams.set("locale", locale);
+    const cslpData = elementWithDataCslp.getAttribute("data-cslp");
+    if (cslpData) {
+      const { locale: cslpLocale } = extractDetailsFromCslp(cslpData);
+      localeToUse = cslpLocale;
+    }
+  }
+  if (localeToUse) {
+    searchParams.set("locale", localeToUse);
   }
   const completeURL = new URL(
     `/#!/stack/${apiKey}/visual-builder?${searchParams.toString()}`,

@@ -30,6 +30,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/visualBuilder/utils/isFieldDisabled.ts
 var isFieldDisabled_exports = {};
 __export(isFieldDisabled_exports, {
+  DisableReason: () => DisableReason,
   isFieldDisabled: () => isFieldDisabled
 });
 module.exports = __toCommonJS(isFieldDisabled_exports);
@@ -38,7 +39,11 @@ var import__ = require("../index.cjs");
 var DisableReason = {
   ReadOnly: "You have only read access to this field",
   LocalizedEntry: "Editing this field is restricted in localized entries",
-  UnlinkedVariant: "This field is not editable as it is not linked to the selected variant",
+  ResolvedVariantPermissions: "This field does not exist in the selected variant",
+  UnlinkedVariant: "This field is not editable as it is not linked to the selected variant.",
+  CanLinkVariant: "Click here to link a variant",
+  UnderlinedAndClickableWord: "here",
+  CannotLinkVariant: "Contact your stack admin or owner to link it.",
   AudienceMode: "To edit an experience, open the Audience widget and click the Edit icon.",
   DisabledVariant: "This field is not editable as it doesn't match the selected variant",
   UnlocalizedVariant: "This field is not editable as it is not localized",
@@ -55,8 +60,9 @@ var getDisableReason = (flags, params) => {
     return DisableReason.LocalizedEntry;
   if (flags.updateRestrictDueToUnlocalizedVariant)
     return DisableReason.UnlocalizedVariant;
-  if (flags.updateRestrictDueToUnlinkVariant)
-    return DisableReason.UnlinkedVariant;
+  if (flags.updateRestrictDueToUnlinkVariant) {
+    return flags.canLinkVariant ? `${DisableReason.UnlinkedVariant} ${DisableReason.CanLinkVariant} ` : `${DisableReason.UnlinkedVariant} ${DisableReason.CannotLinkVariant}`;
+  }
   if (flags.updateRestrictDueToAudienceMode)
     return DisableReason.AudienceMode;
   if (flags.updateRestrictDueToDisabledVariant)
@@ -74,9 +80,12 @@ var getDisableReason = (flags, params) => {
       stageName: params?.stageName ? params.stageName : "Unknown"
     });
   }
+  if (flags.updateRestrictDueToResolvedVariantPermissions) {
+    return DisableReason.ResolvedVariantPermissions;
+  }
   return DisableReason.None;
 };
-var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions, entryWorkflowStageDetails) => {
+var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, resolvedVariantPermissions, entryPermissions, entryWorkflowStageDetails) => {
   const { editableElement, fieldMetadata } = eventFieldDetails;
   const masterLocale = import_configManager.default.get().stackDetails.masterLocale || "en-us";
   const { locale: cmsLocale, variant } = import__.VisualBuilder.VisualBuilderGlobalState.value;
@@ -87,12 +96,16 @@ var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions, entr
     updateRestrictDueToUnlinkVariant: Boolean(
       fieldSchemaMap?.field_metadata?.isUnlinkedVariant
     ),
+    canLinkVariant: Boolean(fieldSchemaMap?.field_metadata?.canLinkVariant),
     updateRestrictDueToUnlocalizedVariant: Boolean(
       variant && fieldMetadata.locale !== cmsLocale
     ),
     updateRestrictDueToNonLocalizableFields: Boolean(
       fieldSchemaMap?.non_localizable && masterLocale !== fieldMetadata.locale
     ),
+    updateRestrictDueToResolvedVariantPermissions: resolvedVariantPermissions ? Boolean(
+      !resolvedVariantPermissions.update
+    ) : false,
     updateRestrictDueToAudienceMode: false,
     updateRestrictDueToDisabledVariant: false
   };
@@ -101,6 +114,9 @@ var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions, entr
   }
   if (entryWorkflowStageDetails && !entryWorkflowStageDetails.permissions.entry.update) {
     flags.updateRestrictDueToWorkflowStagePermission = true;
+  }
+  if (import__.VisualBuilder.VisualBuilderGlobalState.value.audienceMode && editableElement.classList.contains("visual-builder__lower-order-variant-field")) {
+    flags.updateRestrictDueToDisabledVariant = resolvedVariantPermissions ? !!resolvedVariantPermissions.error : false;
   }
   if (import__.VisualBuilder.VisualBuilderGlobalState.value.audienceMode && !editableElement.classList.contains("visual-builder__variant-field") && !editableElement.classList.contains("visual-builder__base-field")) {
     if (editableElement.classList.contains(
@@ -119,6 +135,7 @@ var isFieldDisabled = (fieldSchemaMap, eventFieldDetails, entryPermissions, entr
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  DisableReason,
   isFieldDisabled
 });
 //# sourceMappingURL=isFieldDisabled.cjs.map

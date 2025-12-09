@@ -1,6 +1,7 @@
 import { VisualBuilderCslpEventDetails } from '../types/visualBuilder.types.cjs';
 import { EntryPermissions } from '../utils/getEntryPermissions.cjs';
 import { WorkflowStageDetails } from '../utils/getWorkflowStageDetails.cjs';
+import { ResolvedVariantPermissions } from '../utils/getResolvedVariantPermissions.cjs';
 import '../../cslp/types/cslp.types.cjs';
 
 type FieldDetails = Pick<VisualBuilderCslpEventDetails, "editableElement" | "fieldMetadata">;
@@ -10,6 +11,7 @@ interface MultipleFieldToolbarProps {
     isVariant?: boolean;
     entryPermissions?: EntryPermissions | undefined;
     entryWorkflowStageDetails?: WorkflowStageDetails | undefined;
+    resolvedVariantPermissions?: ResolvedVariantPermissions | undefined;
 }
 declare function FieldToolbarComponent(props: MultipleFieldToolbarProps): JSX.Element | null;
 

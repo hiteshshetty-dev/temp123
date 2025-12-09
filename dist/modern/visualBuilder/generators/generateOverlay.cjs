@@ -145,9 +145,11 @@ function sendFieldEvent(options) {
   if (previousSelectedEditableDOM && (previousSelectedEditableDOM.hasAttribute("contenteditable") || pseudoEditableElement)) {
     const actualEditedElement = pseudoEditableElement || previousSelectedEditableDOM;
     let data = "innerText" in actualEditedElement ? actualEditedElement.innerText : actualEditedElement.textContent;
-    const fieldMetadata = (0, import_cslpdata.extractDetailsFromCslp)(
-      previousSelectedEditableDOM.getAttribute("data-cslp")
-    );
+    const cslpData = previousSelectedEditableDOM.getAttribute("data-cslp");
+    if (!cslpData) {
+      return;
+    }
+    const fieldMetadata = (0, import_cslpdata.extractDetailsFromCslp)(cslpData);
     import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
       fieldMetadata.content_type_uid,
       fieldMetadata.fieldPath

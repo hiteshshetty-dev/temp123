@@ -24,17 +24,26 @@ __export(fetchEntryPermissionsAndStageDetails_exports, {
 });
 module.exports = __toCommonJS(fetchEntryPermissionsAndStageDetails_exports);
 var import_getEntryPermissionsCached = require("./getEntryPermissionsCached.cjs");
+var import_getResolvedVariantPermissions = require("./getResolvedVariantPermissions.cjs");
 var import_getWorkflowStageDetails = require("./getWorkflowStageDetails.cjs");
 async function fetchEntryPermissionsAndStageDetails({
   entryUid,
   contentTypeUid,
   locale,
-  variantUid
+  variantUid,
+  fieldPathWithIndex
 }) {
   const entryAclPromise = (0, import_getEntryPermissionsCached.getEntryPermissionsCached)({
     entryUid,
     contentTypeUid,
     locale
+  });
+  const resolvedVariantPermissionsPromise = (0, import_getResolvedVariantPermissions.getResolvedVariantPermissions)({
+    entry_uid: entryUid,
+    content_type_uid: contentTypeUid,
+    locale,
+    variant: variantUid,
+    fieldPathWithIndex
   });
   const entryWorkflowStageDetailsPromise = (0, import_getWorkflowStageDetails.getWorkflowStageDetails)({
     entryUid,
@@ -44,7 +53,8 @@ async function fetchEntryPermissionsAndStageDetails({
   });
   const results = await Promise.allSettled([
     entryAclPromise,
-    entryWorkflowStageDetailsPromise
+    entryWorkflowStageDetailsPromise,
+    resolvedVariantPermissionsPromise
   ]);
   if (results[0].status === "rejected") {
     console.debug(
@@ -58,11 +68,19 @@ async function fetchEntryPermissionsAndStageDetails({
       results[1].reason
     );
   }
+  if (results[2].status === "rejected") {
+    console.debug(
+      "[Visual Builder] Error retrieving resolved variant permissions",
+      results[2].reason
+    );
+  }
   const acl = results[0].status === "fulfilled" ? results[0].value : void 0;
   const workflowStage = results[1].status === "fulfilled" ? results[1].value : void 0;
+  const resolvedVariantPermissions = results[2].status === "fulfilled" ? results[2].value : void 0;
   return {
     acl,
-    workflowStage
+    workflowStage,
+    resolvedVariantPermissions
   };
 }
 // Annotate the CommonJS export names for ESM import in node:

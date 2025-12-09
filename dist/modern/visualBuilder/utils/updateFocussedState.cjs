@@ -87,7 +87,7 @@ async function updateFocussedState({
     `[data-cslp-unique-id="${previousSelectedElementCslpUniqueId}"]`
   ) || document.querySelector(`[data-cslp="${previousSelectedElementCslp}"]`);
   if (!newPreviousSelectedElement && resizeObserver) {
-    (0, import_generateOverlay.hideFocusOverlay)({
+    (0, import_generateOverlay.hideOverlay)({
       visualBuilderOverlayWrapper: overlayWrapper,
       focusedToolbar,
       visualBuilderContainer,
@@ -101,21 +101,26 @@ async function updateFocussedState({
     import__.VisualBuilder.VisualBuilderGlobalState.value.previousSelectedEditableDOM = previousSelectedEditableDOM;
   }
   const cslp = editableElement?.getAttribute("data-cslp") || "";
+  if (!cslp) {
+    return;
+  }
   const fieldMetadata = (0, import_cslp.extractDetailsFromCslp)(cslp);
   (0, import_mouseHover.hideHoverOutline)(visualBuilderContainer);
   const fieldSchema = await import_fieldSchemaMap.FieldSchemaMap.getFieldSchema(
     fieldMetadata.content_type_uid,
     fieldMetadata.fieldPath
   );
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
     entryUid: fieldMetadata.entry_uid,
     contentTypeUid: fieldMetadata.content_type_uid,
     locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
+    variantUid: fieldMetadata.variant,
+    fieldPathWithIndex: fieldMetadata.fieldPathWithIndex
   });
   const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
     fieldSchema,
     { editableElement, fieldMetadata },
+    resolvedVariantPermissions,
     entryAcl,
     entryWorkflowStageDetails
   );
@@ -179,7 +184,7 @@ function updateFocussedStateOnMutation(focusOverlayWrapper, focusedToolbar, visu
     `[data-cslp-unique-id="${selectedElementCslpUniqueId}"]`
   ) || document.querySelector(`[data-cslp="${selectedElementCslp}"]`);
   if (!newSelectedElement && resizeObserver) {
-    (0, import_generateOverlay.hideFocusOverlay)({
+    (0, import_generateOverlay.hideOverlay)({
       visualBuilderOverlayWrapper: focusOverlayWrapper,
       focusedToolbar,
       visualBuilderContainer,

@@ -87,6 +87,14 @@ var _FieldSchemaMap = class _FieldSchemaMap {
     _FieldSchemaMap.fieldSchema[contentTypeUid] = fieldSchemaMap;
   }
   /**
+   * Clears the field schemas for a specific content type.
+   * @param contentTypeUid The unique identifier of the content type.
+   */
+  static clearContentTypeSchema(contentTypeUid) {
+    delete _FieldSchemaMap.fieldSchema[contentTypeUid];
+    delete _FieldSchemaMap.fieldSchemaPromise[contentTypeUid];
+  }
+  /**
    * Clears the field schema cache.
    */
   static clear() {

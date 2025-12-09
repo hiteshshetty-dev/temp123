@@ -9,6 +9,15 @@ declare const TOP_EDGE_BUFFER = 42;
 declare const RIGHT_EDGE_BUFFER = 180;
 declare const TOOLBAR_EDGE_BUFFER = 8;
 declare const DATA_CSLP_ATTR_SELECTOR = "data-cslp";
+declare const RESULT_TYPES: Readonly<{
+    SUCCESS: "success";
+    ERROR: "error";
+}>;
+declare const WORKFLOW_STAGES: Readonly<{
+    REVIEW: "Review Stage";
+    FINAL_REVIEW: "Final Review";
+    UNKNOWN: "Unknown";
+}>;
 /**
  * The field that can be directly modified using contenteditable=true.
  * This includes all text fields like title and numbers.
@@ -21,4 +30,4 @@ declare const unicodeNonBreakingSpace = "\u00A0";
 declare const mentionLimit = 20;
 declare const maxMessageLength = 500;
 
-export { ALLOWED_INLINE_EDITABLE_FIELD, ALLOWED_MODAL_EDITABLE_FIELD, ALLOWED_REPLACE_FIELDS, DATA_CSLP_ATTR_SELECTOR, DEFAULT_MULTIPLE_FIELDS, LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX, RIGHT_EDGE_BUFFER, TOOLBAR_EDGE_BUFFER, TOP_EDGE_BUFFER, VISUAL_BUILDER_CHANNEL_ID, VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY, maxMessageLength, mentionLimit, numericInputRegex, unicodeNonBreakingSpace };
+export { ALLOWED_INLINE_EDITABLE_FIELD, ALLOWED_MODAL_EDITABLE_FIELD, ALLOWED_REPLACE_FIELDS, DATA_CSLP_ATTR_SELECTOR, DEFAULT_MULTIPLE_FIELDS, LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX, RESULT_TYPES, RIGHT_EDGE_BUFFER, TOOLBAR_EDGE_BUFFER, TOP_EDGE_BUFFER, VISUAL_BUILDER_CHANNEL_ID, VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY, WORKFLOW_STAGES, maxMessageLength, mentionLimit, numericInputRegex, unicodeNonBreakingSpace };

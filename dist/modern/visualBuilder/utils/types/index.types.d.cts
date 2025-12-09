@@ -10,6 +10,7 @@ type ISchemaFieldMap = (IContentTypeRootBlocks | (IModularBlockSingleBlock & {
     field_metadata?: {
         updateRestrict?: boolean;
         isUnlinkedVariant?: boolean;
+        canLinkVariant?: boolean;
     };
 };
 interface ITraverseSchemaVisitor {

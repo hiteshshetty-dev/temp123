@@ -47,6 +47,7 @@ declare function visualBuilderStyles(): {
     "visual-builder__tooltip": string;
     "visual-builder__tooltip--bottom": string;
     "visual-builder__tooltip--persistent": string;
+    "visual-builder__custom-tooltip": string;
     "visual-builder__empty-block": string;
     "visual-builder__empty-block-title": string;
     "visual-builder__empty-block-field-name": string;

@@ -51,6 +51,8 @@ var import_icons2 = require("./icons/index.cjs");
 var import_Tooltip = require("./Tooltip.cjs");
 var import_fetchEntryPermissionsAndStageDetails = require("../utils/fetchEntryPermissionsAndStageDetails.cjs");
 var import_VariantIndicator = require("./VariantIndicator.cjs");
+var import_useRevalidateFieldDataPostMessageEvent = require("../eventManager/useRevalidateFieldDataPostMessageEvent.cjs");
+var import_constants = require("../utils/constants.cjs");
 var import_jsx_runtime = require("preact/jsx-runtime");
 async function getFieldDisplayNames(fieldMetadata) {
   var _a;
@@ -110,7 +112,7 @@ function FieldLabelWrapperComponent(props) {
       const allPaths = (0, import_lodash_es.uniqBy)(
         [
           props.fieldMetadata,
-          ...props.parentPaths.map((path) => {
+          ...props.parentPaths.filter((path) => path).map((path) => {
             return (0, import_cslp.extractDetailsFromCslp)(path);
           })
         ],
@@ -136,12 +138,14 @@ function FieldLabelWrapperComponent(props) {
         const domAncestor = eventDetails.editableElement.closest(`[data-cslp]:not([data-cslp^="${props.fieldMetadata.content_type_uid}"])`);
         if (domAncestor) {
           const domAncestorCslp = domAncestor.getAttribute("data-cslp");
-          const domAncestorDetails = (0, import_cslp.extractDetailsFromCslp)(domAncestorCslp);
-          const domAncestorContentTypeUid = domAncestorDetails.content_type_uid;
-          const domAncestorContentParent = referenceData == null ? void 0 : referenceData.find((data) => data.contentTypeUid === domAncestorContentTypeUid);
-          if (domAncestorContentParent) {
-            referenceFieldName = domAncestorContentParent.referenceFieldName;
-            parentContentTypeName = domAncestorContentParent.contentTypeTitle;
+          if (domAncestorCslp) {
+            const domAncestorDetails = (0, import_cslp.extractDetailsFromCslp)(domAncestorCslp);
+            const domAncestorContentTypeUid = domAncestorDetails.content_type_uid;
+            const domAncestorContentParent = referenceData == null ? void 0 : referenceData.find((data) => data.contentTypeUid === domAncestorContentTypeUid);
+            if (domAncestorContentParent) {
+              referenceFieldName = domAncestorContentParent.referenceFieldName;
+              parentContentTypeName = domAncestorContentParent.contentTypeTitle;
+            }
           }
         }
       }
@@ -150,32 +154,77 @@ function FieldLabelWrapperComponent(props) {
         setError(true);
         return;
       }
-      const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+      const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
         entryUid: props.fieldMetadata.entry_uid,
         contentTypeUid: props.fieldMetadata.content_type_uid,
         locale: props.fieldMetadata.locale,
-        variantUid: props.fieldMetadata.variant
+        variantUid: props.fieldMetadata.variant,
+        fieldPathWithIndex: props.fieldMetadata.fieldPathWithIndex
       });
       const { isDisabled: fieldDisabled, reason } = (0, import_isFieldDisabled.isFieldDisabled)(
         fieldSchema,
         eventDetails,
+        resolvedVariantPermissions,
         entryAcl,
         entryWorkflowStageDetails
       );
+      const handleLinkVariant = async () => {
+        var _a2, _b2;
+        try {
+          if ((_a2 = fieldSchema.field_metadata) == null ? void 0 : _a2.canLinkVariant) {
+            const result = await ((_b2 = import_visualBuilderPostMessage.default) == null ? void 0 : _b2.send(
+              import_postMessage.VisualBuilderPostMessageEvents.OPEN_LINK_VARIANT_MODAL,
+              {
+                contentTypeUid: props.fieldMetadata.content_type_uid
+              }
+            ));
+            if (!result || result.type === import_constants.RESULT_TYPES.ERROR) {
+              return;
+            }
+            if (result.type === import_constants.RESULT_TYPES.SUCCESS) {
+              await (0, import_useRevalidateFieldDataPostMessageEvent.handleRevalidateFieldData)();
+            }
+          }
+        } catch (error2) {
+          console.error(
+            "Error in link variant modal flow:",
+            error2
+          );
+        }
+      };
       const currentFieldDisplayName = (displayNames2 == null ? void 0 : displayNames2[props.fieldMetadata.cslpValue]) ?? fieldSchema.display_name;
       const hasParentPaths = !!((_a = props == null ? void 0 : props.parentPaths) == null ? void 0 : _a.length);
       const isVariant = props.fieldMetadata.variant ? true : false;
       setCurrentField({
         text: currentFieldDisplayName,
         contentTypeName: contentTypeName ?? "",
-        icon: fieldDisabled ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        icon: fieldDisabled ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
           "div",
           {
             className: (0, import_classnames.default)(
               (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__tooltip--persistent"]
             ),
-            "data-tooltip": reason,
-            children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.InfoIcon, {})
+            "data-tooltip": !(reason == null ? void 0 : reason.includes(import_isFieldDisabled.DisableReason.CanLinkVariant)) ? reason : void 0,
+            children: [
+              reason.includes(import_isFieldDisabled.DisableReason.CanLinkVariant) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                "div",
+                {
+                  className: (0, import_visualBuilder.visualBuilderStyles)()["visual-builder__custom-tooltip"],
+                  onClick: handleLinkVariant,
+                  children: (() => {
+                    const [before, after] = reason.split(
+                      import_isFieldDisabled.DisableReason.UnderlinedAndClickableWord
+                    );
+                    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+                      before,
+                      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { style: { textDecoration: "underline" }, children: import_isFieldDisabled.DisableReason.UnderlinedAndClickableWord }),
+                      after
+                    ] });
+                  })()
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.InfoIcon, {})
+            ]
           }
         ) : hasParentPaths ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_icons.CaretIcon, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {}),
         isReference,

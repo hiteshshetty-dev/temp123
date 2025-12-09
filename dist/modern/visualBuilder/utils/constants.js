@@ -10,6 +10,15 @@ var TOP_EDGE_BUFFER = 42;
 var RIGHT_EDGE_BUFFER = 180;
 var TOOLBAR_EDGE_BUFFER = 8;
 var DATA_CSLP_ATTR_SELECTOR = "data-cslp";
+var RESULT_TYPES = Object.freeze({
+  SUCCESS: "success",
+  ERROR: "error"
+});
+var WORKFLOW_STAGES = Object.freeze({
+  REVIEW: "Review Stage",
+  FINAL_REVIEW: "Final Review",
+  UNKNOWN: "Unknown"
+});
 var ALLOWED_INLINE_EDITABLE_FIELD = [
   FieldDataType.SINGLELINE,
   FieldDataType.MULTILINE,
@@ -43,11 +52,13 @@ export {
   DATA_CSLP_ATTR_SELECTOR,
   DEFAULT_MULTIPLE_FIELDS,
   LIVE_PREVIEW_OUTLINE_WIDTH_IN_PX,
+  RESULT_TYPES,
   RIGHT_EDGE_BUFFER,
   TOOLBAR_EDGE_BUFFER,
   TOP_EDGE_BUFFER,
   VISUAL_BUILDER_CHANNEL_ID,
   VISUAL_BUILDER_FIELD_TYPE_ATTRIBUTE_KEY,
+  WORKFLOW_STAGES,
   maxMessageLength,
   mentionLimit,
   numericInputRegex,

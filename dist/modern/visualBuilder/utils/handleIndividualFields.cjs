@@ -44,6 +44,7 @@ async function handleIndividualFields(eventDetails, elements) {
     content_type_uid,
     entry_uid,
     locale,
+    variant,
     fieldPath,
     fieldPathWithIndex
   } = fieldMetadata;
@@ -55,14 +56,17 @@ async function handleIndividualFields(eventDetails, elements) {
     )
   ]);
   const fieldType = (0, import_getFieldType.getFieldType)(fieldSchema);
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
     entryUid: entry_uid,
     contentTypeUid: content_type_uid,
-    locale
+    locale,
+    variantUid: variant,
+    fieldPathWithIndex
   });
   const { isDisabled: disabled } = (0, import_isFieldDisabled.isFieldDisabled)(
     fieldSchema,
     eventDetails,
+    resolvedVariantPermissions,
     entryAcl,
     entryWorkflowStageDetails
   );

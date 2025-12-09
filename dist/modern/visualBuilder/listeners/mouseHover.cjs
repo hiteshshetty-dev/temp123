@@ -99,15 +99,17 @@ async function addOutline(params) {
     fieldPath
   );
   if (!fieldSchema) return;
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
     entryUid: fieldMetadata.entry_uid,
     contentTypeUid: fieldMetadata.content_type_uid,
     locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
+    variantUid: fieldMetadata.variant,
+    fieldPathWithIndex: fieldMetadata.fieldPathWithIndex
   });
   const { isDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
     fieldSchema,
     eventDetails,
+    resolvedVariantPermissions,
     entryAcl,
     entryWorkflowStageDetails
   );
@@ -313,15 +315,17 @@ async function generateCursor({
   if (!fieldSchema) {
     return;
   }
-  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
+  const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await (0, import_fetchEntryPermissionsAndStageDetails.fetchEntryPermissionsAndStageDetails)({
     entryUid: fieldMetadata.entry_uid,
     contentTypeUid: fieldMetadata.content_type_uid,
     locale: fieldMetadata.locale,
-    variantUid: fieldMetadata.variant
+    variantUid: fieldMetadata.variant,
+    fieldPathWithIndex: fieldMetadata.fieldPathWithIndex
   });
   const { isDisabled: fieldDisabled } = (0, import_isFieldDisabled.isFieldDisabled)(
     fieldSchema,
     eventDetails,
+    resolvedVariantPermissions,
     entryAcl,
     entryWorkflowStageDetails
   );

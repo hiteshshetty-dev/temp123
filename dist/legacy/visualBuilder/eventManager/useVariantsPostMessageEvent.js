@@ -6,7 +6,20 @@ import { visualBuilderStyles } from "../visualBuilder.style.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { VisualBuilderPostMessageEvents } from "../utils/types/postMessage.types.js";
 import { FieldSchemaMap } from "../utils/fieldSchemaMap.js";
-function addVariantFieldClass(variant_uid, highlightVariantFields) {
+import { extractDetailsFromCslp } from "../../cslp/cslpdata.js";
+function isLowerOrderVariant(variant_uid, dataCslp, variantOrder) {
+  if (!variantOrder || variantOrder.length === 0) {
+    return false;
+  }
+  const { variant: cslpVariant } = extractDetailsFromCslp(dataCslp);
+  const indexOfCmsVariant = variantOrder.lastIndexOf(variant_uid);
+  const indexOfCslpVariant = variantOrder.lastIndexOf(cslpVariant || "");
+  if (indexOfCslpVariant < 0) {
+    return false;
+  }
+  return indexOfCslpVariant < indexOfCmsVariant;
+}
+function addVariantFieldClass(variant_uid, highlightVariantFields, variantOrder) {
   const elements = document.querySelectorAll(`[data-cslp]`);
   elements.forEach((element) => {
     const dataCslp = element.getAttribute("data-cslp");
@@ -18,6 +31,8 @@ function addVariantFieldClass(variant_uid, highlightVariantFields) {
       element.classList.add("visual-builder__variant-field");
     } else if (!dataCslp.startsWith("v2:")) {
       element.classList.add("visual-builder__base-field");
+    } else if (isLowerOrderVariant(variant_uid, dataCslp, variantOrder)) {
+      element.classList.add("visual-builder__variant-field", "visual-builder__lower-order-variant-field");
     } else {
       element.classList.add("visual-builder__disabled-variant-field");
     }
@@ -35,14 +50,15 @@ function removeVariantFieldClass(onlyHighlighted = false) {
     });
   } else {
     const variantAndBaseFieldElements = document.querySelectorAll(
-      ".visual-builder__disabled-variant-field, .visual-builder__variant-field, .visual-builder__base-field"
+      ".visual-builder__disabled-variant-field, .visual-builder__variant-field, .visual-builder__base-field, .visual-builder__lower-order-variant-field"
     );
     variantAndBaseFieldElements.forEach((element) => {
       element.classList.remove(
         "visual-builder__disabled-variant-field",
         "visual-builder__variant-field",
         visualBuilderStyles()["visual-builder__variant-field"],
-        "visual-builder__base-field"
+        "visual-builder__base-field",
+        "visual-builder__lower-order-variant-field"
       );
     });
   }
@@ -83,7 +99,8 @@ function useVariantFieldsPostMessageEvent() {
       removeVariantFieldClass();
       addVariantFieldClass(
         event.data.variant_data.variant,
-        event.data.variant_data.highlightVariantFields
+        event.data.variant_data.highlightVariantFields,
+        event.data.variant_data.variantOrder
       );
     }
   );

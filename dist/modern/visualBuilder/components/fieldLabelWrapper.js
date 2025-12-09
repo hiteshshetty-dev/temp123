@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { useEffect, useState } from "preact/compat";
 import { extractDetailsFromCslp } from "../../cslp/index.js";
 import { FieldSchemaMap } from "../utils/fieldSchemaMap.js";
-import { isFieldDisabled } from "../utils/isFieldDisabled.js";
+import { DisableReason, isFieldDisabled } from "../utils/isFieldDisabled.js";
 import visualBuilderPostMessage from "../utils/visualBuilderPostMessage.js";
 import { CaretIcon, CaretRightIcon, InfoIcon } from "./icons/index.js";
 import { LoadingIcon } from "./icons/loading.js";
@@ -19,6 +19,8 @@ import { ContentTypeIcon } from "./icons/index.js";
 import { ToolbarTooltip } from "./Tooltip.js";
 import { fetchEntryPermissionsAndStageDetails } from "../utils/fetchEntryPermissionsAndStageDetails.js";
 import { VariantIndicator } from "./VariantIndicator.js";
+import { handleRevalidateFieldData } from "../eventManager/useRevalidateFieldDataPostMessageEvent.js";
+import { RESULT_TYPES } from "../utils/constants.js";
 import { Fragment, jsx, jsxs } from "preact/jsx-runtime";
 async function getFieldDisplayNames(fieldMetadata) {
   const result = await visualBuilderPostMessage?.send(VisualBuilderPostMessageEvents.GET_FIELD_DISPLAY_NAMES, fieldMetadata);
@@ -74,7 +76,7 @@ function FieldLabelWrapperComponent(props) {
       const allPaths = uniqBy(
         [
           props.fieldMetadata,
-          ...props.parentPaths.map((path) => {
+          ...props.parentPaths.filter((path) => path).map((path) => {
             return extractDetailsFromCslp(path);
           })
         ],
@@ -100,12 +102,14 @@ function FieldLabelWrapperComponent(props) {
         const domAncestor = eventDetails.editableElement.closest(`[data-cslp]:not([data-cslp^="${props.fieldMetadata.content_type_uid}"])`);
         if (domAncestor) {
           const domAncestorCslp = domAncestor.getAttribute("data-cslp");
-          const domAncestorDetails = extractDetailsFromCslp(domAncestorCslp);
-          const domAncestorContentTypeUid = domAncestorDetails.content_type_uid;
-          const domAncestorContentParent = referenceData?.find((data) => data.contentTypeUid === domAncestorContentTypeUid);
-          if (domAncestorContentParent) {
-            referenceFieldName = domAncestorContentParent.referenceFieldName;
-            parentContentTypeName = domAncestorContentParent.contentTypeTitle;
+          if (domAncestorCslp) {
+            const domAncestorDetails = extractDetailsFromCslp(domAncestorCslp);
+            const domAncestorContentTypeUid = domAncestorDetails.content_type_uid;
+            const domAncestorContentParent = referenceData?.find((data) => data.contentTypeUid === domAncestorContentTypeUid);
+            if (domAncestorContentParent) {
+              referenceFieldName = domAncestorContentParent.referenceFieldName;
+              parentContentTypeName = domAncestorContentParent.contentTypeTitle;
+            }
           }
         }
       }
@@ -114,32 +118,76 @@ function FieldLabelWrapperComponent(props) {
         setError(true);
         return;
       }
-      const { acl: entryAcl, workflowStage: entryWorkflowStageDetails } = await fetchEntryPermissionsAndStageDetails({
+      const { acl: entryAcl, workflowStage: entryWorkflowStageDetails, resolvedVariantPermissions } = await fetchEntryPermissionsAndStageDetails({
         entryUid: props.fieldMetadata.entry_uid,
         contentTypeUid: props.fieldMetadata.content_type_uid,
         locale: props.fieldMetadata.locale,
-        variantUid: props.fieldMetadata.variant
+        variantUid: props.fieldMetadata.variant,
+        fieldPathWithIndex: props.fieldMetadata.fieldPathWithIndex
       });
       const { isDisabled: fieldDisabled, reason } = isFieldDisabled(
         fieldSchema,
         eventDetails,
+        resolvedVariantPermissions,
         entryAcl,
         entryWorkflowStageDetails
       );
+      const handleLinkVariant = async () => {
+        try {
+          if (fieldSchema.field_metadata?.canLinkVariant) {
+            const result = await visualBuilderPostMessage?.send(
+              VisualBuilderPostMessageEvents.OPEN_LINK_VARIANT_MODAL,
+              {
+                contentTypeUid: props.fieldMetadata.content_type_uid
+              }
+            );
+            if (!result || result.type === RESULT_TYPES.ERROR) {
+              return;
+            }
+            if (result.type === RESULT_TYPES.SUCCESS) {
+              await handleRevalidateFieldData();
+            }
+          }
+        } catch (error2) {
+          console.error(
+            "Error in link variant modal flow:",
+            error2
+          );
+        }
+      };
       const currentFieldDisplayName = displayNames2?.[props.fieldMetadata.cslpValue] ?? fieldSchema.display_name;
       const hasParentPaths = !!props?.parentPaths?.length;
       const isVariant = props.fieldMetadata.variant ? true : false;
       setCurrentField({
         text: currentFieldDisplayName,
         contentTypeName: contentTypeName ?? "",
-        icon: fieldDisabled ? /* @__PURE__ */ jsx(
+        icon: fieldDisabled ? /* @__PURE__ */ jsxs(
           "div",
           {
             className: classNames(
               visualBuilderStyles()["visual-builder__tooltip--persistent"]
             ),
-            "data-tooltip": reason,
-            children: /* @__PURE__ */ jsx(InfoIcon, {})
+            "data-tooltip": !reason?.includes(DisableReason.CanLinkVariant) ? reason : void 0,
+            children: [
+              reason.includes(DisableReason.CanLinkVariant) && /* @__PURE__ */ jsx(
+                "div",
+                {
+                  className: visualBuilderStyles()["visual-builder__custom-tooltip"],
+                  onClick: handleLinkVariant,
+                  children: (() => {
+                    const [before, after] = reason.split(
+                      DisableReason.UnderlinedAndClickableWord
+                    );
+                    return /* @__PURE__ */ jsxs(Fragment, { children: [
+                      before,
+                      /* @__PURE__ */ jsx("span", { style: { textDecoration: "underline" }, children: DisableReason.UnderlinedAndClickableWord }),
+                      after
+                    ] });
+                  })()
+                }
+              ),
+              /* @__PURE__ */ jsx(InfoIcon, {})
+            ]
           }
         ) : hasParentPaths ? /* @__PURE__ */ jsx(CaretIcon, {}) : /* @__PURE__ */ jsx(Fragment, {}),
         isReference,
