@@ -34,23 +34,23 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var require_dist = __commonJS({
   "node_modules/@contentstack/advanced-post-message/dist/index.js"(exports2, module2) {
     "use strict";
-    !function(e, t) {
+    !(function(e, t) {
       "object" == typeof exports2 && "object" == typeof module2 ? module2.exports = t() : "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports2 ? exports2.ContentstackAdvPostMessage = t() : e.ContentstackAdvPostMessage = t();
-    }(exports2, () => {
+    })(exports2, (() => {
       return e = { 706: (e2, t2, r) => {
         "use strict";
         Object.defineProperty(t2, "__esModule", { value: true }), t2.Config = void 0;
-        var n = r(450), o = r(666), i = r(628), s = function() {
+        var n = r(450), o = r(666), i = r(628), s = (function() {
           function e3() {
             this.config = (0, o.getDefaultConfig)();
           }
           return e3.prototype.replace = function(e4) {
-            !function(e5, t3) {
+            !(function(e5, t3) {
               var r2, o2, s2, u;
               if (t3.debug = null !== (r2 = e5.debug) && void 0 !== r2 ? r2 : t3.debug, "" === e5.channelId) throw new Error((0, i.getErrorMessage)(n.ERROR_MESSAGES.common.channelIdRequired));
               t3.channelId = null !== (o2 = e5.channelId) && void 0 !== o2 ? o2 : t3.channelId, t3.suppressErrors = null !== (s2 = e5.suppressErrors) && void 0 !== s2 ? s2 : t3.suppressErrors, t3.targetOrigin = null !== (u = e5.targetOrigin) && void 0 !== u ? u : t3.targetOrigin, e5.target ? t3.targetWindow = e5.target : window ? t3.targetWindow = window : t3.targetWindow = { postMessage: function() {
               } };
-            }(e4, this.config);
+            })(e4, this.config);
           }, e3.prototype.set = function(e4, t3) {
             this.config[e4] = t3;
           }, e3.prototype.get = function(e4) {
@@ -60,7 +60,7 @@ var require_dist = __commonJS({
           }, e3.prototype.reset = function() {
             this.config = (0, o.getDefaultConfig)();
           }, e3;
-        }();
+        })();
         t2.Config = s;
       }, 851: (e2, t2) => {
         "use strict";
@@ -117,7 +117,7 @@ var require_dist = __commonJS({
         }), i = this && this.__exportStar || function(e3, t3) {
           for (var r2 in e3) "default" === r2 || Object.prototype.hasOwnProperty.call(t3, r2) || o(t3, e3, r2);
         }, s = this && this.__awaiter || function(e3, t3, r2, n2) {
-          return new (r2 || (r2 = Promise))(function(o2, i2) {
+          return new (r2 || (r2 = Promise))((function(o2, i2) {
             function s2(e4) {
               try {
                 a2(n2.next(e4));
@@ -134,12 +134,12 @@ var require_dist = __commonJS({
             }
             function a2(e4) {
               var t4;
-              e4.done ? o2(e4.value) : (t4 = e4.value, t4 instanceof r2 ? t4 : new r2(function(e5) {
+              e4.done ? o2(e4.value) : (t4 = e4.value, t4 instanceof r2 ? t4 : new r2((function(e5) {
                 e5(t4);
-              })).then(s2, u2);
+              }))).then(s2, u2);
             }
             a2((n2 = n2.apply(e3, t3 || [])).next());
-          });
+          }));
         }, u = this && this.__generator || function(e3, t3) {
           var r2, n2, o2, i2, s2 = { label: 0, sent: function() {
             if (1 & o2[0]) throw o2[1];
@@ -150,7 +150,7 @@ var require_dist = __commonJS({
           }), i2;
           function u2(u3) {
             return function(a2) {
-              return function(u4) {
+              return (function(u4) {
                 if (r2) throw new TypeError("Generator is already executing.");
                 for (; i2 && (i2 = 0, u4[0] && (s2 = 0)), s2; ) try {
                   if (r2 = 1, n2 && (o2 = 2 & u4[0] ? n2.return : u4[0] ? n2.throw || ((o2 = n2.return) && o2.call(n2), 0) : n2.next) && !(o2 = o2.call(n2, u4[1])).done) return o2;
@@ -195,30 +195,30 @@ var require_dist = __commonJS({
                 }
                 if (5 & u4[0]) throw u4[1];
                 return { value: u4[0] ? u4[1] : void 0, done: true };
-              }([u3, a2]);
+              })([u3, a2]);
             };
           }
         };
         Object.defineProperty(t2, "__esModule", { value: true }), t2.EventManager = void 0;
-        var a = r(834), c = r(706), d = r(450), l = r(897), f = r(628), h = r(768), g = r(610), p = r(574), v = function() {
+        var a = r(834), c = r(706), d = r(450), l = r(897), f = r(628), h = r(768), g = r(610), p = r(574), v = (function() {
           function e3(e4, t3) {
             if (void 0 === t3 && (t3 = {}), this.requestMessageHandlers = /* @__PURE__ */ new Map(), this.responseMessageHandlers = /* @__PURE__ */ new Map(), !e4) throw new Error((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.channelIdRequired));
             this.config = new c.Config(), this.config.replace(n(n({}, t3), { channelId: e4 })), this.logger = new f.Logger(this.config), this.postMessage = new l.PostMessage(this.logger, this.config), this.handleIncomingMessage = this.handleIncomingMessage.bind(this), this.send = this.send.bind(this), this.on = this.on.bind(this), this.unregisterEvent = this.unregisterEvent.bind(this), window ? window.addEventListener("message", this.handleIncomingMessage) : this.logger.debug((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.windowNotFound));
           }
           return e3.prototype.handleIncomingMessage = function(e4) {
-            return s(this, void 0, void 0, function() {
+            return s(this, void 0, void 0, (function() {
               var t3, r2, n2, o2, i2, s2, c2, l2, h2, g2, v2, E, y = this;
-              return u(this, function(u2) {
+              return u(this, (function(u2) {
                 if (t3 = e4.data, r2 = t3.type, n2 = t3.channel, o2 = t3.payload, i2 = t3.eventManager, s2 = t3.metadata, c2 = t3.error, i2 !== d.EVENT_MANAGER_NAME || n2 !== this.config.get("channelId")) return [2];
                 switch (l2 = s2.hash, h2 = s2.nature) {
                   case p.EditorPostMessageNature.REQUEST:
-                    return this.logger.debug("REQUEST received", e4.data), this.config.get("targetWindow").closed && this.logger.error((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.windowClosed)), this.postMessage.sendAck({ type: r2, hash: l2 }), this.requestMessageHandlers.has(r2) ? (g2 = this.requestMessageHandlers.get(r2).handler, v2 = { data: o2 }, [2, a.ZalgoPromise.all([a.ZalgoPromise.try(function() {
+                    return this.logger.debug("REQUEST received", e4.data), this.config.get("targetWindow").closed && this.logger.error((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.windowClosed)), this.postMessage.sendAck({ type: r2, hash: l2 }), this.requestMessageHandlers.has(r2) ? (g2 = this.requestMessageHandlers.get(r2).handler, v2 = { data: o2 }, [2, a.ZalgoPromise.all([a.ZalgoPromise.try((function() {
                       return g2(v2);
-                    }).then(function(e5) {
+                    })).then((function(e5) {
                       y.postMessage.sendResponse({ type: r2, hash: l2, payload: e5, error: void 0 });
-                    }).catch(function(e5) {
+                    })).catch((function(e5) {
                       y.logger.error((0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.codeReturnedError), e5);
-                    })])]) : (this.logger.debug((0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.noRequestListenerFound(r2))), this.postMessage.sendResponse({ type: r2, hash: l2, payload: void 0, error: { code: d.ERROR_CODES.receiveEvent.noRequestListenerFound, message: (0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.noRequestListenerFound(r2)) } }), [2]);
+                    }))])]) : (this.logger.debug((0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.noRequestListenerFound(r2))), this.postMessage.sendResponse({ type: r2, hash: l2, payload: void 0, error: { code: d.ERROR_CODES.receiveEvent.noRequestListenerFound, message: (0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.noRequestListenerFound(r2)) } }), [2]);
                   case p.EditorPostMessageNature.RESPONSE:
                     if (this.logger.debug("RESPONSE received", e4.data), !this.responseMessageHandlers.has(l2)) return this.logger.error((0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.noResponseListenerFound(l2))), [2];
                     E = this.responseMessageHandlers.get(l2), c2 ? E.promise.reject(c2) : E.promise.resolve(o2);
@@ -231,21 +231,21 @@ var require_dist = __commonJS({
                     this.logger.error((0, f.getErrorMessage)(d.ERROR_MESSAGES.receiveEvent.unknownNature(h2)), e4.data);
                 }
                 return [2];
-              });
-            });
+              }));
+            }));
           }, e3.prototype.send = function(e4, t3) {
-            return s(this, void 0, void 0, function() {
+            return s(this, void 0, void 0, (function() {
               var r2, n2, o2, i2, s2, c2 = this;
-              return u(this, function(u2) {
-                return r2 = new a.ZalgoPromise(), n2 = (0, g.uniqueId)(e4), o2 = { type: e4, promise: r2, hasCancelled: false, hasReceivedAck: false }, this.responseMessageHandlers.set(n2, o2), i2 = 1e3, s2 = (0, h.safeInterval)(function() {
+              return u(this, (function(u2) {
+                return r2 = new a.ZalgoPromise(), n2 = (0, g.uniqueId)(e4), o2 = { type: e4, promise: r2, hasCancelled: false, hasReceivedAck: false }, this.responseMessageHandlers.set(n2, o2), i2 = 1e3, s2 = (0, h.safeInterval)((function() {
                   return c2.config.get("targetWindow").closed ? r2.reject(new Error((0, f.getErrorMessage)(d.ERROR_MESSAGES.common.windowClosed))) : (i2 = Math.max(i2 - d.RESPONSE_CYCLE, 0), !o2.hasReceivedAck && i2 <= 0 ? r2.reject((0, f.getErrorMessage)(d.ERROR_MESSAGES.sendEvent.noAckReceived)) : void 0);
-                }, d.RESPONSE_CYCLE), r2.finally(function() {
+                }), d.RESPONSE_CYCLE), r2.finally((function() {
                   c2.responseMessageHandlers.delete(n2), s2.cancel();
-                }).catch(function(e5) {
+                })).catch((function(e5) {
                   c2.logger.debug((0, f.getErrorMessage)(d.ERROR_MESSAGES.sendEvent.receiverReturnedError), e5);
-                }), this.postMessage.sendRequest({ type: e4, hash: n2, error: void 0, payload: t3 }), [2, r2];
-              });
-            });
+                })), this.postMessage.sendRequest({ type: e4, hash: n2, error: void 0, payload: t3 }), [2, r2];
+              }));
+            }));
           }, e3.prototype.on = function(e4, t3) {
             var r2 = this;
             this.requestMessageHandlers.has(e4) && this.logger.error((0, f.getErrorMessage)(d.ERROR_MESSAGES.registerEvent.eventAlreadyRegistered(e4)));
@@ -260,7 +260,7 @@ var require_dist = __commonJS({
           }, e3.prototype.destroy = function(e4) {
             this.requestMessageHandlers.clear(), this.responseMessageHandlers.clear(), (null == e4 ? void 0 : e4.soft) || window.removeEventListener("message", this.handleIncomingMessage);
           }, e3;
-        }();
+        })();
         t2.EventManager = v, i(r(574), t2);
       }, 897: function(e2, t2, r) {
         "use strict";
@@ -271,7 +271,7 @@ var require_dist = __commonJS({
           }, n.apply(this, arguments);
         };
         Object.defineProperty(t2, "__esModule", { value: true }), t2.PostMessage = void 0;
-        var o = r(574), i = function() {
+        var o = r(574), i = (function() {
           function e3(e4, t3) {
             this.logger = e4, this.sendResponse = this.sendResponse.bind(this), this.sendRequest = this.sendRequest.bind(this), this.sendAck = this.sendAck.bind(this), this.getMessage = this.getMessage.bind(this), this.config = t3.getAll();
           }
@@ -294,7 +294,7 @@ var require_dist = __commonJS({
             var t3 = e4.nature, r2 = e4.hash, n2 = e4.payload, o2 = e4.type, i2 = e4.error;
             return { eventManager: "contentstack-adv-post-message", metadata: { hash: r2, nature: t3 }, channel: this.config.channelId, error: i2, payload: n2, type: o2 };
           }, e3;
-        }();
+        })();
         t2.PostMessage = i;
       }, 255: (e2, t2) => {
         "use strict";
@@ -319,9 +319,9 @@ var require_dist = __commonJS({
       }, 145: (e2, t2) => {
         "use strict";
         var r;
-        Object.defineProperty(t2, "__esModule", { value: true }), t2.EditorPostMessageNature = void 0, function(e3) {
+        Object.defineProperty(t2, "__esModule", { value: true }), t2.EditorPostMessageNature = void 0, (function(e3) {
           e3.ACK = "ACK", e3.RESPONSE = "RESPONSE", e3.REQUEST = "REQUEST";
-        }(r || (t2.EditorPostMessageNature = r = {}));
+        })(r || (t2.EditorPostMessageNature = r = {}));
       }, 628: function(e2, t2, r) {
         "use strict";
         var n = this && this.__spreadArray || function(e3, t3, r2) {
@@ -329,7 +329,7 @@ var require_dist = __commonJS({
           return e3.concat(n2 || Array.prototype.slice.call(t3));
         };
         Object.defineProperty(t2, "__esModule", { value: true }), t2.getErrorMessage = t2.Logger = void 0;
-        var o = r(450), i = function() {
+        var o = r(450), i = (function() {
           function e3(e4) {
             this.config = e4, this.prefix = o.EVENT_MANAGER_NAME, this.log = this.log.bind(this), this.info = this.info.bind(this), this.debug = this.debug.bind(this), this.error = this.error.bind(this);
           }
@@ -348,7 +348,7 @@ var require_dist = __commonJS({
           }, e3.prototype.getDebugOptions = function() {
             return { targetOrigin: this.config.get("targetOrigin"), targetWindow: this.config.get("targetWindow") };
           }, e3;
-        }();
+        })();
         t2.Logger = i, t2.getErrorMessage = function(e3) {
           return o.EVENT_MANAGER_NAME + ": " + e3;
         };
@@ -356,11 +356,11 @@ var require_dist = __commonJS({
         "use strict";
         Object.defineProperty(t2, "__esModule", { value: true }), t2.safeInterval = void 0, t2.safeInterval = function(e3, t3) {
           var r;
-          return function n() {
-            r = setTimeout(function() {
+          return (function n() {
+            r = setTimeout((function() {
               e3(), n();
-            }, t3);
-          }(), { cancel: function() {
+            }), t3);
+          })(), { cancel: function() {
             clearTimeout(r);
           } };
         };
@@ -429,14 +429,14 @@ var require_dist = __commonJS({
             e3 = new Uint8Array(t3.length);
             for (let r2 = 0; r2 < t3.length; ++r2) e3[r2] = t3.charCodeAt(r2);
           }
-          return function(e4) {
+          return (function(e4) {
             const t3 = [], r2 = 32 * e4.length, n2 = "0123456789abcdef";
             for (let o2 = 0; o2 < r2; o2 += 8) {
               const r3 = e4[o2 >> 5] >>> o2 % 32 & 255, i2 = parseInt(n2.charAt(r3 >>> 4 & 15) + n2.charAt(15 & r3), 16);
               t3.push(i2);
             }
             return t3;
-          }(function(e4, t3) {
+          })((function(e4, t3) {
             e4[t3 >> 5] |= 128 << t3 % 32, e4[r(t3) - 1] = t3;
             let o2 = 1732584193, c = -271733879, d = -1732584194, l = 271733878;
             for (let t4 = 0; t4 < e4.length; t4 += 16) {
@@ -444,12 +444,12 @@ var require_dist = __commonJS({
               o2 = i(o2, c, d, l, e4[t4], 7, -680876936), l = i(l, o2, c, d, e4[t4 + 1], 12, -389564586), d = i(d, l, o2, c, e4[t4 + 2], 17, 606105819), c = i(c, d, l, o2, e4[t4 + 3], 22, -1044525330), o2 = i(o2, c, d, l, e4[t4 + 4], 7, -176418897), l = i(l, o2, c, d, e4[t4 + 5], 12, 1200080426), d = i(d, l, o2, c, e4[t4 + 6], 17, -1473231341), c = i(c, d, l, o2, e4[t4 + 7], 22, -45705983), o2 = i(o2, c, d, l, e4[t4 + 8], 7, 1770035416), l = i(l, o2, c, d, e4[t4 + 9], 12, -1958414417), d = i(d, l, o2, c, e4[t4 + 10], 17, -42063), c = i(c, d, l, o2, e4[t4 + 11], 22, -1990404162), o2 = i(o2, c, d, l, e4[t4 + 12], 7, 1804603682), l = i(l, o2, c, d, e4[t4 + 13], 12, -40341101), d = i(d, l, o2, c, e4[t4 + 14], 17, -1502002290), c = i(c, d, l, o2, e4[t4 + 15], 22, 1236535329), o2 = s(o2, c, d, l, e4[t4 + 1], 5, -165796510), l = s(l, o2, c, d, e4[t4 + 6], 9, -1069501632), d = s(d, l, o2, c, e4[t4 + 11], 14, 643717713), c = s(c, d, l, o2, e4[t4], 20, -373897302), o2 = s(o2, c, d, l, e4[t4 + 5], 5, -701558691), l = s(l, o2, c, d, e4[t4 + 10], 9, 38016083), d = s(d, l, o2, c, e4[t4 + 15], 14, -660478335), c = s(c, d, l, o2, e4[t4 + 4], 20, -405537848), o2 = s(o2, c, d, l, e4[t4 + 9], 5, 568446438), l = s(l, o2, c, d, e4[t4 + 14], 9, -1019803690), d = s(d, l, o2, c, e4[t4 + 3], 14, -187363961), c = s(c, d, l, o2, e4[t4 + 8], 20, 1163531501), o2 = s(o2, c, d, l, e4[t4 + 13], 5, -1444681467), l = s(l, o2, c, d, e4[t4 + 2], 9, -51403784), d = s(d, l, o2, c, e4[t4 + 7], 14, 1735328473), c = s(c, d, l, o2, e4[t4 + 12], 20, -1926607734), o2 = u(o2, c, d, l, e4[t4 + 5], 4, -378558), l = u(l, o2, c, d, e4[t4 + 8], 11, -2022574463), d = u(d, l, o2, c, e4[t4 + 11], 16, 1839030562), c = u(c, d, l, o2, e4[t4 + 14], 23, -35309556), o2 = u(o2, c, d, l, e4[t4 + 1], 4, -1530992060), l = u(l, o2, c, d, e4[t4 + 4], 11, 1272893353), d = u(d, l, o2, c, e4[t4 + 7], 16, -155497632), c = u(c, d, l, o2, e4[t4 + 10], 23, -1094730640), o2 = u(o2, c, d, l, e4[t4 + 13], 4, 681279174), l = u(l, o2, c, d, e4[t4], 11, -358537222), d = u(d, l, o2, c, e4[t4 + 3], 16, -722521979), c = u(c, d, l, o2, e4[t4 + 6], 23, 76029189), o2 = u(o2, c, d, l, e4[t4 + 9], 4, -640364487), l = u(l, o2, c, d, e4[t4 + 12], 11, -421815835), d = u(d, l, o2, c, e4[t4 + 15], 16, 530742520), c = u(c, d, l, o2, e4[t4 + 2], 23, -995338651), o2 = a(o2, c, d, l, e4[t4], 6, -198630844), l = a(l, o2, c, d, e4[t4 + 7], 10, 1126891415), d = a(d, l, o2, c, e4[t4 + 14], 15, -1416354905), c = a(c, d, l, o2, e4[t4 + 5], 21, -57434055), o2 = a(o2, c, d, l, e4[t4 + 12], 6, 1700485571), l = a(l, o2, c, d, e4[t4 + 3], 10, -1894986606), d = a(d, l, o2, c, e4[t4 + 10], 15, -1051523), c = a(c, d, l, o2, e4[t4 + 1], 21, -2054922799), o2 = a(o2, c, d, l, e4[t4 + 8], 6, 1873313359), l = a(l, o2, c, d, e4[t4 + 15], 10, -30611744), d = a(d, l, o2, c, e4[t4 + 6], 15, -1560198380), c = a(c, d, l, o2, e4[t4 + 13], 21, 1309151649), o2 = a(o2, c, d, l, e4[t4 + 4], 6, -145523070), l = a(l, o2, c, d, e4[t4 + 11], 10, -1120210379), d = a(d, l, o2, c, e4[t4 + 2], 15, 718787259), c = a(c, d, l, o2, e4[t4 + 9], 21, -343485551), o2 = n(o2, r2), c = n(c, f), d = n(d, h), l = n(l, g);
             }
             return [o2, c, d, l];
-          }(function(e4) {
+          })((function(e4) {
             if (0 === e4.length) return [];
             const t3 = 8 * e4.length, n2 = new Uint32Array(r(t3));
             for (let r2 = 0; r2 < t3; r2 += 8) n2[r2 >> 5] |= (255 & e4[r2 / 8]) << r2 % 32;
             return n2;
-          }(e3), 8 * e3.length));
+          })(e3), 8 * e3.length));
         };
       }, 140: (e2, t2) => {
         "use strict";
@@ -577,12 +577,12 @@ var require_dist = __commonJS({
         Object.defineProperty(t2, "__esModule", { value: true }), t2.URL = t2.DNS = void 0, t2.default = function(e3, t3, r2) {
           function n2(e4, n3, s2, u2) {
             var a;
-            if ("string" == typeof e4 && (e4 = function(e5) {
+            if ("string" == typeof e4 && (e4 = (function(e5) {
               e5 = unescape(encodeURIComponent(e5));
               const t4 = [];
               for (let r3 = 0; r3 < e5.length; ++r3) t4.push(e5.charCodeAt(r3));
               return t4;
-            }(e4)), "string" == typeof n3 && (n3 = (0, i.default)(n3)), 16 !== (null === (a = n3) || void 0 === a ? void 0 : a.length)) throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
+            })(e4)), "string" == typeof n3 && (n3 = (0, i.default)(n3)), 16 !== (null === (a = n3) || void 0 === a ? void 0 : a.length)) throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
             let c = new Uint8Array(16 + e4.length);
             if (c.set(n3), c.set(e4, n3.length), c = r2(c), c[6] = 15 & c[6] | t3, c[8] = 63 & c[8] | 128, s2) {
               u2 = u2 || 0;
@@ -644,7 +644,7 @@ var require_dist = __commonJS({
           return parseInt(e3.slice(14, 15), 16);
         };
       }, 994: function(e2) {
-        "undefined" != typeof self && self, e2.exports = function(e3) {
+        "undefined" != typeof self && self, e2.exports = (function(e3) {
           var t2 = {};
           function r(n) {
             if (t2[n]) return t2[n].exports;
@@ -673,7 +673,7 @@ var require_dist = __commonJS({
           }, r.o = function(e4, t3) {
             return {}.hasOwnProperty.call(e4, t3);
           }, r.p = "", r(r.s = 0);
-        }([function(e3, t2, r) {
+        })([function(e3, t2, r) {
           "use strict";
           function n(e4) {
             try {
@@ -692,9 +692,9 @@ var require_dist = __commonJS({
             }
             return false;
           }
-          r.r(t2), r.d(t2, "ZalgoPromise", function() {
+          r.r(t2), r.d(t2, "ZalgoPromise", (function() {
             return l;
-          });
+          }));
           var o, i = [], s = [], u = 0;
           function a() {
             if (!u && o) {
@@ -708,18 +708,18 @@ var require_dist = __commonJS({
           function d() {
             u -= 1, a();
           }
-          var l = function() {
+          var l = (function() {
             function e4(e5) {
               var t4 = this;
               if (this.resolved = void 0, this.rejected = void 0, this.errorHandled = void 0, this.value = void 0, this.error = void 0, this.handlers = void 0, this.dispatching = void 0, this.stack = void 0, this.resolved = false, this.rejected = false, this.errorHandled = false, this.handlers = [], e5) {
                 var r2, n2, o2 = false, i2 = false, s2 = false;
                 c();
                 try {
-                  e5(function(e6) {
+                  e5((function(e6) {
                     s2 ? t4.resolve(e6) : (o2 = true, r2 = e6);
-                  }, function(e6) {
+                  }), (function(e6) {
                     s2 ? t4.reject(e6) : (i2 = true, n2 = e6);
-                  });
+                  }));
                 } catch (e6) {
                   return d(), void this.reject(e6);
                 }
@@ -739,16 +739,16 @@ var require_dist = __commonJS({
                 var r2 = e5 && "function" == typeof e5.toString ? e5.toString() : {}.toString.call(e5);
                 e5 = new Error("Expected reject to be called with Error, got " + r2);
               }
-              return this.rejected = true, this.error = e5, this.errorHandled || setTimeout(function() {
-                t4.errorHandled || function(e6, t5) {
+              return this.rejected = true, this.error = e5, this.errorHandled || setTimeout((function() {
+                t4.errorHandled || (function(e6, t5) {
                   if (-1 === i.indexOf(e6)) {
-                    i.push(e6), setTimeout(function() {
+                    i.push(e6), setTimeout((function() {
                       throw e6;
-                    }, 1);
+                    }), 1);
                     for (var r3 = 0; r3 < s.length; r3++) s[r3](e6, t5);
                   }
-                }(e5, t4);
-              }, 1), this.dispatch(), this;
+                })(e5, t4);
+              }), 1), this.dispatch(), this;
             }, t3.asyncReject = function(e5) {
               return this.errorHandled = true, this.reject(e5), this;
             }, t3.dispatch = function() {
@@ -756,11 +756,11 @@ var require_dist = __commonJS({
               if (!this.dispatching && (t4 || r2)) {
                 this.dispatching = true, c();
                 for (var i2 = function(e5, t5) {
-                  return e5.then(function(e6) {
+                  return e5.then((function(e6) {
                     t5.resolve(e6);
-                  }, function(e6) {
+                  }), (function(e6) {
                     t5.reject(e6);
-                  });
+                  }));
                 }, s2 = 0; s2 < o2.length; s2++) {
                   var u2 = o2[s2], a2 = u2.onSuccess, l2 = u2.onError, f = u2.promise, h = void 0;
                   if (t4) try {
@@ -797,33 +797,33 @@ var require_dist = __commonJS({
               return this.then(void 0, e5);
             }, t3.finally = function(t4) {
               if (t4 && "function" != typeof t4 && !t4.call) throw new Error("Promise.finally expected a function");
-              return this.then(function(r2) {
-                return e4.try(t4).then(function() {
+              return this.then((function(r2) {
+                return e4.try(t4).then((function() {
                   return r2;
-                });
-              }, function(r2) {
-                return e4.try(t4).then(function() {
+                }));
+              }), (function(r2) {
+                return e4.try(t4).then((function() {
                   throw r2;
-                });
-              });
+                }));
+              }));
             }, t3.timeout = function(e5, t4) {
               var r2 = this;
               if (this.resolved || this.rejected) return this;
-              var n2 = setTimeout(function() {
+              var n2 = setTimeout((function() {
                 r2.resolved || r2.rejected || r2.reject(t4 || new Error("Promise timed out after " + e5 + "ms"));
-              }, e5);
-              return this.then(function(e6) {
+              }), e5);
+              return this.then((function(e6) {
                 return clearTimeout(n2), e6;
-              });
+              }));
             }, t3.toPromise = function() {
               if ("undefined" == typeof Promise) throw new TypeError("Could not find Promise");
               return Promise.resolve(this);
             }, t3.lazy = function() {
               return this.errorHandled = true, this;
             }, e4.resolve = function(t4) {
-              return t4 instanceof e4 ? t4 : n(t4) ? new e4(function(e5, r2) {
+              return t4 instanceof e4 ? t4 : n(t4) ? new e4((function(e5, r2) {
                 return t4.then(e5, r2);
-              }) : new e4().resolve(t4);
+              })) : new e4().resolve(t4);
             }, e4.reject = function(t4) {
               return new e4().reject(t4);
             }, e4.asyncReject = function(t4) {
@@ -832,11 +832,11 @@ var require_dist = __commonJS({
               var r2 = new e4(), o2 = t4.length, i2 = [].slice();
               if (!o2) return r2.resolve(i2), r2;
               for (var s2 = function(e5, t5, n2) {
-                return t5.then(function(t6) {
+                return t5.then((function(t6) {
                   i2[e5] = t6, 0 == (o2 -= 1) && r2.resolve(i2);
-                }, function(e6) {
+                }), (function(e6) {
                   n2.reject(e6);
-                });
+                }));
               }, u2 = 0; u2 < t4.length; u2++) {
                 var a2 = t4[u2];
                 if (a2 instanceof e4) {
@@ -855,23 +855,23 @@ var require_dist = __commonJS({
               var r2 = {}, o2 = [], i2 = function(e5) {
                 if (t4.hasOwnProperty(e5)) {
                   var i3 = t4[e5];
-                  n(i3) ? o2.push(i3.then(function(t5) {
+                  n(i3) ? o2.push(i3.then((function(t5) {
                     r2[e5] = t5;
-                  })) : r2[e5] = i3;
+                  }))) : r2[e5] = i3;
                 }
               };
               for (var s2 in t4) i2(s2);
-              return e4.all(o2).then(function() {
+              return e4.all(o2).then((function() {
                 return r2;
-              });
+              }));
             }, e4.map = function(t4, r2) {
               return e4.all(t4.map(r2));
             }, e4.onPossiblyUnhandledException = function(e5) {
-              return function(e6) {
+              return (function(e6) {
                 return s.push(e6), { cancel: function() {
                   s.splice(s.indexOf(e6), 1);
                 } };
-              }(e5);
+              })(e5);
             }, e4.try = function(t4, r2, n2) {
               if (t4 && "function" != typeof t4 && !t4.call) throw new Error("Promise.try expected a function");
               var o2;
@@ -883,27 +883,27 @@ var require_dist = __commonJS({
               }
               return d(), e4.resolve(o2);
             }, e4.delay = function(t4) {
-              return new e4(function(e5) {
+              return new e4((function(e5) {
                 setTimeout(e5, t4);
-              });
+              }));
             }, e4.isPromise = function(t4) {
               return !!(t4 && t4 instanceof e4) || n(t4);
             }, e4.flush = function() {
               return t4 = o = o || new e4(), a(), t4;
               var t4;
             }, e4;
-          }();
+          })();
         }]);
       }, 834: (e2, t2, r) => {
         e2.exports = r(994);
-      } }, t = {}, function r(n) {
+      } }, t = {}, (function r(n) {
         var o = t[n];
         if (void 0 !== o) return o.exports;
         var i = t[n] = { exports: {} };
         return e[n].call(i.exports, i, i.exports, r), i.exports;
-      }(156);
+      })(156);
       var e, t;
-    });
+    }));
   }
 });
 
