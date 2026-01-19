@@ -696,7 +696,8 @@ function visualBuilderStyles() {
     "visual-builder__draft-field": import_goober.css`
             outline: 2px dashed #eb5646;
         `,
-    "visual-builder__variant-field": import_goober.css`
+    "visual-builder__variant-field": import_goober.css``,
+    "visual-builder__variant-field-outline": import_goober.css`
             outline: 2px solid #bd59fa;
             outline-offset: -2px;
         `,

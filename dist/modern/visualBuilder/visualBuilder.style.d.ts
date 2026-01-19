@@ -60,6 +60,7 @@ declare function visualBuilderStyles(): {
     "visual-builder__default-cursor--disabled": string;
     "visual-builder__draft-field": string;
     "visual-builder__variant-field": string;
+    "visual-builder__variant-field-outline": string;
     "visual-builder__pseudo-editable-element": string;
     "visual-builder__button-error": string;
     "visual-builder__focused-toolbar__error": string;

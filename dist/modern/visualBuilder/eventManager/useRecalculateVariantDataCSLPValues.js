@@ -6,21 +6,21 @@ import livePreviewPostMessage from "../../livePreview/eventManager/livePreviewEv
 import { LIVE_PREVIEW_POST_MESSAGE_EVENTS } from "../../livePreview/eventManager/livePreviewEventManager.constant.js";
 import { DATA_CSLP_ATTR_SELECTOR } from "../utils/constants.js";
 import { visualBuilderStyles } from "../visualBuilder.style.js";
+import { setHighlightVariantFields } from "./useVariantsPostMessageEvent.js";
 var VARIANT_UPDATE_DELAY_MS = 8e3;
 function useRecalculateVariantDataCSLPValues() {
   livePreviewPostMessage?.on(
     LIVE_PREVIEW_POST_MESSAGE_EVENTS.VARIANT_PATCH,
     (event) => {
       if (VisualBuilder.VisualBuilderGlobalState.value.audienceMode) {
-        updateVariantClasses(event.data);
+        setHighlightVariantFields(event.data.highlightVariantFields);
+        updateVariantClasses();
       }
     }
   );
 }
-function updateVariantClasses({
-  highlightVariantFields,
-  expectedCSLPValues
-}) {
+function updateVariantClasses() {
+  const highlightVariantFields = VisualBuilder.VisualBuilderGlobalState.value.highlightVariantFields;
   const variant = VisualBuilder.VisualBuilderGlobalState.value.variant;
   const observers = [];
   const updateElementClasses = (element, dataCslp, observer) => {
@@ -29,23 +29,20 @@ function updateVariantClasses({
       if (element.classList.contains("visual-builder__base-field")) {
         element.classList.remove("visual-builder__base-field");
       }
+      const variantFieldClasses = ["visual-builder__variant-field"];
       if (highlightVariantFields) {
-        element.classList.add(
-          visualBuilderStyles()["visual-builder__variant-field"],
-          "visual-builder__variant-field"
-        );
-      } else {
-        element.classList.add("visual-builder__variant-field");
+        variantFieldClasses.push(visualBuilderStyles()["visual-builder__variant-field-outline"]);
       }
+      element.classList.add(...variantFieldClasses);
     } else if (!dataCslp.startsWith("v2:") && element.classList.contains("visual-builder__variant-field")) {
       element.classList.remove(
-        visualBuilderStyles()["visual-builder__variant-field"],
+        visualBuilderStyles()["visual-builder__variant-field-outline"],
         "visual-builder__variant-field"
       );
       element.classList.add("visual-builder__base-field");
     } else if (dataCslp.startsWith("v2:") && variant && !dataCslp.includes(variant) && element.classList.contains("visual-builder__variant-field")) {
       element.classList.remove(
-        visualBuilderStyles()["visual-builder__variant-field"],
+        visualBuilderStyles()["visual-builder__variant-field-outline"],
         "visual-builder__variant-field"
       );
       element.classList.add("visual-builder__disabled-variant-field");
@@ -74,18 +71,15 @@ function updateVariantClasses({
       if (element.classList.contains("visual-builder__base-field")) {
         element.classList.remove("visual-builder__base-field");
       }
+      const variantFieldClasses = ["visual-builder__variant-field"];
       if (highlightVariantFields) {
-        element.classList.add(
-          visualBuilderStyles()["visual-builder__variant-field"],
-          "visual-builder__variant-field"
-        );
-      } else {
-        element.classList.add("visual-builder__variant-field");
+        variantFieldClasses.push(visualBuilderStyles()["visual-builder__variant-field-outline"]);
       }
+      element.classList.add(...variantFieldClasses);
     } else if (!dataCslp.startsWith("v2:")) {
       if (element.classList.contains("visual-builder__variant-field")) {
         element.classList.remove(
-          visualBuilderStyles()["visual-builder__variant-field"],
+          visualBuilderStyles()["visual-builder__variant-field-outline"],
           "visual-builder__variant-field"
         );
       }
@@ -135,6 +129,7 @@ function updateVariantClasses({
   }, VARIANT_UPDATE_DELAY_MS);
 }
 export {
+  updateVariantClasses,
   useRecalculateVariantDataCSLPValues
 };
 //# sourceMappingURL=useRecalculateVariantDataCSLPValues.js.map

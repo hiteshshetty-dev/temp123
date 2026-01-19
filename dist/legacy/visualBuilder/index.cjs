@@ -161,6 +161,9 @@ var _VisualBuilder = class _VisualBuilder {
               previousEmptyBlockParents: emptyBlockParents
             };
           }
+          if (_VisualBuilder.VisualBuilderGlobalState.value.variant && _VisualBuilder.VisualBuilderGlobalState.value.highlightVariantFields) {
+            (0, import_useVariantsPostMessageEvent.debounceAddVariantFieldClass)(_VisualBuilder.VisualBuilderGlobalState.value.variant);
+          }
         },
         100,
         { trailing: true }
@@ -214,6 +217,8 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
+        highlightVariantFields: false,
+        variantOrder: [],
         focusElementObserver: null,
         referenceParentMap: {},
         isFocussed: false
@@ -307,6 +312,9 @@ var _VisualBuilder = class _VisualBuilder {
           childList: true,
           subtree: true
         });
+        (0, import_useVariantsPostMessageEvent.getHighlightVariantFieldsStatus)().then((result) => {
+          (0, import_useVariantsPostMessageEvent.setHighlightVariantFields)(result.highlightVariantFields);
+        });
         (_a2 = import_visualBuilderPostMessage.default) == null ? void 0 : _a2.on(
           import_postMessage.VisualBuilderPostMessageEvents.GET_ALL_ENTRIES_IN_CURRENT_PAGE,
           import_getEntryIdentifiersInCurrentPage.getEntryIdentifiersInCurrentPage
@@ -333,7 +341,7 @@ var _VisualBuilder = class _VisualBuilder {
         (0, import_postMessageEvent.useOnEntryUpdatePostMessageEvent)();
         (0, import_useRecalculateVariantDataCSLPValues.useRecalculateVariantDataCSLPValues)();
         (0, import_useDraftFieldsPostMessageEvent.useDraftFieldsPostMessageEvent)();
-        (0, import_useVariantsPostMessageEvent.useVariantFieldsPostMessageEvent)();
+        (0, import_useVariantsPostMessageEvent.useVariantFieldsPostMessageEvent)({ isSSR: config.ssr ?? false });
       }
     }).catch(() => {
       if (!(0, import_inIframe.inIframe)()) {
@@ -360,6 +368,8 @@ _VisualBuilder.VisualBuilderGlobalState = (0, import_signals.signal)({
   audienceMode: false,
   locale: import_configManager.default.get().stackDetails.masterLocale || "en-us",
   variant: null,
+  highlightVariantFields: false,
+  variantOrder: [],
   focusElementObserver: null,
   referenceParentMap: {},
   isFocussed: false

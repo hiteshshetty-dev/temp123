@@ -48,6 +48,7 @@ var VisualBuilderPostMessageEvents = /* @__PURE__ */ ((VisualBuilderPostMessageE
   VisualBuilderPostMessageEvents2["REMOVE_HIGHLIGHTED_COMMENTS"] = "remove-highlighted-comments";
   VisualBuilderPostMessageEvents2["GET_VARIANT_ID"] = "get-variant-id";
   VisualBuilderPostMessageEvents2["GET_LOCALE"] = "get-locale";
+  VisualBuilderPostMessageEvents2["GET_HIGHLIGHT_VARIANT_FIELDS_STATUS"] = "get-highlight-variant-fields-status";
   VisualBuilderPostMessageEvents2["SEND_VARIANT_AND_LOCALE"] = "send-variant-and-locale";
   VisualBuilderPostMessageEvents2["GET_CONTENT_TYPE_NAME"] = "get-content-type-name";
   VisualBuilderPostMessageEvents2["REFERENCE_MAP"] = "get-reference-map";

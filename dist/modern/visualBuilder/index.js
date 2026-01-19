@@ -25,7 +25,7 @@ import initUI from "./components/index.js";
 import { useDraftFieldsPostMessageEvent } from "./eventManager/useDraftFieldsPostMessageEvent.js";
 import { useHideFocusOverlayPostMessageEvent } from "./eventManager/useHideFocusOverlayPostMessageEvent.js";
 import { useScrollToField } from "./eventManager/useScrollToField.js";
-import { useVariantFieldsPostMessageEvent } from "./eventManager/useVariantsPostMessageEvent.js";
+import { debounceAddVariantFieldClass, getHighlightVariantFieldsStatus, setHighlightVariantFields, useVariantFieldsPostMessageEvent } from "./eventManager/useVariantsPostMessageEvent.js";
 import {
   generateEmptyBlocks,
   removeEmptyBlocks
@@ -150,6 +150,9 @@ var _VisualBuilder = class _VisualBuilder {
               previousEmptyBlockParents: emptyBlockParents
             };
           }
+          if (_VisualBuilder.VisualBuilderGlobalState.value.variant && _VisualBuilder.VisualBuilderGlobalState.value.highlightVariantFields) {
+            debounceAddVariantFieldClass(_VisualBuilder.VisualBuilderGlobalState.value.variant);
+          }
         },
         100,
         { trailing: true }
@@ -203,6 +206,8 @@ var _VisualBuilder = class _VisualBuilder {
         audienceMode: false,
         locale: "en-us",
         variant: null,
+        highlightVariantFields: false,
+        variantOrder: [],
         focusElementObserver: null,
         referenceParentMap: {},
         isFocussed: false
@@ -294,6 +299,9 @@ var _VisualBuilder = class _VisualBuilder {
           childList: true,
           subtree: true
         });
+        getHighlightVariantFieldsStatus().then((result) => {
+          setHighlightVariantFields(result.highlightVariantFields);
+        });
         visualBuilderPostMessage?.on(
           VisualBuilderPostMessageEvents.GET_ALL_ENTRIES_IN_CURRENT_PAGE,
           getEntryIdentifiersInCurrentPage
@@ -320,7 +328,7 @@ var _VisualBuilder = class _VisualBuilder {
         useOnEntryUpdatePostMessageEvent();
         useRecalculateVariantDataCSLPValues();
         useDraftFieldsPostMessageEvent();
-        useVariantFieldsPostMessageEvent();
+        useVariantFieldsPostMessageEvent({ isSSR: config.ssr ?? false });
       }
     }).catch(() => {
       if (!inIframe()) {
@@ -347,6 +355,8 @@ _VisualBuilder.VisualBuilderGlobalState = signal({
   audienceMode: false,
   locale: Config.get().stackDetails.masterLocale || "en-us",
   variant: null,
+  highlightVariantFields: false,
+  variantOrder: [],
   focusElementObserver: null,
   referenceParentMap: {},
   isFocussed: false

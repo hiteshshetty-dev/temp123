@@ -9,6 +9,8 @@ interface VisualBuilderGlobalStateImpl {
     audienceMode: boolean;
     locale: string;
     variant: string | null;
+    highlightVariantFields: boolean;
+    variantOrder: string[];
     focusElementObserver: MutationObserver | null;
     referenceParentMap: Record<string, string>;
     isFocussed: boolean;
